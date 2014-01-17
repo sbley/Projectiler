@@ -59,6 +59,7 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	protected void openTimeTracker() {
+		driver.findElement(By.cssSelector("input[name$='BUTTON.intro']")).click();
 		new Select(driver.findElement(By.cssSelector("select[id$='Field_TimeTracker']")))
 				.selectByVisibleText("heute");
 		driver.findElement(By.cssSelector("input[title=TimeTracker]")).click();
