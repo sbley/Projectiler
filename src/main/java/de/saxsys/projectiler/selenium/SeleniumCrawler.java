@@ -3,6 +3,7 @@ package de.saxsys.projectiler.selenium;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -22,16 +23,12 @@ public class SeleniumCrawler implements Crawler {
 
 	public SeleniumCrawler(Settings settings) {
 		this.settings = settings;
-		if ("firefox".equals(settings.getDriver())) {
-			this.driver = firefoxDriver();
-		} else {
-			// headless driver
-			this.driver = htmlUnitDriver();
-		}
 	}
 
 	@Override
 	public void clock(final User user, final String projectName) {
+
+		initDriver();
 
 		login(user);
 
@@ -40,6 +37,17 @@ public class SeleniumCrawler implements Crawler {
 		clockTime(projectName);
 
 		logout();
+
+		releaseDriver();
+	}
+
+	private void initDriver() {
+		if ("firefox".equals(settings.getDriver())) {
+			this.driver = firefoxDriver();
+		} else {
+			// headless driver
+			this.driver = htmlUnitDriver();
+		}
 	}
 
 	protected void login(User user) {
@@ -67,16 +75,20 @@ public class SeleniumCrawler implements Crawler {
 		WebElement selProject = driver.findElement(By.cssSelector("select[id$='NewWhat_0_0']"));
 		selProject.findElement(By.xpath(".//option[contains(., '" + projectName + "')]")).click();
 		driver.findElement(By.cssSelector("input[title='Änderungen speichern']")).click();
-		WebElement btnConfirmOverwrite = driver.findElement(By
-				.cssSelector("input[name$='ForceOverwriteYes']"));
-		if (btnConfirmOverwrite.isDisplayed()) {
+		try {
+			WebElement btnConfirmOverwrite = driver.findElement(By
+					.cssSelector("input[name$='ForceOverwriteYes']"));
 			btnConfirmOverwrite.click();
+		} catch (NoSuchElementException e) {
 		}
 	}
 
 	private void logout() {
 		driver.findElement(By.cssSelector("input[title=Abmelden]")).click();
-		// driver.quit();
+	}
+
+	private void releaseDriver() {
+		driver.quit();
 	}
 
 	private CharSequence currentTime() {
