@@ -15,7 +15,7 @@ import de.saxsys.projectiler.selenium.Settings;
  */
 public class Projectiler {
 
-	private User user = new User("stefan.bley", Password.get());;
+	private User user = new User("stefan.bley", Password.get());
 	private Crawler crawler;
 
 	public Projectiler(final Crawler crawler) {
@@ -33,6 +33,6 @@ public class Projectiler {
 	public static void main(String[] args) {
 		Projectiler projectiler = new Projectiler(new SeleniumCrawler(new Settings()));
 		List<String> projectNames = projectiler.getProjectNames();
-		projectiler.clock(projectNames.get(new Random().nextInt(projectNames.size() - 1)) + 1);
+		projectiler.clock(projectNames.get(new Random().nextInt(projectNames.size() - 1) + 1));
 	}
 }
