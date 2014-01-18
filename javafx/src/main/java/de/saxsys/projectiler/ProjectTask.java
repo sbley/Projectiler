@@ -11,6 +11,15 @@ import de.saxsys.projectiler.selenium.Settings;
 
 public class ProjectTask extends Task<List<String>> {
 
+    private final String username;
+    private final String password;
+
+    public ProjectTask(final String username, final String password) {
+        this.username = username;
+        // TODO Auto-generated constructor stub
+        this.password = password;
+    }
+
     @Override
     protected List<String> call() throws Exception {
         Projectiler projectiler = null;

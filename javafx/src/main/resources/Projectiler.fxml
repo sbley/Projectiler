@@ -21,7 +21,7 @@
         <Image url="@projectiler_uhr.png" />
       </image>
     </ImageView>
-    <Label fx:id="timeLabel" text="Label" translateY="150.0">
+    <Label fx:id="timeLabel" text="Label" translateY="120.0">
       <font>
         <Font name="Arial" size="50.0" />
       </font>
@@ -35,5 +35,11 @@
         </FXCollections>
       </items>
     </ChoiceBox>
+    <VBox id="VBox" alignment="CENTER" maxWidth="300.0" spacing="5.0" translateY="215.0">
+      <children>
+        <TextField fx:id="usernameField" minHeight="50.0" onScrollFinished="#usernameField" prefWidth="200.0" promptText="Benutzername" style="-fx-font-width:15;&#10;" />
+        <PasswordField minHeight="50.0" onScrollFinished="#passwordField" prefWidth="200.0" promptText="Passwort" />
+      </children>
+    </VBox>
   </children>
 </StackPane>

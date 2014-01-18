@@ -15,6 +15,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -44,6 +46,12 @@ public class ProjectilerController {
 
     @FXML
     private StackPane root;
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private PasswordField passwordField;
 
     private TranslateTransition transition;
 
@@ -89,7 +97,8 @@ public class ProjectilerController {
                 if (selectedItem.isEmpty()) {
                     return;
                 }
-                final ClockTask projectilerTask = new ClockTask("stefan.bley", "password", selectedItem);
+                final ClockTask projectilerTask =
+                        new ClockTask(usernameField.getText(), usernameField.getText(), selectedItem);
                 projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(final WorkerStateEvent t) {
