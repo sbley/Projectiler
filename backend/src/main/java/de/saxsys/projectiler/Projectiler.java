@@ -1,8 +1,11 @@
 package de.saxsys.projectiler;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.Credentials;
@@ -17,6 +20,7 @@ import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
  */
 public class Projectiler {
 
+	private static final Logger LOGGER = Logger.getLogger(Projectiler.class.getName());
 	private final Credentials user;
 	private final Crawler crawler;
 
@@ -32,17 +36,29 @@ public class Projectiler {
 	}
 
 	public void checkin() {
-		// TODO implement [SB]
+		Date startDate = new Date();
+		UserDataStore.getInstance().setStartDate(startDate);
+		LOGGER.info("Checked in at " + formatDate(startDate));
 	}
 
 	public int checkout(final String projectName) {
-		// TODO retrieve start time
-		final Date start = new Date(2017, 0, 1, 8, 30);
+		UserDataStore store = UserDataStore.getInstance();
+		final Date start = store.getStartDate();
 		final Date end = new Date();
 		crawler.clock(user, projectName, start, end);
-		// TODO calculate minutes [SB]
-		int minutes = 90;
-		return minutes;
+		store.clearStartDate();
+		store.save();
+		LOGGER.info("Checked out at " + formatDate(end));
+		return duration(start, end);
+	}
+
+	private int duration(final Date start, final Date end) {
+		return (int) TimeUnit.MINUTES.convert(end.getTime() - start.getTime(),
+				TimeUnit.MILLISECONDS);
+	}
+
+	private String formatDate(Date startDate) {
+		return DateFormat.getDateInstance(DateFormat.SHORT).format(startDate);
 	}
 
 	public List<String> getProjectNames() {
