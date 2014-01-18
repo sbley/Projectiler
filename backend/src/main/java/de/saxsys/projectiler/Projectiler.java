@@ -24,10 +24,13 @@ public class Projectiler {
 	private final Credentials user;
 	private final Crawler crawler;
 
-	public Projectiler(final Crawler crawler) {
-		final UserDataStore store = UserDataStore.getInstance();
-		this.user = new Credentials(store.getUserName(), store.getPassword());
-		this.crawler = crawler;
+	public static Projectiler createDefaultProjectiler() {
+		return new Projectiler(UserDataStore.getInstance());
+	}
+
+	protected Projectiler(final UserDataStore store) {
+		this(new Credentials(store.getUserName(), store.getPassword()), new SeleniumCrawler(
+				new Settings()));
 	}
 
 	protected Projectiler(final Credentials credentials, final Crawler crawler) {
