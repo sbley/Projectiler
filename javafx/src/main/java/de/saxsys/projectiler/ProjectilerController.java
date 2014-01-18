@@ -52,7 +52,6 @@ public class ProjectilerController {
 
     @FXML
     private PasswordField passwordField;
-
     private TranslateTransition transition;
 
     @FXML
@@ -65,8 +64,8 @@ public class ProjectilerController {
                         .autoReverse(true).cycleCount(2).build();
 
         createListeners();
-        getProjects();
         projectChooser.setItems(FXCollections.<String> observableArrayList());
+        getProjects();
     }
 
     private void createListeners() {
@@ -110,14 +109,15 @@ public class ProjectilerController {
                 new Thread(projectilerTask).start();
             }
         });
-
     }
 
     private void getProjects() {
-        final ProjectTask projectilerTask = new ProjectTask();
+        final ProjectTask projectilerTask = new ProjectTask(usernameField.getText(), passwordField.getText());
+        System.out.println("getProjects");
         projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(final WorkerStateEvent t) {
+                System.out.println("handle projects");
                 projectChooser.setItems(FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
             }
         });
