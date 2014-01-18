@@ -35,6 +35,6 @@ public class Projectiler {
 		Projectiler projectiler = new Projectiler(new User("stefan.bley", Password.get()),
 				new SeleniumCrawler(new Settings()));
 		List<String> projectNames = projectiler.getProjectNames();
-		projectiler.clock(projectNames.get(new Random().nextInt(projectNames.size() - 1) + 1));
+		projectiler.clock(projectNames.get(new Random().nextInt(projectNames.size() - 2) + 1));
 	}
 }
