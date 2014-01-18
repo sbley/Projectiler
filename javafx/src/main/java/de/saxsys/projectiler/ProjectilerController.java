@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public class ProjectilerController {
@@ -36,6 +37,9 @@ public class ProjectilerController {
     @FXML
     private Label timeLabel;
 
+    @FXML
+    private StackPane root;
+
     private TranslateTransition transition;
 
     @FXML
@@ -47,6 +51,7 @@ public class ProjectilerController {
                 TranslateTransitionBuilder.create().node(cardImage).rate(1.5).toY(cardImage.getLayoutY() + 120)
                         .autoReverse(true).cycleCount(2).build();
         createListeners();
+
     }
 
     private void createListeners() {
@@ -63,8 +68,7 @@ public class ProjectilerController {
                             if (arg2.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
                                 transition.pause();
                                 transition.currentTimeProperty().removeListener(this);
-                                FadeTransitionBuilder.create().node(cardImage.getScene().getRoot()).toValue(0.8)
-                                        .build().play();
+                                FadeTransitionBuilder.create().node(cardImage).toValue(0.8).build().play();
                                 cardImage.getScene().getRoot().setMouseTransparent(true);
                             }
                         }
@@ -79,7 +83,7 @@ public class ProjectilerController {
                 projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(final WorkerStateEvent t) {
-                        FadeTransitionBuilder.create().node(cardImage.getScene().getRoot()).toValue(1.0).build().play();
+                        FadeTransitionBuilder.create().node(cardImage).toValue(1.0).build().play();
                         transition.play();
                         cardImage.getScene().getRoot().setMouseTransparent(false);
                     }
