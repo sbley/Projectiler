@@ -2,24 +2,27 @@ package de.saxsys.projectiler;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.logging.Logger;
 
 public class UserDataStore implements Serializable {
 
+	private static final Logger LOGGER = Logger.getLogger(UserDataStore.class.getSimpleName());
 	private static final long serialVersionUID = -8326125819925449250L;
 
-	// Wenn wir wissen wie wir ausliefern -> tauschen
-	private static final String FILENAME = "D:///data.projectiler";
+	// TODO Wenn wir wissen wie wir ausliefern -> tauschen
+	private static final String FILENAME = System.getProperty("userdata.file",
+			System.getProperty("user.home") + "/.projectiler/data.projectiler");
+	private static final Path FILEPATH = Paths.get(FILENAME);
 
 	private Date startDate;
 	private String userName;
@@ -32,28 +35,26 @@ public class UserDataStore implements Serializable {
 
 	public void save() {
 		try {
-			final OutputStream file = new FileOutputStream(FILENAME);
-			final OutputStream buffer = new BufferedOutputStream(file);
-			final ObjectOutput output = new ObjectOutputStream(buffer);
-			output.writeObject(INSTANCE);
-			output.flush();
-			output.close();
-		} catch (final IOException ex) {
-			System.err.println("Couldn't write existing profile from disk");
+			Files.createDirectories(FILEPATH.getParent());
+			try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(
+					Files.newOutputStream(FILEPATH)))) {
+				output.writeObject(INSTANCE);
+			} finally {
+			}
+		} catch (final IOException e) {
+			LOGGER.severe("Couldn't write existing profile to disk. " + e.getMessage());
 		}
 	}
 
 	public static UserDataStore getInstance() {
-		try {
-			final InputStream file = new FileInputStream(FILENAME);
-			final InputStream buffer = new BufferedInputStream(file);
-			final ObjectInput input = new ObjectInputStream(buffer);
-			// deserialize the List
+		try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(
+				Files.newInputStream(FILEPATH)))) {
+			// deserialize the list
 			final UserDataStore data = (UserDataStore) input.readObject();
 			INSTANCE.setStartDate(data.getStartDate());
 			INSTANCE.setUserName(data.getUserName());
 		} catch (final Exception e) {
-			System.err.println("Couldn't load existing profile from disk");
+			LOGGER.severe("Couldn't load existing profile from disk. " + e.getMessage());
 		}
 		return INSTANCE;
 	}
