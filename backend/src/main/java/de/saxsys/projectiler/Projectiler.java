@@ -9,7 +9,6 @@ import de.saxsys.projectiler.crawler.Credentials;
 import de.saxsys.projectiler.crawler.Password;
 import de.saxsys.projectiler.crawler.Settings;
 import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
-import de.saxsys.projectiler.domain.User;
 
 /**
  * Automatic time tracking in Projectile
@@ -21,8 +20,14 @@ public class Projectiler {
 	private Credentials user;
 	private Crawler crawler;
 
-	public Projectiler(final User user, final Crawler crawler) {
-		this.user = new Credentials(user.getUsername(), user.getPassword());
+	public Projectiler(final Crawler crawler) {
+		UserDataStore store = UserDataStore.loadUserData();
+		this.user = new Credentials(store.getUserName(), store.getPassword());
+		this.crawler = crawler;
+	}
+
+	protected Projectiler(final Credentials credentials, final Crawler crawler) {
+		user = credentials;
 		this.crawler = crawler;
 	}
 
@@ -38,7 +43,7 @@ public class Projectiler {
 	}
 
 	public static void main(String[] args) {
-		Projectiler projectiler = new Projectiler(new User("stefan.bley", Password.get()),
+		Projectiler projectiler = new Projectiler(new Credentials("stefan.bley", Password.get()),
 				new SeleniumCrawler(new Settings()));
 		List<String> projectNames = projectiler.getProjectNames();
 		projectiler.clock(projectNames.get(new Random().nextInt(projectNames.size() - 2) + 1));
