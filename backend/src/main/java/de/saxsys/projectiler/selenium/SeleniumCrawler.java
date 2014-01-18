@@ -124,7 +124,7 @@ public class SeleniumCrawler implements Crawler {
 
 	// headless driver
 	private WebDriver htmlUnitDriver() {
-		return new HtmlUnitDriver();
+		return new HtmlUnitDriver(true);
 	}
 
 	private WebDriver firefoxDriver() {
