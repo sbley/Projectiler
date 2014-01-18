@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -21,11 +22,6 @@
         <Image url="@projectiler_uhr.png" />
       </image>
     </ImageView>
-    <Label fx:id="timeLabel" text="Label" translateY="120.0">
-      <font>
-        <Font name="Arial" size="50.0" />
-      </font>
-    </Label>
     <ChoiceBox fx:id="projectChooser" minHeight="50.0" minWidth="295.0" translateY="0.0">
       <items>
         <FXCollections fx:factory="observableArrayList">
@@ -35,11 +31,27 @@
         </FXCollections>
       </items>
     </ChoiceBox>
-    <VBox id="VBox" alignment="CENTER" maxWidth="300.0" spacing="5.0" translateY="215.0">
+    <VBox id="VBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="300.0" spacing="5.0" style="-fx-background-color:whitesmoke&#10;" translateY="0.0">
       <children>
+        <Label text="Projectiler">
+          <font>
+            <Font size="30.0" />
+          </font>
+        </Label>
         <TextField fx:id="usernameField" minHeight="50.0" prefWidth="200.0" promptText="Benutzername" style="-fx-font-width:15;&#10;" />
         <PasswordField fx:id="passwordField" minHeight="50.0" prefWidth="200.0" promptText="Passwort" />
+        <Button fx:id="loginButton" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onLoginButtonPressed" text="Login">
+          <font>
+            <Font size="20.0" />
+          </font>
+        </Button>
       </children>
+      <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      </padding>
+      <StackPane.margin>
+        <Insets />
+      </StackPane.margin>
     </VBox>
   </children>
 </StackPane>

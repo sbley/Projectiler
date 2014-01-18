@@ -1,10 +1,11 @@
-package de.saxsys.projectiler;
+package de.saxsys.projectiler.worker;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javafx.concurrent.Task;
+import de.saxsys.projectiler.Projectiler;
 import de.saxsys.projectiler.domain.User;
 import de.saxsys.projectiler.selenium.SeleniumCrawler;
 import de.saxsys.projectiler.selenium.Settings;

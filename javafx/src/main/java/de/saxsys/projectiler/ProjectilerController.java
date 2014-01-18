@@ -1,8 +1,5 @@
 package de.saxsys.projectiler;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
@@ -11,8 +8,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,17 +19,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import de.saxsys.projectiler.worker.ClockTask;
+import de.saxsys.projectiler.worker.ProjectTask;
 
 public class ProjectilerController {
-
-    private static final int TRESHOLD = 60;
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private ImageView cardImage;
@@ -55,6 +49,9 @@ public class ProjectilerController {
     private TranslateTransition transition;
 
     @FXML
+    private Button loginButton;
+
+    @FXML
     void initialize() {
         assert cardImage != null : "fx:id=\"cardImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
         assert timeImage != null : "fx:id=\"timeImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
@@ -63,9 +60,45 @@ public class ProjectilerController {
                 TranslateTransitionBuilder.create().node(cardImage).rate(1.5).toY(cardImage.getLayoutY() + 120)
                         .autoReverse(true).cycleCount(2).build();
 
+        enableLogin();
+
         createListeners();
-        projectChooser.setItems(FXCollections.<String> observableArrayList());
+        projectChooser.setItems(FXCollections
+                .<String> observableArrayList("No project currently laoded - maybe an error occured."));
+        projectChooser.layout();
+    }
+
+    @FXML
+    void onLoginButtonPressed(final ActionEvent event) {
         getProjects();
+        passwordField.setDisable(true);
+        usernameField.setDisable(true);
+        loginButton.disableProperty().unbind();
+        loginButton.setDisable(true);
+    }
+
+    private void enableLogin() {
+        projectChooser.setOpacity(0.0);
+        cardImage.setOpacity(0.0);
+        timeImage.setOpacity(0.0);
+        loginButton.disableProperty().bind(
+                passwordField.textProperty().greaterThan("").not()
+                        .or(usernameField.textProperty().greaterThan("").not()));
+        cardImage.setMouseTransparent(true);
+    }
+
+    private void disableLogin() {
+        FadeTransitionBuilder.create().node(cardImage).toValue(1.0).build().play();
+        FadeTransitionBuilder.create().node(timeImage).toValue(1.0).onFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent arg0) {
+                FadeTransitionBuilder.create().node(projectChooser).toValue(1.0).build().play();
+            }
+        }).build().play();
+
+        cardImage.setMouseTransparent(false);
+        final VBox parent = (VBox) passwordField.getParent();
+        ((StackPane) parent.getParent()).getChildren().remove(parent);
     }
 
     private void createListeners() {
@@ -74,18 +107,7 @@ public class ProjectilerController {
             @Override
             public void handle(final MouseEvent arg0) {
                 if (!(transition.getStatus() == Status.RUNNING)) {
-                    transition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-                        @Override
-                        public void changed(final ObservableValue<? extends Duration> arg0, final Duration arg1,
-                                final Duration arg2) {
-                            if (arg2.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
-                                transition.pause();
-                                transition.currentTimeProperty().removeListener(this);
-                                FadeTransitionBuilder.create().node(cardImage).toValue(0.8).build().play();
-                                cardImage.getScene().getRoot().setMouseTransparent(true);
-                            }
-                        }
-                    });
+                    transition.currentTimeProperty().addListener(createCardIsBottomDurationListener());
                 }
                 callProjectile();
                 transition.play();
@@ -101,7 +123,6 @@ public class ProjectilerController {
                 projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(final WorkerStateEvent t) {
-                        FadeTransitionBuilder.create().node(cardImage).toValue(1.0).build().play();
                         transition.play();
                         cardImage.getScene().getRoot().setMouseTransparent(false);
                     }
@@ -113,14 +134,36 @@ public class ProjectilerController {
 
     private void getProjects() {
         final ProjectTask projectilerTask = new ProjectTask(usernameField.getText(), passwordField.getText());
-        System.out.println("getProjects");
         projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(final WorkerStateEvent t) {
-                System.out.println("handle projects");
-                projectChooser.setItems(FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
+                projectChooser.getItems().clear();
+                projectChooser.getItems().addAll(
+                        FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
+                disableLogin();
+                projectChooser.getSelectionModel().select(0);
             }
         });
         new Thread(projectilerTask).start();
     }
+
+    /*************
+     * LISTENERS**
+     *************/
+
+    private ChangeListener<Duration> createCardIsBottomDurationListener() {
+        return new ChangeListener<Duration>() {
+            @Override
+            public void changed(final ObservableValue<? extends Duration> arg0, final Duration arg1,
+                    final Duration newDuration) {
+                if (newDuration.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
+                    transition.pause();
+                    transition.currentTimeProperty().removeListener(this);
+                    FadeTransitionBuilder.create().node(cardImage).toValue(0.8).build().play();
+                    cardImage.getScene().getRoot().setMouseTransparent(true);
+                }
+            }
+        };
+    }
+
 }

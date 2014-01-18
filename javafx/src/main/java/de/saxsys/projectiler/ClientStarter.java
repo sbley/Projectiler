@@ -13,16 +13,16 @@ import javafx.stage.StageStyle;
 public class ClientStarter extends Application {
 
     @Override
-    public void start(final Stage arg0) throws Exception {
+    public void start(final Stage stage) throws Exception {
         final URL rootUrl = ClientStarter.class.getResource("/Projectiler.fxml");
         final StackPane vBox = FXMLLoader.load(rootUrl);
 
         final Scene scene = new Scene(vBox);
-        arg0.setScene(scene);
-        arg0.initStyle(StageStyle.TRANSPARENT);
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
 
-        arg0.show();
+        stage.show();
     }
 
     public static void main(final String[] args) {
