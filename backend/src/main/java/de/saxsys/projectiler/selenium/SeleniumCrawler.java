@@ -2,7 +2,9 @@ package de.saxsys.projectiler.selenium;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -29,16 +31,27 @@ public class SeleniumCrawler implements Crawler {
 	public void clock(final User user, final String projectName) {
 
 		initDriver();
-
 		login(user);
-
 		openTimeTracker();
 
 		clockTime(projectName);
 
 		logout();
-
 		releaseDriver();
+	}
+
+	@Override
+	public List<String> getProjectNames(final User user) {
+
+		initDriver();
+		login(user);
+		openTimeTracker();
+
+		List<String> projectNames = readProjectNames();
+
+		logout();
+		releaseDriver();
+		return projectNames;
 	}
 
 	private void initDriver() {
@@ -50,7 +63,7 @@ public class SeleniumCrawler implements Crawler {
 		}
 	}
 
-	protected void login(User user) {
+	private void login(User user) {
 		driver.get(settings.getProjectileUrl());
 		driver.findElement(By.name("login")).sendKeys(user.getUsername());
 		WebElement txtPassword = driver.findElement(By.name("password"));
@@ -58,7 +71,7 @@ public class SeleniumCrawler implements Crawler {
 		txtPassword.submit();
 	}
 
-	protected void openTimeTracker() {
+	private void openTimeTracker() {
 		driver.findElement(By.cssSelector("input[name$='BUTTON.intro']")).click();
 		new Select(driver.findElement(By.cssSelector("select[id$='Field_TimeTracker']")))
 				.selectByVisibleText("heute");
@@ -70,7 +83,7 @@ public class SeleniumCrawler implements Crawler {
 	 *            can be substring of the project name but must be identify only
 	 *            one project
 	 */
-	protected void clockTime(String projectName) {
+	private void clockTime(String projectName) {
 		driver.findElement(By.cssSelector("input.rw[id$='NewFrom_0_0']")).sendKeys("08:30");
 		driver.findElement(By.cssSelector("input.rw[id$='NewTo_0_0']")).sendKeys(currentTime());
 		WebElement selProject = driver.findElement(By.cssSelector("select[id$='NewWhat_0_0']"));
@@ -82,6 +95,19 @@ public class SeleniumCrawler implements Crawler {
 			btnConfirmOverwrite.click();
 		} catch (NoSuchElementException e) {
 		}
+	}
+
+	private List<String> readProjectNames() {
+		List<String> projectNames = new ArrayList<>();
+		List<WebElement> options = driver.findElements(By
+				.cssSelector("select[id$='NewWhat_0_0'] option"));
+		for (WebElement option : options) {
+			String text = option.getText();
+			if (!text.trim().isEmpty()) {
+				projectNames.add(text);
+			}
+		}
+		return projectNames;
 	}
 
 	private void logout() {
@@ -104,5 +130,4 @@ public class SeleniumCrawler implements Crawler {
 	private WebDriver firefoxDriver() {
 		return new FirefoxDriver(new FirefoxBinary(new File(settings.getFirefoxBinaryPath())), null);
 	}
-
 }
