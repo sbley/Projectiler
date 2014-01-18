@@ -2,8 +2,6 @@ package de.saxsys.projectiler.worker;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
-import de.saxsys.projectiler.crawler.Settings;
-import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
 
 public class ClockTask extends Task<Boolean> {
 
@@ -16,7 +14,7 @@ public class ClockTask extends Task<Boolean> {
 	@Override
 	protected Boolean call() throws Exception {
 		try {
-			final Projectiler projectiler = new Projectiler(new SeleniumCrawler(new Settings()));
+			final Projectiler projectiler = Projectiler.createDefaultProjectiler();
 			projectiler.checkout(projectKey);
 		} catch (final Exception e) {
 			e.printStackTrace();

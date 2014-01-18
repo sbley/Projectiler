@@ -6,8 +6,6 @@ import java.util.List;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
-import de.saxsys.projectiler.crawler.Settings;
-import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
 
 public class ProjectTask extends Task<List<String>> {
 
@@ -19,7 +17,7 @@ public class ProjectTask extends Task<List<String>> {
 		Projectiler projectiler = null;
 		List<String> projectNames = Collections.emptyList();
 		try {
-			projectiler = new Projectiler(new SeleniumCrawler(new Settings()));
+			projectiler = Projectiler.createDefaultProjectiler();
 			projectNames = projectiler.getProjectNames();
 		} catch (final Exception e) {
 			e.printStackTrace();
