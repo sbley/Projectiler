@@ -23,6 +23,7 @@ public class UserDataStore implements Serializable {
 
     private Date startDate;
     private String userName;
+    private transient String password;
 
     private UserDataStore() {
     }
@@ -68,5 +69,13 @@ public class UserDataStore implements Serializable {
 
     public Date getStartDate() {
         return startDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

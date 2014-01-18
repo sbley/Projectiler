@@ -88,25 +88,6 @@ public class ProjectilerController {
         }
     }
 
-    @FXML
-    void onLoginButtonPressed(final ActionEvent event) {
-        getProjects();
-        passwordField.setDisable(true);
-        usernameField.setDisable(true);
-        loginButton.disableProperty().unbind();
-        loginButton.setDisable(true);
-    }
-
-    @FXML
-    void onCloseAction(final ActionEvent event) {
-        Platform.exit();
-    }
-
-    @FXML
-    void onCloseButtonClicked(final Event event) {
-        Platform.exit();
-    }
-
     private void enableLogin() {
         projectChooser.setOpacity(0.0);
         cardImage.setOpacity(0.0);
@@ -127,6 +108,25 @@ public class ProjectilerController {
         cardImage.setMouseTransparent(false);
         final VBox parent = (VBox) passwordField.getParent();
         ((StackPane) parent.getParent()).getChildren().remove(parent);
+    }
+
+    @FXML
+    void onLoginButtonPressed(final ActionEvent event) {
+        getProjects();
+        passwordField.setDisable(true);
+        usernameField.setDisable(true);
+        loginButton.disableProperty().unbind();
+        loginButton.setDisable(true);
+    }
+
+    @FXML
+    void onCloseAction(final ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    void onCloseButtonClicked(final Event event) {
+        Platform.exit();
     }
 
     private void createListeners() {
@@ -172,6 +172,7 @@ public class ProjectilerController {
                     disableLogin();
                     final UserDataStore userData = UserDataStore.loadUserData();
                     userData.setUserName(usernameField.getText());
+                    userData.setPassword(passwordField.getText());
                     userData.save();
                 } else {
                     enableLogin();
