@@ -9,9 +9,11 @@ import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +40,9 @@ public class ProjectilerController {
     private Label timeLabel;
 
     @FXML
+    private ChoiceBox<String> projectChooser;
+
+    @FXML
     private StackPane root;
 
     private TranslateTransition transition;
@@ -50,8 +55,9 @@ public class ProjectilerController {
         transition =
                 TranslateTransitionBuilder.create().node(cardImage).rate(1.5).toY(cardImage.getLayoutY() + 120)
                         .autoReverse(true).cycleCount(2).build();
-        createListeners();
 
+        createListeners();
+        getProjects();
     }
 
     private void createListeners() {
@@ -79,7 +85,7 @@ public class ProjectilerController {
             }
 
             private void callProjectile() {
-                final ProjectilerTask projectilerTask = new ProjectilerTask();
+                final ClockTask projectilerTask = new ClockTask();
                 projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(final WorkerStateEvent t) {
@@ -91,5 +97,17 @@ public class ProjectilerController {
                 new Thread(projectilerTask).start();
             }
         });
+
+    }
+
+    private void getProjects() {
+        final ProjectTask projectilerTask = new ProjectTask();
+        projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(final WorkerStateEvent t) {
+                projectChooser.setItems(FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
+            }
+        });
+        new Thread(projectilerTask).start();
     }
 }

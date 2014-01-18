@@ -1,27 +1,29 @@
 package de.saxsys.projectiler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.domain.Password;
 import de.saxsys.projectiler.domain.User;
 import de.saxsys.projectiler.selenium.SeleniumCrawler;
 import de.saxsys.projectiler.selenium.Settings;
 
-public class ProjectilerTask extends Task<Boolean> {
+public class ProjectTask extends Task<List<String>> {
 
     @Override
-    protected Boolean call() throws Exception {
+    protected List<String> call() throws Exception {
+        Projectiler projectiler = null;
         try {
-            final Projectiler projectiler =
+            projectiler =
                     new Projectiler(new User("alexander.casall", Password.get()), new SeleniumCrawler(new Settings()));
-            System.out.println("Deine Projekte: " + projectiler.getProjectNames());
-            // projectiler.clock(projectName)
         } catch (final Exception e) {
             e.printStackTrace();
             this.succeeded();
-            return false;
+            return new ArrayList<>();
         }
         this.succeeded();
-        return true;
+        return projectiler.getProjectNames();
     }
 
 }

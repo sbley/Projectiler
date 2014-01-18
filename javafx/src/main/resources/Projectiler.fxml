@@ -11,15 +11,6 @@
 <StackPane fx:id="root" minHeight="594.0" minWidth="350.0" prefHeight="594.0" prefWidth="350.0" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.projectiler.ProjectilerController">
   <!-- TODO Add Nodes -->
   <children>
-    <ChoiceBox minHeight="50.0" minWidth="295.0" translateY="-200.0">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ChoiceBox>
     <ImageView fx:id="cardImage" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
       <image>
         <Image url="@projectiler_karte.png" />
@@ -35,5 +26,14 @@
         <Font name="Arial" size="50.0" />
       </font>
     </Label>
+    <ChoiceBox fx:id="projectChooser" minHeight="50.0" minWidth="295.0" translateY="0.0">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ChoiceBox>
   </children>
 </StackPane>
