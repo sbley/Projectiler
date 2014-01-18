@@ -28,7 +28,7 @@ public class SeleniumCrawler implements Crawler {
 	private static final Logger LOGGER = Logger.getLogger(SeleniumCrawler.class.getName());
 	private WebDriver driver;
 	private Settings settings;
-	private SeleniumSettings seleniumSettings;
+	private SeleniumSettings seleniumSettings = new SeleniumSettings();
 
 	public SeleniumCrawler(Settings settings) {
 		this.settings = settings;
