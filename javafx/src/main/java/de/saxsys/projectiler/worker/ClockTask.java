@@ -2,8 +2,8 @@ package de.saxsys.projectiler.worker;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
+import de.saxsys.projectiler.crawler.Settings;
 import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
-import de.saxsys.projectiler.crawler.selenium.Settings;
 import de.saxsys.projectiler.domain.User;
 
 public class ClockTask extends Task<Boolean> {

@@ -1,10 +1,6 @@
 package de.saxsys.projectiler.crawler.selenium;
 
-public class Settings {
-
-	public String getProjectileUrl() {
-		return System.getProperty("projectile.url", "https://pt.saxsys.de/projectile/start");
-	}
+public class SeleniumSettings {
 
 	public String getDriver() {
 		return System.getProperty("driver", "htmlUnit");
@@ -15,7 +11,4 @@ public class Settings {
 				"c:\\Program Files (x86)\\Internet\\Mozilla Firefox\\firefox.exe");
 	}
 
-	public String getTimeFormat() {
-		return "HH:mm";
-	}
 }

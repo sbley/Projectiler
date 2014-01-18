@@ -7,8 +7,8 @@ import java.util.Random;
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.Credentials;
 import de.saxsys.projectiler.crawler.Password;
+import de.saxsys.projectiler.crawler.Settings;
 import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
-import de.saxsys.projectiler.crawler.selenium.Settings;
 import de.saxsys.projectiler.domain.User;
 
 /**

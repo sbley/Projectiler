@@ -21,12 +21,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.Credentials;
 import de.saxsys.projectiler.crawler.InvalidCredentialsException;
+import de.saxsys.projectiler.crawler.Settings;
 
 public class SeleniumCrawler implements Crawler {
 
 	private static final Logger LOGGER = Logger.getLogger(SeleniumCrawler.class.getName());
 	private WebDriver driver;
 	private Settings settings;
+	private SeleniumSettings seleniumSettings;
 
 	public SeleniumCrawler(Settings settings) {
 		this.settings = settings;
@@ -61,7 +63,7 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	private void initDriver() {
-		if ("firefox".equals(settings.getDriver())) {
+		if ("firefox".equals(seleniumSettings.getDriver())) {
 			this.driver = firefoxDriver();
 		} else {
 			// headless driver
@@ -149,6 +151,7 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	private WebDriver firefoxDriver() {
-		return new FirefoxDriver(new FirefoxBinary(new File(settings.getFirefoxBinaryPath())), null);
+		return new FirefoxDriver(new FirefoxBinary(
+				new File(seleniumSettings.getFirefoxBinaryPath())), null);
 	}
 }
