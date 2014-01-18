@@ -58,6 +58,7 @@ public class ProjectilerController {
 
         createListeners();
         getProjects();
+        projectChooser.setItems(FXCollections.<String> observableArrayList());
     }
 
     private void createListeners() {
@@ -66,7 +67,6 @@ public class ProjectilerController {
             @Override
             public void handle(final MouseEvent arg0) {
                 if (!(transition.getStatus() == Status.RUNNING)) {
-
                     transition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
                         @Override
                         public void changed(final ObservableValue<? extends Duration> arg0, final Duration arg1,
@@ -85,7 +85,11 @@ public class ProjectilerController {
             }
 
             private void callProjectile() {
-                final ClockTask projectilerTask = new ClockTask();
+                final String selectedItem = projectChooser.getSelectionModel().getSelectedItem();
+                if (selectedItem.isEmpty()) {
+                    return;
+                }
+                final ClockTask projectilerTask = new ClockTask("stefan.bley", "password", selectedItem);
                 projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(final WorkerStateEvent t) {

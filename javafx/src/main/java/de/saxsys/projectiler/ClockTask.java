@@ -8,13 +8,22 @@ import de.saxsys.projectiler.selenium.Settings;
 
 public class ClockTask extends Task<Boolean> {
 
+    private final String projectKey;
+    private final String password;
+    private final String userName;
+
+    public ClockTask(final String userName, final String password, final String projectKey) {
+        this.userName = userName;
+        this.password = password;
+        this.projectKey = projectKey;
+    }
+
     @Override
     protected Boolean call() throws Exception {
         try {
             final Projectiler projectiler =
-                    new Projectiler(new User("alexander.casall", Password.get()), new SeleniumCrawler(new Settings()));
-            System.out.println("Deine Projekte: " + projectiler.getProjectNames());
-            // projectiler.clock(projectName)
+                    new Projectiler(new User(userName, Password.get()), new SeleniumCrawler(new Settings()));
+            projectiler.clock(projectKey);
         } catch (final Exception e) {
             e.printStackTrace();
             this.succeeded();
@@ -23,5 +32,4 @@ public class ClockTask extends Task<Boolean> {
         this.succeeded();
         return true;
     }
-
 }
