@@ -4,11 +4,13 @@ import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -77,10 +79,22 @@ public class ProjectilerController {
         loginButton.setDisable(true);
     }
 
+    @FXML
+    void onCloseAction(final ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    void onCloseButtonClicked(final Event event) {
+        Platform.exit();
+    }
+
     private void enableLogin() {
         projectChooser.setOpacity(0.0);
         cardImage.setOpacity(0.0);
         timeImage.setOpacity(0.0);
+        passwordField.setDisable(false);
+        usernameField.setDisable(false);
         loginButton.disableProperty().bind(
                 passwordField.textProperty().greaterThan("").not()
                         .or(usernameField.textProperty().greaterThan("").not()));
@@ -89,12 +103,8 @@ public class ProjectilerController {
 
     private void disableLogin() {
         FadeTransitionBuilder.create().node(cardImage).toValue(1.0).build().play();
-        FadeTransitionBuilder.create().node(timeImage).toValue(1.0).onFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent arg0) {
-                FadeTransitionBuilder.create().node(projectChooser).toValue(1.0).build().play();
-            }
-        }).build().play();
+        FadeTransitionBuilder.create().node(projectChooser).toValue(1.0).build().play();
+        FadeTransitionBuilder.create().node(timeImage).toValue(1.0).build().play();
 
         cardImage.setMouseTransparent(false);
         final VBox parent = (VBox) passwordField.getParent();
@@ -119,7 +129,7 @@ public class ProjectilerController {
                     return;
                 }
                 final ClockTask projectilerTask =
-                        new ClockTask(usernameField.getText(), usernameField.getText(), selectedItem);
+                        new ClockTask(usernameField.getText(), passwordField.getText(), selectedItem);
                 projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(final WorkerStateEvent t) {
@@ -140,7 +150,11 @@ public class ProjectilerController {
                 projectChooser.getItems().clear();
                 projectChooser.getItems().addAll(
                         FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
-                disableLogin();
+                if (projectilerTask.valueProperty().get().size() > 0) {
+                    disableLogin();
+                } else {
+                    enableLogin();
+                }
                 projectChooser.getSelectionModel().select(0);
             }
         });
@@ -159,7 +173,6 @@ public class ProjectilerController {
                 if (newDuration.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
                     transition.pause();
                     transition.currentTimeProperty().removeListener(this);
-                    FadeTransitionBuilder.create().node(cardImage).toValue(0.8).build().play();
                     cardImage.getScene().getRoot().setMouseTransparent(true);
                 }
             }

@@ -22,7 +22,7 @@
         <Image url="@projectiler_uhr.png" />
       </image>
     </ImageView>
-    <ChoiceBox fx:id="projectChooser" minHeight="50.0" minWidth="295.0" translateY="0.0">
+    <ChoiceBox fx:id="projectChooser" maxWidth="295.0" minHeight="50.0" minWidth="295.0" prefWidth="295.0" translateY="0.0">
       <items>
         <FXCollections fx:factory="observableArrayList">
           <String fx:value="Item 1" />
@@ -31,6 +31,11 @@
         </FXCollections>
       </items>
     </ChoiceBox>
+    <Label text="Label" translateY="150.0">
+      <font>
+        <Font size="20.0" />
+      </font>
+    </Label>
     <VBox id="VBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="300.0" spacing="5.0" style="-fx-background-color:whitesmoke&#10;" translateY="0.0">
       <children>
         <Label text="Projectiler">
@@ -40,11 +45,12 @@
         </Label>
         <TextField fx:id="usernameField" minHeight="50.0" prefWidth="200.0" promptText="Benutzername" style="-fx-font-width:15;&#10;" />
         <PasswordField fx:id="passwordField" minHeight="50.0" prefWidth="200.0" promptText="Passwort" />
-        <Button fx:id="loginButton" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onLoginButtonPressed" text="Login">
-          <font>
-            <Font size="20.0" />
-          </font>
-        </Button>
+        <HBox id="HBox" alignment="CENTER" spacing="30.0">
+          <children>
+            <Button fx:id="loginButton" font="$x1" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onLoginButtonPressed" text="Ok" />
+            <Button id="loginButton" font="$x1" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCloseAction" text="Cancel" />
+          </children>
+        </HBox>
       </children>
       <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -53,5 +59,10 @@
         <Insets />
       </StackPane.margin>
     </VBox>
+    <ImageView fitHeight="0.0" fitWidth="0.0" onMouseClicked="#onCloseButtonClicked" pickOnBounds="true" preserveRatio="true" translateX="140.0" translateY="265.0">
+      <image>
+        <Image url="@projectiler_close.png" />
+      </image>
+    </ImageView>
   </children>
 </StackPane>
