@@ -14,7 +14,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import de.saxsys.projectiler.Crawler;
 import de.saxsys.projectiler.domain.User;
@@ -76,7 +78,9 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	private void openTimeTracker() {
-		driver.findElement(By.cssSelector("input[name$='BUTTON.intro']")).click();
+		WebElement btnIntro = (new WebDriverWait(driver, 2)).until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("input[name$='BUTTON.intro']")));
+		btnIntro.click();
 		new Select(driver.findElement(By.cssSelector("select[id$='Field_TimeTracker']")))
 				.selectByVisibleText("heute");
 		driver.findElement(By.cssSelector("input[title=TimeTracker]")).click();
