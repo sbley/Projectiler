@@ -62,12 +62,30 @@ public class ProjectilerController {
                 TranslateTransitionBuilder.create().node(cardImage).rate(1.5).toY(cardImage.getLayoutY() + 120)
                         .autoReverse(true).cycleCount(2).build();
 
-        enableLogin();
-
+        initTextFields();
         createListeners();
+        enableLogin();
+        initProjectChooser();
+
+    }
+
+    /**
+     * 
+     */
+    private void initProjectChooser() {
         projectChooser.setItems(FXCollections
                 .<String> observableArrayList("No project currently laoded - maybe an error occured."));
         projectChooser.layout();
+    }
+
+    /**
+     * 
+     */
+    private void initTextFields() {
+        usernameField.setText(UserDataStore.loadUserData().getUserName());
+        if (usernameField.textProperty().greaterThan("").get()) {
+            passwordField.requestFocus();
+        }
     }
 
     @FXML
@@ -152,6 +170,9 @@ public class ProjectilerController {
                         FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
                 if (projectilerTask.valueProperty().get().size() > 0) {
                     disableLogin();
+                    final UserDataStore userData = UserDataStore.loadUserData();
+                    userData.setUserName(usernameField.getText());
+                    userData.save();
                 } else {
                     enableLogin();
                 }
