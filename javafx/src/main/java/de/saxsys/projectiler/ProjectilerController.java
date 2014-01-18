@@ -19,99 +19,104 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import de.saxsys.projectiler.domain.Password;
 
 public class ProjectilerController {
 
-    private static final int TRESHOLD = 60;
+	private static final int TRESHOLD = 60;
 
-    @FXML
-    private ResourceBundle resources;
+	@FXML
+	private ResourceBundle resources;
 
-    @FXML
-    private URL location;
+	@FXML
+	private URL location;
 
-    @FXML
-    private ImageView cardImage;
+	@FXML
+	private ImageView cardImage;
 
-    @FXML
-    private ImageView timeImage;
+	@FXML
+	private ImageView timeImage;
 
-    @FXML
-    private Label timeLabel;
+	@FXML
+	private Label timeLabel;
 
-    @FXML
-    private ChoiceBox<String> projectChooser;
+	@FXML
+	private ChoiceBox<String> projectChooser;
 
-    @FXML
-    private StackPane root;
+	@FXML
+	private StackPane root;
 
-    private TranslateTransition transition;
+	private TranslateTransition transition;
 
-    @FXML
-    void initialize() {
-        assert cardImage != null : "fx:id=\"cardImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
-        assert timeImage != null : "fx:id=\"timeImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
-        assert timeLabel != null : "fx:id=\"timeLabel\" was not injected: check your FXML file 'Projectiler.fxml'.";
-        transition =
-                TranslateTransitionBuilder.create().node(cardImage).rate(1.5).toY(cardImage.getLayoutY() + 120)
-                        .autoReverse(true).cycleCount(2).build();
+	@FXML
+	void initialize() {
+		assert cardImage != null : "fx:id=\"cardImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
+		assert timeImage != null : "fx:id=\"timeImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
+		assert timeLabel != null : "fx:id=\"timeLabel\" was not injected: check your FXML file 'Projectiler.fxml'.";
+		transition = TranslateTransitionBuilder.create().node(cardImage).rate(1.5)
+				.toY(cardImage.getLayoutY() + 120).autoReverse(true).cycleCount(2).build();
 
-        createListeners();
-        getProjects();
-        projectChooser.setItems(FXCollections.<String> observableArrayList());
-    }
+		createListeners();
+		projectChooser.setItems(FXCollections.<String> observableArrayList());
+		getProjects();
+	}
 
-    private void createListeners() {
-        cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	private void createListeners() {
+		cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-            @Override
-            public void handle(final MouseEvent arg0) {
-                if (!(transition.getStatus() == Status.RUNNING)) {
-                    transition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-                        @Override
-                        public void changed(final ObservableValue<? extends Duration> arg0, final Duration arg1,
-                                final Duration arg2) {
-                            if (arg2.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
-                                transition.pause();
-                                transition.currentTimeProperty().removeListener(this);
-                                FadeTransitionBuilder.create().node(cardImage).toValue(0.8).build().play();
-                                cardImage.getScene().getRoot().setMouseTransparent(true);
-                            }
-                        }
-                    });
-                }
-                callProjectile();
-                transition.play();
-            }
+			@Override
+			public void handle(final MouseEvent arg0) {
+				if (!(transition.getStatus() == Status.RUNNING)) {
+					transition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+						@Override
+						public void changed(final ObservableValue<? extends Duration> arg0,
+								final Duration arg1, final Duration arg2) {
+							if (arg2.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
+								transition.pause();
+								transition.currentTimeProperty().removeListener(this);
+								FadeTransitionBuilder.create().node(cardImage).toValue(0.8).build()
+										.play();
+								cardImage.getScene().getRoot().setMouseTransparent(true);
+							}
+						}
+					});
+				}
+				callProjectile();
+				transition.play();
+			}
 
-            private void callProjectile() {
-                final String selectedItem = projectChooser.getSelectionModel().getSelectedItem();
-                if (selectedItem.isEmpty()) {
-                    return;
-                }
-                final ClockTask projectilerTask = new ClockTask("stefan.bley", "password", selectedItem);
-                projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(final WorkerStateEvent t) {
-                        FadeTransitionBuilder.create().node(cardImage).toValue(1.0).build().play();
-                        transition.play();
-                        cardImage.getScene().getRoot().setMouseTransparent(false);
-                    }
-                });
-                new Thread(projectilerTask).start();
-            }
-        });
+			private void callProjectile() {
+				final String selectedItem = projectChooser.getSelectionModel().getSelectedItem();
+				if (selectedItem.isEmpty()) {
+					return;
+				}
+				final ClockTask projectilerTask = new ClockTask("stefan.bley", Password.get(),
+						selectedItem);
+				projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+					@Override
+					public void handle(final WorkerStateEvent t) {
+						FadeTransitionBuilder.create().node(cardImage).toValue(1.0).build().play();
+						transition.play();
+						cardImage.getScene().getRoot().setMouseTransparent(false);
+					}
+				});
+				new Thread(projectilerTask).start();
+			}
+		});
 
-    }
+	}
 
-    private void getProjects() {
-        final ProjectTask projectilerTask = new ProjectTask();
-        projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(final WorkerStateEvent t) {
-                projectChooser.setItems(FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
-            }
-        });
-        new Thread(projectilerTask).start();
-    }
+	private void getProjects() {
+		final ProjectTask projectilerTask = new ProjectTask();
+		System.out.println("getProjects");
+		projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+			@Override
+			public void handle(final WorkerStateEvent t) {
+				System.out.println("handle projects");
+				projectChooser.setItems(FXCollections.observableArrayList(projectilerTask
+						.valueProperty().get()));
+			}
+		});
+		new Thread(projectilerTask).start();
+	}
 }

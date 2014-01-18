@@ -2,7 +2,7 @@ package de.saxsys.projectiler.domain;
 
 public class Password {
 
-	public static CharSequence get() {
+	public static String get() {
 		return "myPassword";
 	}
 }
