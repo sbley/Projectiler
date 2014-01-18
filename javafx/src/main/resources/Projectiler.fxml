@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.*?>
 
-<StackPane minHeight="568.0" prefHeight="568.0" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.projectiler.ProjectilerController">
+<StackPane minHeight="594.0" minWidth="350.0" prefHeight="594.0" prefWidth="350.0" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.projectiler.ProjectilerController">
   <!-- TODO Add Nodes -->
   <children>
     <ImageView fx:id="cardImage" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
@@ -15,7 +15,7 @@
         <Image url="@projectiler_karte.png" />
       </image>
     </ImageView>
-    <ImageView fx:id="timeImage" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" translateY="280.0" y="0.0" StackPane.alignment="TOP_LEFT">
+    <ImageView fx:id="timeImage" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" translateY="280.0" y="0.0" StackPane.alignment="TOP_CENTER">
       <image>
         <Image url="@projectiler_uhr.png" />
       </image>

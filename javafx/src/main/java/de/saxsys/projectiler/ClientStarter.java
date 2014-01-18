@@ -17,7 +17,7 @@ public class ClientStarter extends Application {
         final URL rootUrl = ClientStarter.class.getResource("/Projectiler.fxml");
         final StackPane vBox = FXMLLoader.load(rootUrl);
 
-        final Scene scene = new Scene(vBox, 320, 568);
+        final Scene scene = new Scene(vBox);
         arg0.setScene(scene);
         arg0.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
