@@ -17,7 +17,7 @@ public class ClockTask extends Task<Boolean> {
 	protected Boolean call() throws Exception {
 		try {
 			final Projectiler projectiler = new Projectiler(new SeleniumCrawler(new Settings()));
-			projectiler.clock(projectKey);
+			projectiler.checkout(projectKey);
 		} catch (final Exception e) {
 			e.printStackTrace();
 			this.succeeded();

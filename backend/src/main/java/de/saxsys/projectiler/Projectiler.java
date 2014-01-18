@@ -17,35 +17,42 @@ import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
  */
 public class Projectiler {
 
-    private final Credentials user;
-    private final Crawler crawler;
+	private final Credentials user;
+	private final Crawler crawler;
 
-    public Projectiler(final Crawler crawler) {
-        final UserDataStore store = UserDataStore.getInstance();
-        this.user = new Credentials(store.getUserName(), store.getPassword());
-        this.crawler = crawler;
-    }
+	public Projectiler(final Crawler crawler) {
+		final UserDataStore store = UserDataStore.getInstance();
+		this.user = new Credentials(store.getUserName(), store.getPassword());
+		this.crawler = crawler;
+	}
 
-    protected Projectiler(final Credentials credentials, final Crawler crawler) {
-        user = credentials;
-        this.crawler = crawler;
-    }
+	protected Projectiler(final Credentials credentials, final Crawler crawler) {
+		user = credentials;
+		this.crawler = crawler;
+	}
 
-    public void clock(final String projectName) {
-        // TODO retrieve start time
-        final Date start = new Date(2017, 0, 1, 8, 30);
-        final Date end = new Date();
-        crawler.clock(user, projectName, start, end);
-    }
+	public void checkin() {
+		// TODO implement [SB]
+	}
 
-    public List<String> getProjectNames() {
-        return crawler.getProjectNames(user);
-    }
+	public int checkout(final String projectName) {
+		// TODO retrieve start time
+		final Date start = new Date(2017, 0, 1, 8, 30);
+		final Date end = new Date();
+		crawler.clock(user, projectName, start, end);
+		// TODO calculate minutes [SB]
+		int minutes = 90;
+		return minutes;
+	}
 
-    public static void main(final String[] args) {
-        final Projectiler projectiler =
-                new Projectiler(new Credentials("stefan.bley", Password.get()), new SeleniumCrawler(new Settings()));
-        final List<String> projectNames = projectiler.getProjectNames();
-        projectiler.clock(projectNames.get(new Random().nextInt(projectNames.size() - 2) + 1));
-    }
+	public List<String> getProjectNames() {
+		return crawler.getProjectNames(user);
+	}
+
+	public static void main(final String[] args) {
+		final Projectiler projectiler = new Projectiler(new Credentials("stefan.bley",
+				Password.get()), new SeleniumCrawler(new Settings()));
+		final List<String> projectNames = projectiler.getProjectNames();
+		projectiler.checkout(projectNames.get(new Random().nextInt(projectNames.size() - 2) + 1));
+	}
 }
