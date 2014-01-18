@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -20,6 +21,7 @@ import de.saxsys.projectiler.domain.User;
 
 public class SeleniumCrawler implements Crawler {
 
+	private static final Logger LOGGER = Logger.getLogger(SeleniumCrawler.class.getName());
 	private WebDriver driver;
 	private Settings settings;
 
@@ -34,7 +36,8 @@ public class SeleniumCrawler implements Crawler {
 		login(user);
 		openTimeTracker();
 
-		clockTime(projectName);
+		// TODO get time
+		clockTime(new Date(2017, 0, 1, 8, 30), new Date(), projectName);
 
 		logout();
 		releaseDriver();
@@ -69,6 +72,7 @@ public class SeleniumCrawler implements Crawler {
 		WebElement txtPassword = driver.findElement(By.name("password"));
 		txtPassword.sendKeys(user.getPassword());
 		txtPassword.submit();
+		LOGGER.info("User " + user.getUsername() + " logged in.");
 	}
 
 	private void openTimeTracker() {
@@ -76,6 +80,7 @@ public class SeleniumCrawler implements Crawler {
 		new Select(driver.findElement(By.cssSelector("select[id$='Field_TimeTracker']")))
 				.selectByVisibleText("heute");
 		driver.findElement(By.cssSelector("input[title=TimeTracker]")).click();
+		LOGGER.info("Timetracker opened.");
 	}
 
 	/**
@@ -83,9 +88,10 @@ public class SeleniumCrawler implements Crawler {
 	 *            can be substring of the project name but must be identify only
 	 *            one project
 	 */
-	private void clockTime(String projectName) {
-		driver.findElement(By.cssSelector("input.rw[id$='NewFrom_0_0']")).sendKeys("08:30");
-		driver.findElement(By.cssSelector("input.rw[id$='NewTo_0_0']")).sendKeys(currentTime());
+	private void clockTime(final Date start, final Date end, final String projectName) {
+		driver.findElement(By.cssSelector("input.rw[id$='NewFrom_0_0']")).sendKeys(
+				formatTime(start));
+		driver.findElement(By.cssSelector("input.rw[id$='NewTo_0_0']")).sendKeys(formatTime(end));
 		WebElement selProject = driver.findElement(By.cssSelector("select[id$='NewWhat_0_0']"));
 		selProject.findElement(By.xpath(".//option[contains(., '" + projectName + "')]")).click();
 		driver.findElement(By.cssSelector("input[title='Änderungen speichern']")).click();
@@ -93,7 +99,10 @@ public class SeleniumCrawler implements Crawler {
 			WebElement btnConfirmOverwrite = driver.findElement(By
 					.cssSelector("input[name$='ForceOverwriteYes']"));
 			btnConfirmOverwrite.click();
+			LOGGER.info("Overwrite confirmed.");
 		} catch (NoSuchElementException e) {
+		} finally {
+			LOGGER.info("Time clocked for project '" + projectName + "'.");
 		}
 	}
 
@@ -107,24 +116,26 @@ public class SeleniumCrawler implements Crawler {
 				projectNames.add(text);
 			}
 		}
+		LOGGER.info("Project names read.");
 		return projectNames;
 	}
 
 	private void logout() {
 		driver.findElement(By.cssSelector("input[title=Abmelden]")).click();
+		LOGGER.info("User logged out.");
 	}
 
 	private void releaseDriver() {
 		driver.quit();
 	}
 
-	private CharSequence currentTime() {
-		return new SimpleDateFormat(settings.getTimeFormat()).format(new Date());
+	private CharSequence formatTime(final Date time) {
+		return new SimpleDateFormat(settings.getTimeFormat()).format(time);
 	}
 
 	// headless driver
 	private WebDriver htmlUnitDriver() {
-		return new HtmlUnitDriver(true);
+		return new HtmlUnitDriver(false);
 	}
 
 	private WebDriver firefoxDriver() {
