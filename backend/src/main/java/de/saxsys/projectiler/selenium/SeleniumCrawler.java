@@ -19,6 +19,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import de.saxsys.projectiler.Crawler;
+import de.saxsys.projectiler.InvalidCredentialsException;
 import de.saxsys.projectiler.domain.User;
 
 public class SeleniumCrawler implements Crawler {
@@ -74,7 +75,12 @@ public class SeleniumCrawler implements Crawler {
 		WebElement txtPassword = driver.findElement(By.name("password"));
 		txtPassword.sendKeys(user.getPassword());
 		txtPassword.submit();
-		LOGGER.info("User " + user.getUsername() + " logged in.");
+		try {
+			driver.findElement(By.name("password"));
+			throw new InvalidCredentialsException();
+		} catch (NoSuchElementException e) {
+			LOGGER.info("User " + user.getUsername() + " logged in.");
+		}
 	}
 
 	private void openTimeTracker() {
