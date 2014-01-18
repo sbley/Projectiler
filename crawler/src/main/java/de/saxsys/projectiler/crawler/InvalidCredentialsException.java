@@ -1,4 +1,4 @@
-package de.saxsys.projectiler;
+package de.saxsys.projectiler.crawler;
 
 public class InvalidCredentialsException extends RuntimeException {
 

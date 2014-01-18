@@ -7,9 +7,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>backend</artifactId>
-	<properties>
-		<selenium.version>2.39.0</selenium.version>
-	</properties>
 	<build>
 		<plugins>
 			<!-- only to run the backend from console -->
@@ -43,19 +40,9 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-firefox-driver</artifactId>
-			<version>${selenium.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-htmlunit-driver</artifactId>
-			<version>${selenium.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-support</artifactId>
-			<version>${selenium.version}</version>
+			<groupId>${parent.groupId}</groupId>
+			<artifactId>crawler</artifactId>
+			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>
 </project>

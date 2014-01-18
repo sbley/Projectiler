@@ -1,11 +1,11 @@
-package de.saxsys.projectiler.domain;
+package de.saxsys.projectiler.crawler;
 
-public class User {
+public class Credentials {
 
 	private String username;
 	private String password;
 
-	public User(String username, String password) {
+	public Credentials(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}

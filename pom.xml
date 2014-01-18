@@ -33,6 +33,7 @@
 	</build>
 	<modules>
 		<module>backend</module>
+		<module>crawler</module>
 		<module>javafx</module>
 	</modules>
 </project>

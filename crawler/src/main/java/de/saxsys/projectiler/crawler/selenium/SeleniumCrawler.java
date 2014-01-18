@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.selenium;
+package de.saxsys.projectiler.crawler.selenium;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -18,9 +18,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import de.saxsys.projectiler.Crawler;
-import de.saxsys.projectiler.InvalidCredentialsException;
-import de.saxsys.projectiler.domain.User;
+import de.saxsys.projectiler.crawler.Crawler;
+import de.saxsys.projectiler.crawler.Credentials;
+import de.saxsys.projectiler.crawler.InvalidCredentialsException;
 
 public class SeleniumCrawler implements Crawler {
 
@@ -33,21 +33,21 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	@Override
-	public void clock(final User user, final String projectName) {
+	public void clock(final Credentials user, final String projectName, final Date start,
+			final Date end) {
 
 		initDriver();
 		login(user);
 		openTimeTracker();
 
-		// TODO get time
-		clockTime(new Date(2017, 0, 1, 8, 30), new Date(), projectName);
+		clockTime(start, end, projectName);
 
 		logout();
 		releaseDriver();
 	}
 
 	@Override
-	public List<String> getProjectNames(final User user) {
+	public List<String> getProjectNames(final Credentials user) {
 
 		initDriver();
 		login(user);
@@ -69,7 +69,7 @@ public class SeleniumCrawler implements Crawler {
 		}
 	}
 
-	private void login(User user) {
+	private void login(Credentials user) {
 		driver.get(settings.getProjectileUrl());
 		driver.findElement(By.name("login")).sendKeys(user.getUsername());
 		WebElement txtPassword = driver.findElement(By.name("password"));

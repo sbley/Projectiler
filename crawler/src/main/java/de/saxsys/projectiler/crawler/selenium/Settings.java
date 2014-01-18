@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.selenium;
+package de.saxsys.projectiler.crawler.selenium;
 
 public class Settings {
 
