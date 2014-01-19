@@ -1,31 +1,35 @@
 package de.saxsys.projectiler.crawler.selenium;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import de.saxsys.projectiler.crawler.Crawler;
+import de.saxsys.projectiler.crawler.CrawlingException;
 import de.saxsys.projectiler.crawler.Credentials;
 import de.saxsys.projectiler.crawler.InvalidCredentialsException;
 import de.saxsys.projectiler.crawler.Settings;
 
 public class SeleniumCrawler implements Crawler {
 
-	private static final Logger LOGGER = Logger.getLogger(SeleniumCrawler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(SeleniumCrawler.class.getSimpleName());
 	private WebDriver driver;
 	private Settings settings;
 	private SeleniumSettings seleniumSettings = new SeleniumSettings();
@@ -37,29 +41,35 @@ public class SeleniumCrawler implements Crawler {
 	@Override
 	public void clock(final Credentials user, final String projectName, final Date start,
 			final Date end) {
+		try {
+			initDriver();
+			login(user);
+			openTimeTracker();
 
-		initDriver();
-		login(user);
-		openTimeTracker();
+			clockTime(start, end, projectName);
 
-		clockTime(start, end, projectName);
-
-		logout();
-		releaseDriver();
+			logout();
+			releaseDriver();
+		} catch (WebDriverException e) {
+			throw new CrawlingException("Error while clocking time.", e);
+		}
 	}
 
 	@Override
 	public List<String> getProjectNames(final Credentials user) {
+		try {
+			initDriver();
+			login(user);
+			openTimeTracker();
 
-		initDriver();
-		login(user);
-		openTimeTracker();
+			List<String> projectNames = readProjectNames();
 
-		List<String> projectNames = readProjectNames();
-
-		logout();
-		releaseDriver();
-		return projectNames;
+			logout();
+			releaseDriver();
+			return projectNames;
+		} catch (WebDriverException e) {
+			throw new CrawlingException("Error while retrieving project names.", e);
+		}
 	}
 
 	private void initDriver() {
@@ -69,6 +79,7 @@ public class SeleniumCrawler implements Crawler {
 			// headless driver
 			this.driver = htmlUnitDriver();
 		}
+		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 	}
 
 	private void login(Credentials user) {
@@ -86,11 +97,12 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	private void openTimeTracker() {
-		WebElement btnIntro = (new WebDriverWait(driver, 2)).until(ExpectedConditions
-				.presenceOfElementLocated(By.cssSelector("input[name$='BUTTON.intro']")));
+		WebElement btnIntro = (new WebDriverWait(driver, 2)).until(presenceOfElementLocated(By
+				.cssSelector("input[name$='BUTTON.intro']")));
 		btnIntro.click();
-		new Select(driver.findElement(By.cssSelector("select[id$='Field_TimeTracker']")))
-				.selectByVisibleText("heute");
+		WebElement selectTimeTracker = (new WebDriverWait(driver, 2))
+				.until(presenceOfElementLocated(By.cssSelector("select[id$='Field_TimeTracker']")));
+		new Select(selectTimeTracker).selectByVisibleText("heute");
 		driver.findElement(By.cssSelector("input[title=TimeTracker]")).click();
 		LOGGER.info("Timetracker opened.");
 	}

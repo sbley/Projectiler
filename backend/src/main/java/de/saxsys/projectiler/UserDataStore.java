@@ -28,7 +28,15 @@ public class UserDataStore implements Serializable {
 	private String userName;
 	private transient String password;
 
-	private static final UserDataStore INSTANCE = new UserDataStore();
+	private static UserDataStore INSTANCE;
+
+	public static UserDataStore getInstance() {
+		if (null == INSTANCE) {
+			INSTANCE = new UserDataStore();
+			INSTANCE.load();
+		}
+		return INSTANCE;
+	}
 
 	private UserDataStore() {
 	}
@@ -39,14 +47,13 @@ public class UserDataStore implements Serializable {
 			try (ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(
 					Files.newOutputStream(FILEPATH)))) {
 				output.writeObject(INSTANCE);
-			} finally {
 			}
 		} catch (final IOException e) {
 			LOGGER.severe("Couldn't write existing profile to disk. " + e.getMessage());
 		}
 	}
 
-	public static UserDataStore getInstance() {
+	public void load() {
 		try (ObjectInput input = new ObjectInputStream(new BufferedInputStream(
 				Files.newInputStream(FILEPATH)))) {
 			// deserialize the list
@@ -56,7 +63,6 @@ public class UserDataStore implements Serializable {
 		} catch (final Exception e) {
 			LOGGER.severe("Couldn't load existing profile from disk. " + e.getMessage());
 		}
-		return INSTANCE;
 	}
 
 	public void setUserName(final String name) {

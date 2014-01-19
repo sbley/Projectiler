@@ -20,7 +20,7 @@ import de.saxsys.projectiler.crawler.selenium.SeleniumCrawler;
  */
 public class Projectiler {
 
-	private static final Logger LOGGER = Logger.getLogger(Projectiler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Projectiler.class.getSimpleName());
 	private final Credentials user;
 	private final Crawler crawler;
 
@@ -40,7 +40,9 @@ public class Projectiler {
 
 	public void checkin() {
 		Date startDate = new Date();
-		UserDataStore.getInstance().setStartDate(startDate);
+		UserDataStore store = UserDataStore.getInstance();
+		store.setStartDate(startDate);
+		store.save();
 		LOGGER.info("Checked in at " + formatDate(startDate));
 	}
 
@@ -61,7 +63,7 @@ public class Projectiler {
 	}
 
 	private String formatDate(Date startDate) {
-		return DateFormat.getDateInstance(DateFormat.SHORT).format(startDate);
+		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startDate);
 	}
 
 	public List<String> getProjectNames() {
@@ -71,7 +73,8 @@ public class Projectiler {
 	public static void main(final String[] args) {
 		final Projectiler projectiler = new Projectiler(new Credentials("stefan.bley",
 				Password.get()), new SeleniumCrawler(new Settings()));
+		projectiler.checkin();
 		final List<String> projectNames = projectiler.getProjectNames();
-		projectiler.checkout(projectNames.get(new Random().nextInt(projectNames.size() - 2) + 1));
+		projectiler.checkout(projectNames.get(new Random().nextInt(projectNames.size() - 1)));
 	}
 }
