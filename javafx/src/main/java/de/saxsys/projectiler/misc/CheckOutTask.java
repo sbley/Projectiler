@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
-import de.saxsys.projectiler.UserDataStore;
 
 public class CheckOutTask extends Task<Date> {
 
@@ -21,9 +20,7 @@ public class CheckOutTask extends Task<Date> {
         Date checkout = null;
         try {
             checkout = projectiler.checkout(projectKey);
-            final UserDataStore instance = UserDataStore.getInstance();
-            instance.setProjectName(projectKey);
-            instance.save();
+            projectiler.saveProjectName(projectKey);
         } catch (final Exception e) {
             e.printStackTrace();
         }

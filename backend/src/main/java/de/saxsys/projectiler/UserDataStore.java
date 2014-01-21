@@ -19,7 +19,7 @@ public class UserDataStore implements Serializable {
 	private static final Logger LOGGER = Logger.getLogger(UserDataStore.class.getSimpleName());
 	private static final long serialVersionUID = -8326125819925449250L;
 
-	// TODO Wenn wir wissen wie wir ausliefern -> tauschen
+	// TODO Wenn wir wissen wie wir ausliefern -> tauschen [AC]
 	private static final String FILENAME = System.getProperty("userdata.file",
 			System.getProperty("user.home") + "/.projectiler/data.projectiler");
 	private static final Path FILEPATH = Paths.get(FILENAME);
@@ -101,13 +101,13 @@ public class UserDataStore implements Serializable {
 	/*
 	 * Helper
 	 */
-	public void clearStartDate() {
-		setStartDate(null);
-	}
-
 	public void setCredentials(final String userName, final String password) {
 		this.setUserName(userName);
 		this.setPassword(password);
+	}
+
+	public void clearStartDate() {
+		setStartDate(null);
 	}
 
 	public boolean isCheckedIn() {

@@ -297,9 +297,7 @@ public class ProjectilerController {
         final String username = usernameField.getText();
         final String password = passwordField.getText();
         LOGGER.info("Stored user data " + username);
-        final UserDataStore userData = UserDataStore.getInstance();
-        userData.setCredentials(username, password);
-        userData.save();
+        projectiler.saveCredentials(username, password);
     }
 
 }
