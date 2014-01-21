@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.worker;
+package de.saxsys.projectiler.misc;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.worker;
+package de.saxsys.projectiler.misc;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
