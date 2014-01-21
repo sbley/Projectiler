@@ -9,23 +9,24 @@ import de.saxsys.projectiler.Projectiler;
 
 public class ProjectTask extends Task<List<String>> {
 
-	public ProjectTask() {
-	}
+    private final Projectiler projectiler;
 
-	@Override
-	protected List<String> call() throws Exception {
-		Projectiler projectiler = null;
-		List<String> projectNames = Collections.emptyList();
-		try {
-			projectiler = Projectiler.createDefaultProjectiler();
-			projectNames = projectiler.getProjectNames();
-		} catch (final Exception e) {
-			e.printStackTrace();
-			this.succeeded();
-			return new ArrayList<>();
-		}
-		this.succeeded();
-		return projectNames;
-	}
+    public ProjectTask(final Projectiler projectiler) {
+        this.projectiler = projectiler;
+    }
+
+    @Override
+    protected List<String> call() throws Exception {
+        List<String> projectNames = Collections.emptyList();
+        try {
+            projectNames = projectiler.getProjectNames();
+        } catch (final Exception e) {
+            e.printStackTrace();
+            this.succeeded();
+            return new ArrayList<>();
+        }
+        this.succeeded();
+        return projectNames;
+    }
 
 }

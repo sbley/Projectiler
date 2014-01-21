@@ -1,11 +1,14 @@
 package de.saxsys.projectiler;
 
+import java.util.logging.Logger;
+
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -21,23 +24,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import de.saxsys.projectiler.misc.ClockTask;
+import de.saxsys.projectiler.misc.CheckInTask;
+import de.saxsys.projectiler.misc.CheckOutTask;
 import de.saxsys.projectiler.misc.DisableSceneOnHalfAnimation;
 import de.saxsys.projectiler.misc.ProjectTask;
 
 public class ProjectilerController {
 
+    private static final Logger LOGGER = Logger.getLogger(ProjectilerController.class.getSimpleName());
+
     @FXML
-    private StackPane root;
+    private StackPane root, timePane;
 
     @FXML
     private VBox loginVbox;
 
     @FXML
-    private ImageView cardImage, timeImage;
+    private ImageView timeImage;
 
     @FXML
-    private Label timeLabel;
+    private Label fromTimeLabel, toTimeLabel;
 
     @FXML
     private ChoiceBox<String> projectChooser;
@@ -53,11 +59,10 @@ public class ProjectilerController {
 
     private TranslateTransition transition;
 
+    private final Projectiler projectiler = Projectiler.createDefaultProjectiler();
+
     @FXML
     void initialize() {
-        assert cardImage != null : "fx:id=\"cardImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
-        assert timeImage != null : "fx:id=\"timeImage\" was not injected: check your FXML file 'Projectiler.fxml'.";
-        assert timeLabel != null : "fx:id=\"timeLabel\" was not injected: check your FXML file 'Projectiler.fxml'.";
         initTransition();
         initTextFields();
         initProjectChooser();
@@ -70,7 +75,7 @@ public class ProjectilerController {
      */
     private void initTransition() {
         transition =
-                TranslateTransitionBuilder.create().node(cardImage).rate(1.5).toY(cardImage.getLayoutY() + 120)
+                TranslateTransitionBuilder.create().node(timePane).rate(1.5).toY(timePane.getLayoutY() + 120)
                         .autoReverse(true).cycleCount(2).build();
     }
 
@@ -97,9 +102,10 @@ public class ProjectilerController {
      * GUI STATES
      */
     private void login() {
-        hide(projectChooser, cardImage, timeImage);
+        loginVbox.setVisible(true);
+        hide(projectChooser, timePane, timeImage);
         enable(passwordField, usernameField);
-        cardImage.setMouseTransparent(true);
+        timePane.setMouseTransparent(true);
 
         loginButton.disableProperty().bind(
                 passwordField.textProperty().greaterThan("").not()
@@ -112,9 +118,35 @@ public class ProjectilerController {
     }
 
     private void loggedIn() {
-        fadeIn(cardImage, projectChooser, timeImage);
-        cardImage.setMouseTransparent(false);
+        loginVbox.setVisible(false);
+        fadeIn(timePane, projectChooser, timeImage);
+        timePane.setMouseTransparent(false);
         root.getChildren().remove(loginVbox);
+    }
+
+    /**
+     * @return if the card could be pulled down
+     */
+    private boolean pullCardDown() {
+        if (!(transition.getStatus() == Status.RUNNING || transition.getStatus() == Status.PAUSED)) {
+            transition.currentTimeProperty().addListener(
+                    new DisableSceneOnHalfAnimation(transition, timePane.getScene()));
+            transition.play();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return
+     * 
+     */
+    private boolean liftCardUp() {
+        if (transition.getStatus() == Status.PAUSED) {
+            transition.play();
+            return true;
+        }
+        return false;
     }
 
     /*
@@ -122,18 +154,16 @@ public class ProjectilerController {
      */
 
     private void createListeners() {
-        cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        timePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(final MouseEvent arg0) {
-                if (!(transition.getStatus() == Status.RUNNING)) {
-                    transition.currentTimeProperty().addListener(
-                            new DisableSceneOnHalfAnimation(transition, cardImage.getScene()));
+                if (pullCardDown()) {
+                    bookProjectAgainstProjectile();
+                } else if (liftCardUp()) {
                     bookProjectAgainstProjectile();
                 }
-                transition.play();
             }
-
         });
     }
 
@@ -156,7 +186,7 @@ public class ProjectilerController {
     }
 
     private void fillDropDownWithProjects() {
-        final ProjectTask projectilerTask = new ProjectTask();
+        final ProjectTask projectilerTask = new ProjectTask(projectiler);
         projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(final WorkerStateEvent t) {
@@ -177,35 +207,31 @@ public class ProjectilerController {
     }
 
     private void bookProjectAgainstProjectile() {
-        final String selectedItem = projectChooser.getSelectionModel().getSelectedItem();
-        if (selectedItem.isEmpty()) {
-            return;
-        }
-        final ClockTask projectilerTask = new ClockTask(selectedItem);
-        projectilerTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(final WorkerStateEvent t) {
-                transition.play();
-                cardImage.getScene().getRoot().setMouseTransparent(false);
+        Task<?> task = null;
+        // if this is the first pull --> checkin
+        if (!projectiler.isCheckedIn()) {
+            task = new CheckInTask(projectiler);
+        } else {
+            // if this is the second pull --> checkout
+            final String projectKey = projectChooser.getSelectionModel().getSelectedItem();
+            if (projectKey.isEmpty()) {
+                return;
             }
-        });
-        new Thread(projectilerTask).start();
+            task = new CheckOutTask(projectiler, projectKey);
+        }
+        new Thread(task).start();
     }
 
     /**
      * 
      */
     private void storeUserData() {
+        final String username = usernameField.getText();
+        final String password = passwordField.getText();
+        LOGGER.info("Stored user data " + username);
         final UserDataStore userData = UserDataStore.getInstance();
-        userData.setUserName(usernameField.getText());
-        userData.setPassword(passwordField.getText());
+        userData.setCredentials(username, password);
         userData.save();
-    }
-
-    private void show(final Node... nodes) {
-        for (final Node node : nodes) {
-            node.setOpacity(1.0);
-        }
     }
 
     private void hide(final Node... nodes) {

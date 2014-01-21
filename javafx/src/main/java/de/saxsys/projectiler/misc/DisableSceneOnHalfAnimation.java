@@ -21,7 +21,6 @@ public class DisableSceneOnHalfAnimation implements ChangeListener<Duration> {
         if (newDuration.greaterThanOrEqualTo(transition.getTotalDuration().divide(2))) {
             transition.pause();
             transition.currentTimeProperty().removeListener(this);
-            scene.getRoot().setMouseTransparent(true);
         }
     }
 
