@@ -22,7 +22,6 @@ public class Projectiler {
 	final UserDataStore credentialStore = UserDataStore.getInstance();
 	private static final Logger LOGGER = Logger.getLogger(Projectiler.class.getSimpleName());
 	private final Crawler crawler;
-	private boolean checkedIn;
 
 	public static Projectiler createDefaultProjectiler() {
 		return new Projectiler(new SeleniumCrawler(new Settings()));
@@ -36,7 +35,6 @@ public class Projectiler {
 		final Date start = new Date();
 		credentialStore.setStartDate(start);
 		credentialStore.save();
-		checkedIn = true;
 		LOGGER.info("Checked in at " + formatDate(start));
 		return start;
 	}
@@ -49,7 +47,6 @@ public class Projectiler {
 		store.clearStartDate();
 		store.save();
 		LOGGER.info("Checked out at " + formatDate(end));
-		checkedIn = false;
 		return end;
 	}
 
@@ -62,7 +59,7 @@ public class Projectiler {
 	}
 
 	public boolean isCheckedIn() {
-		return checkedIn;
+		return UserDataStore.getInstance().isCheckedIn();
 	}
 
 	public static void main(final String[] args) {
