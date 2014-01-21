@@ -1,5 +1,7 @@
 package de.saxsys.projectiler;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javafx.animation.Animation.Status;
@@ -7,6 +9,8 @@ import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -14,7 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -24,10 +28,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import de.saxsys.projectiler.misc.CheckInTask;
 import de.saxsys.projectiler.misc.CheckOutTask;
 import de.saxsys.projectiler.misc.DisableSceneOnHalfAnimation;
 import de.saxsys.projectiler.misc.ProjectTask;
+import de.saxsys.projectiler.misc.TimeSpentCountUp;
+import de.saxsys.projectiler.misc.UITools;
 
 public class ProjectilerController {
 
@@ -40,10 +47,10 @@ public class ProjectilerController {
     private VBox loginVbox;
 
     @FXML
-    private ImageView timeImage;
+    private ImageView timeImage, closeImage;
 
     @FXML
-    private Label fromTimeLabel, toTimeLabel;
+    private Label fromTimeLabel, toTimeLabel, timeSpentLabel;
 
     @FXML
     private ChoiceBox<String> projectChooser;
@@ -64,10 +71,10 @@ public class ProjectilerController {
     @FXML
     void initialize() {
         initTransition();
-        initTextFields();
         initProjectChooser();
         createListeners();
         login();
+        initTextFields();
     }
 
     /**
@@ -75,7 +82,7 @@ public class ProjectilerController {
      */
     private void initTransition() {
         transition =
-                TranslateTransitionBuilder.create().node(timePane).rate(1.5).toY(timePane.getLayoutY() + 120)
+                TranslateTransitionBuilder.create().node(timePane).rate(2).toY(timePane.getLayoutY() + 80)
                         .autoReverse(true).cycleCount(2).build();
     }
 
@@ -92,8 +99,9 @@ public class ProjectilerController {
      * 
      */
     private void initTextFields() {
-        usernameField.setText(UserDataStore.getInstance().getUserName());
-        if (usernameField.textProperty().greaterThan("").get()) {
+        final String userName = UserDataStore.getInstance().getUserName();
+        usernameField.setText(userName);
+        if (!userName.isEmpty()) {
             passwordField.requestFocus();
         }
     }
@@ -103,8 +111,9 @@ public class ProjectilerController {
      */
     private void login() {
         loginVbox.setVisible(true);
-        hide(projectChooser, timePane, timeImage);
-        enable(passwordField, usernameField);
+        UITools.makeInvisible(closeImage);
+        UITools.hide(projectChooser, timePane, timeImage);
+        UITools.enable(passwordField, usernameField);
         timePane.setMouseTransparent(true);
 
         loginButton.disableProperty().bind(
@@ -114,12 +123,13 @@ public class ProjectilerController {
 
     private void loginPending() {
         loginButton.disableProperty().unbind();
-        disable(passwordField, usernameField, loginButton);
+        UITools.disable(passwordField, usernameField, loginButton);
     }
 
     private void loggedIn() {
         loginVbox.setVisible(false);
-        fadeIn(timePane, projectChooser, timeImage);
+        UITools.makeVisible(closeImage);
+        UITools.fadeIn(timePane, projectChooser, timeImage);
         timePane.setMouseTransparent(false);
         root.getChildren().remove(loginVbox);
     }
@@ -129,8 +139,7 @@ public class ProjectilerController {
      */
     private boolean pullCardDown() {
         if (!(transition.getStatus() == Status.RUNNING || transition.getStatus() == Status.PAUSED)) {
-            transition.currentTimeProperty().addListener(
-                    new DisableSceneOnHalfAnimation(transition, timePane.getScene()));
+            transition.currentTimeProperty().addListener(new DisableSceneOnHalfAnimation(transition));
             transition.play();
             return true;
         }
@@ -165,6 +174,34 @@ public class ProjectilerController {
                 }
             }
         });
+    }
+
+    /*
+     * Labels
+     */
+    private void displayFromTimeLabel(final Date date) {
+        if (date == null) {
+            toTimeLabel.setText("Error");
+        } else {
+            final String displayString = new SimpleDateFormat("H:mm").format(date);
+            fromTimeLabel.setText(displayString);
+            fromTimeLabel.setOpacity(0.0);
+            UITools.fadeIn(fromTimeLabel);
+        }
+    }
+
+    /*
+     * Labels
+     */
+    private void displayToTimeLabel(final Date date) {
+        if (date == null) {
+            toTimeLabel.setText("Error");
+        } else {
+            final String displayString = new SimpleDateFormat("H:mm").format(date);
+            toTimeLabel.setText(displayString);
+            toTimeLabel.setOpacity(0.0);
+            UITools.fadeIn(toTimeLabel);
+        }
     }
 
     @FXML
@@ -211,6 +248,15 @@ public class ProjectilerController {
         // if this is the first pull --> checkin
         if (!projectiler.isCheckedIn()) {
             task = new CheckInTask(projectiler);
+            ((CheckInTask) task).valueProperty().addListener(new ChangeListener<Date>() {
+                @Override
+                public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
+                    displayFromTimeLabel(newDate);
+                }
+            });
+            startTimeSpentCountUp(new Date());
+            timeSpentLabel.setOpacity(0.2);
+            UITools.fadeIn(timeSpentLabel);
         } else {
             // if this is the second pull --> checkout
             final String projectKey = projectChooser.getSelectionModel().getSelectedItem();
@@ -218,8 +264,30 @@ public class ProjectilerController {
                 return;
             }
             task = new CheckOutTask(projectiler, projectKey);
+            loadingIndication(true);
+            ((CheckOutTask) task).valueProperty().addListener(new ChangeListener<Date>() {
+                @Override
+                public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
+                    displayToTimeLabel(newDate);
+                    loadingIndication(false);
+                }
+            });
         }
         new Thread(task).start();
+    }
+
+    private void loadingIndication(final boolean enabled) {
+        double opacity = 1.0;
+        if (enabled) {
+            opacity = 0.8;
+        }
+        final Parent root = timeImage.getScene().getRoot();
+        root.setMouseTransparent(enabled);
+        FadeTransitionBuilder.create().toValue(opacity).duration(Duration.seconds(0.5)).node(root).build().play();
+    }
+
+    private void startTimeSpentCountUp(final Date date) {
+        new TimeSpentCountUp(timeSpentLabel.textProperty(), date).start();
     }
 
     /**
@@ -232,31 +300,6 @@ public class ProjectilerController {
         final UserDataStore userData = UserDataStore.getInstance();
         userData.setCredentials(username, password);
         userData.save();
-    }
-
-    private void hide(final Node... nodes) {
-        for (final Node node : nodes) {
-            node.setOpacity(0.0);
-        }
-    }
-
-    private void disable(final Node... nodes) {
-        for (final Node node : nodes) {
-            node.setDisable(true);
-        }
-    }
-
-    private void enable(final Node... nodes) {
-        for (final Node node : nodes) {
-            node.setDisable(false);
-        }
-    }
-
-    private void fadeIn(final Node... nodes) {
-        for (final Node node : nodes) {
-            final FadeTransitionBuilder build = FadeTransitionBuilder.create().toValue(1.0);
-            build.node(node).build().play();
-        }
     }
 
 }

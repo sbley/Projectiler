@@ -26,6 +26,7 @@ public class UserDataStore implements Serializable {
 
     private Date startDate;
     private String userName;
+    private String projectName;
     private transient String password;
 
     private static UserDataStore INSTANCE;
@@ -88,12 +89,23 @@ public class UserDataStore implements Serializable {
         this.password = password;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(final String projectName) {
+        this.projectName = projectName;
+    }
+
+    /*
+     * Helper
+     */
+    public void clearStartDate() {
+        setStartDate(null);
+    }
+
     public void setCredentials(final String userName, final String password) {
         this.setUserName(userName);
         this.setPassword(password);
-    }
-
-    public void clearStartDate() {
-        setStartDate(null);
     }
 }

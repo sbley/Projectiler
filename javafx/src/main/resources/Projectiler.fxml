@@ -4,12 +4,14 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane fx:id="root" minHeight="594.0" minWidth="350.0" prefHeight="594.0" prefWidth="350.0" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.projectiler.ProjectilerController">
+<StackPane fx:id="root" minHeight="594.0" minWidth="350.0" prefHeight="594.0" prefWidth="350.0" style="-fx-background-color:transparent;" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.projectiler.ProjectilerController">
   <!-- TODO Add Nodes -->
   <children>
     <StackPane id="StackPane" fx:id="timePane">
@@ -19,19 +21,37 @@
             <Image url="@projectiler_karte.png" />
           </image>
         </ImageView>
-        <Label id="fromTimeLable" fx:id="fromTimeLabel" alignment="CENTER" prefWidth="171.0" text="Label" textAlignment="CENTER" translateX="51.0" translateY="-150.0" StackPane.alignment="CENTER">
+        <Label id="fromTimeLable" fx:id="fromTimeLabel" alignment="CENTER" prefWidth="171.0" text="" textAlignment="CENTER" translateX="51.0" translateY="-150.0" StackPane.alignment="CENTER">
           <font>
             <Font size="30.0" fx:id="x2" />
           </font>
+          <textFill>
+            <Color blue="0.375" green="0.375" red="0.375" fx:id="x3" />
+          </textFill>
         </Label>
-        <Label alignment="CENTER" font="$x2" prefWidth="93.0" text="Von:" textAlignment="CENTER" translateX="-100.0" translateY="-150.0" />
-        <Label id="fromTimeLable" fx:id="toTimeLabel" alignment="CENTER" font="$x2" prefWidth="171.0" text="Label" textAlignment="CENTER" translateX="51.0" translateY="-60.0" />
-        <Label alignment="CENTER" font="$x2" prefWidth="93.0" text="Bis:" textAlignment="CENTER" translateX="-100.0" translateY="-60.0" />
+        <Label alignment="CENTER" font="$x2" prefWidth="93.0" text="Von:" textAlignment="CENTER" textFill="$x3" translateX="-100.0" translateY="-150.0" />
+        <Label id="fromTimeLable" fx:id="toTimeLabel" alignment="CENTER" font="$x2" prefWidth="171.0" text="" textAlignment="CENTER" textFill="$x3" translateX="51.0" translateY="-60.0" />
+        <Label alignment="CENTER" font="$x2" prefWidth="93.0" text="Bis:" textAlignment="CENTER" textFill="$x3" translateX="-100.0" translateY="-60.0" />
       </children>
     </StackPane>
-    <ImageView fx:id="timeImage" fitHeight="0.0" fitWidth="0.0" pickOnBounds="true" preserveRatio="true" translateY="280.0" y="0.0" StackPane.alignment="TOP_CENTER">
+    <ImageView fx:id="timeImage" fitHeight="0.0" fitWidth="0.0" opacity="1.0" pickOnBounds="true" preserveRatio="true" translateY="280.0" y="0.0" StackPane.alignment="TOP_CENTER">
+      <effect>
+        <Lighting diffuseConstant="1.7777777777777777" specularConstant="0.44444444444444453" specularExponent="33.968253968253975" surfaceScale="0.0">
+          <bumpInput>
+            <Shadow />
+          </bumpInput>
+          <light>
+            <javafx.scene.effect.Light.Spot pointsAtX="50.0" pointsAtY="50.0" specularExponent="0.8095238095238095" x="285.0" y="300.0" z="200.0" />
+          </light>
+        </Lighting>
+      </effect>
       <image>
         <Image url="@projectiler_uhr.png" />
+      </image>
+    </ImageView>
+    <ImageView fx:id="closeImage" fitHeight="0.0" fitWidth="0.0" onMouseClicked="#onCloseButtonClicked" pickOnBounds="true" preserveRatio="true" translateX="140.0" translateY="265.0" visible="false">
+      <image>
+        <Image url="@projectiler_close.png" />
       </image>
     </ImageView>
     <ChoiceBox fx:id="projectChooser" maxWidth="295.0" minHeight="50.0" minWidth="295.0" prefWidth="295.0" translateY="0.0">
@@ -43,11 +63,6 @@
         </FXCollections>
       </items>
     </ChoiceBox>
-    <Label text="Label" translateY="150.0">
-      <font>
-        <Font size="20.0" />
-      </font>
-    </Label>
     <VBox id="VBox" fx:id="loginVbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="300.0" spacing="5.0" style="-fx-background-color:whitesmoke&#10;" translateY="0.0" visible="false">
       <children>
         <Label font="$x2" text="Projectiler" />
@@ -64,6 +79,9 @@
           </children>
         </HBox>
       </children>
+      <effect>
+        <DropShadow color="#606060" height="55.269841269841265" radius="27.134920634920633" width="55.269841269841265" />
+      </effect>
       <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
@@ -71,10 +89,10 @@
         <Insets />
       </StackPane.margin>
     </VBox>
-    <ImageView fitHeight="0.0" fitWidth="0.0" onMouseClicked="#onCloseButtonClicked" pickOnBounds="true" preserveRatio="true" translateX="140.0" translateY="265.0">
-      <image>
-        <Image url="@projectiler_close.png" />
-      </image>
-    </ImageView>
+    <Label fx:id="timeSpentLabel" alignment="CENTER" cache="false" contentDisplay="CENTER" prefWidth="275.0" text="" textAlignment="CENTER" textFill="$x3" translateY="150.0" visible="true">
+      <font>
+        <Font size="80.0" />
+      </font>
+    </Label>
   </children>
 </StackPane>

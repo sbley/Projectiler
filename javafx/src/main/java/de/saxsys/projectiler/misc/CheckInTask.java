@@ -1,9 +1,11 @@
 package de.saxsys.projectiler.misc;
 
+import java.util.Date;
+
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
 
-public class CheckInTask extends Task<Boolean> {
+public class CheckInTask extends Task<Date> {
 
     private final Projectiler projectiler;
 
@@ -12,15 +14,14 @@ public class CheckInTask extends Task<Boolean> {
     }
 
     @Override
-    protected Boolean call() throws Exception {
+    protected Date call() throws Exception {
+        Date checkin = null;
         try {
-            projectiler.checkin();
+            checkin = projectiler.checkin();
         } catch (final Exception e) {
             e.printStackTrace();
-            this.succeeded();
-            return false;
         }
         this.succeeded();
-        return true;
+        return checkin;
     }
 }

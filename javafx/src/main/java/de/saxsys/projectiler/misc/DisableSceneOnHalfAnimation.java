@@ -3,17 +3,14 @@ package de.saxsys.projectiler.misc;
 import javafx.animation.Transition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Scene;
 import javafx.util.Duration;
 
 public class DisableSceneOnHalfAnimation implements ChangeListener<Duration> {
 
     private final Transition transition;
-    private final Scene scene;
 
-    public DisableSceneOnHalfAnimation(final Transition transition, final Scene scene) {
+    public DisableSceneOnHalfAnimation(final Transition transition) {
         this.transition = transition;
-        this.scene = scene;
     }
 
     @Override
