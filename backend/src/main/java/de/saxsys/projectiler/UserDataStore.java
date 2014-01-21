@@ -24,9 +24,9 @@ public class UserDataStore implements Serializable {
 			System.getProperty("user.home") + "/.projectiler/data.projectiler");
 	private static final Path FILEPATH = Paths.get(FILENAME);
 
-    private Date startDate;
-    private String userName;
-    private String projectName;
+	private Date startDate;
+	private String userName;
+	private String projectName;
 	private transient String password;
 
 	private static UserDataStore INSTANCE;
@@ -90,30 +90,26 @@ public class UserDataStore implements Serializable {
 		this.password = password;
 	}
 
-  
-    public String getProjectName() {
-        return projectName;
-    }
-	
+	public String getProjectName() {
+		return projectName;
+	}
 
-    }
-    public void setProjectName(final String projectName) {
-        this.projectName = projectName;
-    }
-	
+	public void setProjectName(final String projectName) {
+		this.projectName = projectName;
+	}
 
-   
-    /*
-     * Helper
-     */
-    public void clearStartDate() {
-        setStartDate(null);
-    }
+	/*
+	 * Helper
+	 */
+	public void clearStartDate() {
+		setStartDate(null);
+	}
 
-    public void setCredentials(final String userName, final String password) {
-        this.setUserName(userName);
-        this.setPassword(password);
-    }
+	public void setCredentials(final String userName, final String password) {
+		this.setUserName(userName);
+		this.setPassword(password);
+	}
+
 	public boolean isCheckedIn() {
 		return null != getStartDate();
 	}
