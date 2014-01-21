@@ -7,6 +7,17 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>backend</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>crawler</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<!-- only to run the backend from console -->
@@ -34,15 +45,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${parent.groupId}</groupId>
-			<artifactId>crawler</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
-	</dependencies>
 </project>
