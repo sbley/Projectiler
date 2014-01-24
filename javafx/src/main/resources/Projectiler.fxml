@@ -70,12 +70,12 @@
         <PasswordField fx:id="passwordField" minHeight="50.0" prefWidth="200.0" promptText="Passwort" />
         <HBox id="HBox" alignment="CENTER" spacing="30.0">
           <children>
-            <Button fx:id="loginButton" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onLoginButtonPressed" text="Ok">
+            <Button fx:id="loginButton" defaultButton="true" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onLoginButtonPressed" text="Ok">
               <font>
                 <Font size="12.0" fx:id="x1" />
               </font>
             </Button>
-            <Button id="loginButton" font="$x1" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCloseAction" text="Cancel" />
+            <Button id="loginButton" cancelButton="true" font="$x1" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCloseAction" text="Cancel" />
           </children>
         </HBox>
       </children>
