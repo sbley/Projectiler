@@ -58,20 +58,20 @@ public class Projectiler {
 	 *            project to clock your time to
 	 * @throws ProjectilerException
 	 *             in case backend operations fail
-	 * @throws IllegalArgumentException
+	 * @throws IllegalStateException
 	 *             if invoked while not being checked in or if work time is less
 	 *             than one minute
 	 */
 	public Date checkout(final String projectName) throws ProjectilerException,
-			IllegalArgumentException {
+			IllegalStateException {
 		if (!isCheckedIn()) {
-			throw new IllegalArgumentException("Must be checked in before checking out.");
+			throw new IllegalStateException("Must be checked in before checking out.");
 		}
 
 		final Date start = dataStore.getStartDate();
 		final Date end = new Date();
 		if (formatHHmm(start).equals(formatHHmm(end))) {
-			throw new IllegalArgumentException("Work time must be at least 1 minute.");
+			throw new IllegalStateException("Work time must be at least 1 minute.");
 		}
 
 		try {
