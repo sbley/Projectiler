@@ -6,14 +6,15 @@
 		<artifactId>projectiler</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>crawler</artifactId>
+	<artifactId>crawler-selenium</artifactId>
 	<properties>
 		<selenium.version>2.39.0</selenium.version>
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>crawler-api</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -29,11 +30,6 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-support</artifactId>
 			<version>${selenium.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.7.3</version>
 		</dependency>
 	</dependencies>
 </project>

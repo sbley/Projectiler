@@ -14,7 +14,13 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>crawler</artifactId>
+			<artifactId>crawler-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- include crawler implementation here (selenium or jsoup) -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>crawler-selenium</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

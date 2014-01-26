@@ -4,6 +4,6 @@ package de.saxsys.projectiler.crawler;
 public class Password {
 
 	public static String get() {
-		throw new UnsupportedOperationException("insert your password here");
+		throw new UnsupportedOperationException("return your password here");
 	}
 }

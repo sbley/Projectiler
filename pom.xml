@@ -32,8 +32,10 @@
 		</plugins>
 	</build>
 	<modules>
+		<module>crawler-api</module>
+		<module>crawler-selenium</module>
+		<module>crawler-jsoup</module>
 		<module>backend</module>
-		<module>crawler</module>
 		<module>javafx</module>
 	</modules>
 </project>
