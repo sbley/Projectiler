@@ -11,6 +11,14 @@ import java.util.List;
 public interface Crawler {
 
 	/**
+	 * Get a list of all available project names.
+	 * 
+	 * @throws CrawlingException
+	 *             in case the crawling fails
+	 */
+	List<String> getProjectNames(Credentials credentials) throws CrawlingException;
+
+	/**
 	 * Clock time for given user and project.
 	 * 
 	 * @throws CrawlingException
@@ -18,12 +26,4 @@ public interface Crawler {
 	 */
 	void clock(Credentials credentials, String projectName, Date start, Date end)
 			throws CrawlingException;
-
-	/**
-	 * Get a list of all available project names.
-	 * 
-	 * @throws CrawlingException
-	 *             in case the crawling fails
-	 */
-	List<String> getProjectNames(Credentials user) throws CrawlingException;
 }
