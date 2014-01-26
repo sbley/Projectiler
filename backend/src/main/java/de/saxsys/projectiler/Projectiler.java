@@ -120,11 +120,13 @@ public class Projectiler {
 		return new Credentials(dataStore.getUserName(), dataStore.getPassword());
 	}
 
-	public static void main(final String[] args) throws ProjectilerException {
+	public static void main(final String[] args) throws ProjectilerException, InterruptedException {
 		// common use case sequence
 		final Projectiler projectiler = createDefaultProjectiler();
 		projectiler.saveCredentials("stefan.bley", Password.get());
 		projectiler.checkin();
+		LOGGER.info("Waiting one minute...");
+		Thread.sleep(60000);
 		final List<String> projectNames = projectiler.getProjectNames();
 		projectiler.checkout(projectNames.get(new Random().nextInt(projectNames.size() - 1)));
 	}

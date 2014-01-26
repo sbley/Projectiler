@@ -123,7 +123,10 @@ public class SeleniumCrawler implements Crawler {
 		driver.findElement(By.cssSelector("input.rw[id$='NewTo_0_0']")).sendKeys(formatTime(end));
 		final WebElement selProject = driver.findElement(By
 				.cssSelector("select[id$='NewWhat_0_0']"));
-		selProject.findElement(By.xpath(".//option[contains(., '" + projectName + "')]")).click();
+		final WebElement option = selProject.findElement(By.xpath(".//option[contains(., '"
+				+ projectName + "')]"));
+		String selectedProjectValue = option.getAttribute("value");
+		option.click();
 		driver.findElement(By.cssSelector("input[title='Änderungen speichern']")).click();
 		try {
 			final WebElement btnConfirmOverwrite = driver.findElement(By
@@ -132,6 +135,16 @@ public class SeleniumCrawler implements Crawler {
 			LOGGER.info("Overwrite confirmed.");
 		} catch (final NoSuchElementException e) {
 		} finally {
+			String inputStartId = driver
+					.findElement(
+							By.cssSelector("input.rw[id*='Field_Start'][value='"
+									+ formatTime(start) + "']")).getAttribute("id");
+			String inputEndId = inputStartId.replace("Start", "End");
+			driver.findElement(By.cssSelector("input.rw[id='" + inputEndId + "'][value='"
+					+ formatTime(end) + "']"));
+			String inputWhatId = inputStartId.replace("Start", "What");
+			driver.findElement(By.cssSelector("select[id='" + inputWhatId
+					+ "'] option[selected][value='" + selectedProjectValue + "']"));
 			LOGGER.info("Time clocked for project '" + projectName + "'.");
 		}
 	}
