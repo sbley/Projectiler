@@ -3,7 +3,10 @@ package de.saxsys.projectiler.concurrent;
 import java.util.Date;
 
 import javafx.concurrent.Task;
+import de.saxsys.projectiler.InvalidCredentialsException;
+import de.saxsys.projectiler.Notification;
 import de.saxsys.projectiler.Projectiler;
+import de.saxsys.projectiler.ProjectilerException;
 
 public class CheckOutTask extends Task<Date> {
 
@@ -16,14 +19,23 @@ public class CheckOutTask extends Task<Date> {
     }
 
     @Override
-    protected Date call() throws Exception {
+    protected Date call() {
         Date checkout = null;
         try {
             checkout = projectiler.checkout(projectKey);
-            projectiler.saveProjectName(projectKey);
-        } catch (final Exception e) {
+        } catch (final IllegalStateException e) {
+            Notification.Notifier.INSTANCE.notifyWarning("Fehler beim buchen",
+                    "Es dürfen keine Buchungen unter einer Minute angelegt werden.");
+            e.printStackTrace();
+        } catch (final InvalidCredentialsException e) {
+            Notification.Notifier.INSTANCE.notifyWarning("Fehler beim buchen", "Logindaten sind falsch.");
+            e.printStackTrace();
+        } catch (final ProjectilerException e) {
+            Notification.Notifier.INSTANCE.notifyWarning("Fehler beim buchen", "Haha.");
             e.printStackTrace();
         }
+        projectiler.saveProjectName(projectKey);
+
         this.succeeded();
         return checkout;
     }

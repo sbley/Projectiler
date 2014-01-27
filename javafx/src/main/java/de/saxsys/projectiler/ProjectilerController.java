@@ -55,6 +55,7 @@ public class ProjectilerController {
 
     @FXML
     void initialize() {
+
         initLogin();
         initTransition();
         initProjectChooser();
@@ -196,7 +197,6 @@ public class ProjectilerController {
                 projectChooser.getItems().clear();
                 projectChooser.getItems().addAll(
                         FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
-                projectChooser.getSelectionModel().select(0);
                 projectChooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(final ObservableValue<? extends String> arg0, final String arg1,
@@ -207,7 +207,11 @@ public class ProjectilerController {
                     }
                 });
                 final String projectName = UserDataStore.getInstance().getProjectName();
-                projectChooser.getSelectionModel().select(projectName);
+                if (projectName == null) {
+                    projectChooser.getSelectionModel().select(0);
+                } else {
+                    projectChooser.getSelectionModel().select(projectName);
+                }
                 UITools.fadeIn(projectChooser);
             }
 
@@ -223,11 +227,15 @@ public class ProjectilerController {
             startTimeSpentCountUp(startDate);
         } else {
             final CheckInTask task = new CheckInTask(projectiler);
-            task.valueProperty().addListener(new ChangeListener<Date>() {
+            task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
-                public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
-                    displayFromTimeLabel(newDate);
-                    startTimeSpentCountUp(newDate);
+                public void handle(final WorkerStateEvent arg0) {
+                    if (task.getValue() != null) {
+                        displayFromTimeLabel(task.getValue());
+                        startTimeSpentCountUp(task.getValue());
+                    } else {
+                        liftCardUp();
+                    }
                 }
             });
             new Thread(task).start();
@@ -244,11 +252,11 @@ public class ProjectilerController {
         }
         final CheckOutTask task = new CheckOutTask(projectiler, projectKey);
         loadingIndication(true);
-        task.valueProperty().addListener(new ChangeListener<Date>() {
+        task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
-                if (newDate != null) {
-                    displayToTimeLabel(newDate);
+            public void handle(final WorkerStateEvent arg0) {
+                if (task.getValue() != null) {
+                    displayToTimeLabel(task.getValue());
                     loadingIndication(false);
                 } else {
                     System.out.println("test");
