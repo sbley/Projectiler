@@ -102,7 +102,7 @@ public class Projectiler {
 	public void saveCredentials(final String username, final String password)
 			throws ProjectilerException {
 		try {
-			crawler.checkCredentials(createCredentials());
+			crawler.checkCredentials(new Credentials(username, password));
 			dataStore.setCredentials(username, password);
 			dataStore.save();
 		} catch (de.saxsys.projectiler.crawler.InvalidCredentialsException e) {
