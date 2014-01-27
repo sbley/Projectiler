@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.misc;
+package de.saxsys.projectiler.concurrent;
 
 import java.util.Date;
 

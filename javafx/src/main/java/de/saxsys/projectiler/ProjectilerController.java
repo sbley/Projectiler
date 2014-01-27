@@ -14,26 +14,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import de.saxsys.projectiler.misc.CheckInTask;
-import de.saxsys.projectiler.misc.CheckOutTask;
+import de.saxsys.projectiler.concurrent.CheckInTask;
+import de.saxsys.projectiler.concurrent.CheckOutTask;
+import de.saxsys.projectiler.concurrent.TimeSpentCountUpThread;
+import de.saxsys.projectiler.login.Login;
 import de.saxsys.projectiler.misc.DisableSceneOnHalfAnimation;
 import de.saxsys.projectiler.misc.ProjectTask;
-import de.saxsys.projectiler.misc.TimeSpentCountUp;
 import de.saxsys.projectiler.misc.UITools;
 
 public class ProjectilerController {
@@ -43,8 +39,7 @@ public class ProjectilerController {
     @FXML
     private StackPane root, timePane;
 
-    @FXML
-    private VBox loginVbox;
+    private Login login;
 
     @FXML
     private ImageView timeImage, closeImage;
@@ -55,26 +50,28 @@ public class ProjectilerController {
     @FXML
     private ChoiceBox<String> projectChooser;
 
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private Button loginButton;
-
     private TranslateTransition transition;
 
     private final Projectiler projectiler = Projectiler.createDefaultProjectiler();
 
     @FXML
     void initialize() {
+        initLogin();
         initTransition();
         initProjectChooser();
         createListeners();
         login();
-        initTextFields();
+    }
+
+    private void initLogin() {
+        login = new Login(projectiler);
+        login.loginSucessfulProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(final ObservableValue<? extends Boolean> arg0, final Boolean arg1, final Boolean arg2) {
+                loggedIn();
+                fillDropDownWithProjects();
+            }
+        });
     }
 
     /**
@@ -92,46 +89,26 @@ public class ProjectilerController {
     private void initProjectChooser() {
         projectChooser.setItems(FXCollections
                 .<String> observableArrayList("No project currently laoded - maybe an error occured."));
-        projectChooser.layout();
-    }
-
-    /**
-     * 
-     */
-    private void initTextFields() {
-        final String userName = UserDataStore.getInstance().getUserName();
-        usernameField.setText(userName);
-        if (!userName.isEmpty()) {
-            passwordField.requestFocus();
-        }
+        projectChooser.setOpacity(0.0);
     }
 
     /*
      * GUI STATES
      */
     private void login() {
-        loginVbox.setVisible(true);
+        login.setVisible(true);
+        root.getChildren().add(login);
         UITools.makeInvisible(closeImage);
         UITools.hide(projectChooser, timePane, timeImage);
-        UITools.enable(passwordField, usernameField);
         timePane.setMouseTransparent(true);
-
-        loginButton.disableProperty().bind(
-                passwordField.textProperty().greaterThan("").not()
-                        .or(usernameField.textProperty().greaterThan("").not()));
-    }
-
-    private void loginPending() {
-        loginButton.disableProperty().unbind();
-        UITools.disable(passwordField, usernameField, loginButton);
     }
 
     private void loggedIn() {
-        loginVbox.setVisible(false);
+        login.setVisible(false);
         UITools.makeVisible(closeImage);
-        UITools.fadeIn(timePane, projectChooser, timeImage);
+        UITools.fadeIn(timePane, timeImage);
         timePane.setMouseTransparent(false);
-        root.getChildren().remove(loginVbox);
+        root.getChildren().remove(login);
     }
 
     /**
@@ -205,19 +182,6 @@ public class ProjectilerController {
     }
 
     @FXML
-    void onLoginButtonPressed(final ActionEvent event) {
-        storeUserData();
-        fillDropDownWithProjects();
-        // Pending state
-        loginPending();
-    }
-
-    @FXML
-    void onCloseAction(final ActionEvent event) {
-        Platform.exit();
-    }
-
-    @FXML
     void onCloseButtonClicked(final Event event) {
         Platform.exit();
     }
@@ -230,13 +194,8 @@ public class ProjectilerController {
                 projectChooser.getItems().clear();
                 projectChooser.getItems().addAll(
                         FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
-                if (projectilerTask.valueProperty().get().size() > 0) {
-                    loggedIn();
-                    storeUserData();
-                } else {
-                    login();
-                }
                 projectChooser.getSelectionModel().select(0);
+                UITools.fadeIn(projectChooser);
             }
 
         });
@@ -252,9 +211,9 @@ public class ProjectilerController {
                 @Override
                 public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
                     displayFromTimeLabel(newDate);
+                    startTimeSpentCountUp(newDate);
                 }
             });
-            startTimeSpentCountUp(new Date());
             timeSpentLabel.setOpacity(0.2);
             UITools.fadeIn(timeSpentLabel);
         } else {
@@ -287,17 +246,7 @@ public class ProjectilerController {
     }
 
     private void startTimeSpentCountUp(final Date date) {
-        new TimeSpentCountUp(timeSpentLabel.textProperty(), date).start();
-    }
-
-    /**
-     * 
-     */
-    private void storeUserData() {
-        final String username = usernameField.getText();
-        final String password = passwordField.getText();
-        LOGGER.info("Stored user data " + username);
-        projectiler.saveCredentials(username, password);
+        new TimeSpentCountUpThread(timeSpentLabel.textProperty(), date).start();
     }
 
 }
