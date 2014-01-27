@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.misc;
+package de.saxsys.projectiler.concurrent;
 
 import java.util.Date;
 
@@ -7,13 +7,13 @@ import javafx.beans.property.StringProperty;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
-public class TimeSpentCountUp extends Thread {
+public class TimeSpentCountUpThread extends Thread {
 
     private final StringProperty text;
 
     private final Date from;
 
-    public TimeSpentCountUp(final StringProperty text, final Date from) {
+    public TimeSpentCountUpThread(final StringProperty text, final Date from) {
         this.text = text;
         this.from = from;
     }

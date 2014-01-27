@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+
+<fx:root type="VBox" alignment="CENTER" maxHeight="200.0" maxWidth="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color:whitesmoke;" xmlns:fx="http://javafx.com/fxml">
+  <children>
+    <Label text="Projectiler">
+      <font>
+        <Font size="30.0" />
+      </font>
+    </Label>
+    <TextField fx:id="usernameField" minHeight="50.0" prefWidth="200.0" promptText="Benutzername" style="-fx-font-width:15;&#10;" />
+    <PasswordField fx:id="passwordField" minHeight="50.0" prefWidth="200.0" promptText="Passwort" />
+    <HBox id="HBox" alignment="CENTER" spacing="30.0">
+      <children>
+        <Button fx:id="loginButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onLoginButtonPressed" prefHeight="-1.0" prefWidth="-1.0" text="Ok" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="12.0" fx:id="x1" />
+          </font>
+        </Button>
+        <Button id="loginButton" cancelButton="true" font="$x1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="40.0" minWidth="100.0" mnemonicParsing="false" onAction="#onCloseAction" text="Cancel" HBox.hgrow="ALWAYS" />
+      </children>
+      <padding>
+        <Insets top="10.0" />
+      </padding>
+    </HBox>
+  </children>
+  <padding>
+    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+  </padding>
+</fx:root>
