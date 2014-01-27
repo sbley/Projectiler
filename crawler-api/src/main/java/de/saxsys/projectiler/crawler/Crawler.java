@@ -11,6 +11,11 @@ import java.util.List;
 public interface Crawler {
 
 	/**
+	 * Verifies the credentials are valid.
+	 */
+	void checkCredentials(Credentials credentials) throws CrawlingException;
+
+	/**
 	 * Get a list of all available project names.
 	 * 
 	 * @throws CrawlingException

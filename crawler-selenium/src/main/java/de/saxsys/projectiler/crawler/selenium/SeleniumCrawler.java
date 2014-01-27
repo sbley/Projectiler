@@ -44,8 +44,20 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	@Override
+	public void checkCredentials(final Credentials user) throws CrawlingException {
+		try {
+			initDriver();
+			login(user);
+			logout();
+			releaseDriver();
+		} catch (final WebDriverException e) {
+			throw new CrawlingException("Error while checking credentials.", e);
+		}
+	}
+
+	@Override
 	public void clock(final Credentials user, final String projectName, final Date start,
-			final Date end) {
+			final Date end) throws CrawlingException {
 		try {
 			initDriver();
 			login(user);

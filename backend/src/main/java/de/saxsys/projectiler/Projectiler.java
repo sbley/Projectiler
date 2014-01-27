@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import de.saxsys.projectiler.crawler.Crawler;
+import de.saxsys.projectiler.crawler.CrawlingException;
 import de.saxsys.projectiler.crawler.Credentials;
 import de.saxsys.projectiler.crawler.Password;
 import de.saxsys.projectiler.crawler.Settings;
@@ -82,7 +83,7 @@ public class Projectiler {
 			return end;
 		} catch (de.saxsys.projectiler.crawler.InvalidCredentialsException e) {
 			throw new InvalidCredentialsException();
-		} catch (Exception e) {
+		} catch (CrawlingException e) {
 			throw new ProjectilerException(e.getMessage(), e);
 		}
 	}
@@ -98,9 +99,17 @@ public class Projectiler {
 		return crawler.getProjectNames(createCredentials());
 	}
 
-	public void saveCredentials(final String username, final String password) {
-		dataStore.setCredentials(username, password);
-		dataStore.save();
+	public void saveCredentials(final String username, final String password)
+			throws ProjectilerException {
+		try {
+			crawler.checkCredentials(createCredentials());
+			dataStore.setCredentials(username, password);
+			dataStore.save();
+		} catch (de.saxsys.projectiler.crawler.InvalidCredentialsException e) {
+			throw new InvalidCredentialsException();
+		} catch (CrawlingException e) {
+			throw new ProjectilerException(e.getMessage(), e);
+		}
 	}
 
 	public void saveProjectName(final String projectKey) {

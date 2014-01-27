@@ -21,6 +21,12 @@ import de.saxsys.projectiler.crawler.Credentials;
 import de.saxsys.projectiler.crawler.InvalidCredentialsException;
 import de.saxsys.projectiler.crawler.Settings;
 
+/**
+ * Interacts with Projectile via JSoup.
+ * 
+ * @author stefan.bley
+ * @see {@link http://jsoup.org}
+ */
 public class JSoupCrawler implements Crawler {
 
 	private static final Logger LOGGER = Logger.getLogger(JSoupCrawler.class.getSimpleName());
@@ -29,6 +35,16 @@ public class JSoupCrawler implements Crawler {
 
 	public JSoupCrawler(final Settings settings) {
 		this.settings = settings;
+	}
+
+	@Override
+	public void checkCredentials(final Credentials credentials) throws CrawlingException {
+		try {
+			Map<String, String> cookies = login(credentials);
+			logout(cookies);
+		} catch (final IOException e) {
+			throw new CrawlingException("Error while checking credentials.", e);
+		}
 	}
 
 	@Override
