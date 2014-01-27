@@ -12,7 +12,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -70,6 +69,10 @@ public class ProjectilerController {
             public void changed(final ObservableValue<? extends Boolean> arg0, final Boolean arg1, final Boolean arg2) {
                 loggedIn();
                 fillDropDownWithProjects();
+                if (projectiler.isCheckedIn()) {
+                    performCheckIn();
+                    pullCardDown();
+                }
             }
         });
     }
@@ -141,13 +144,12 @@ public class ProjectilerController {
 
     private void createListeners() {
         timePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
             @Override
             public void handle(final MouseEvent arg0) {
                 if (pullCardDown()) {
-                    bookProjectAgainstProjectile();
+                    performCheckIn();
                 } else if (liftCardUp()) {
-                    bookProjectAgainstProjectile();
+                    performCheckOut();
                 }
             }
         });
@@ -195,6 +197,17 @@ public class ProjectilerController {
                 projectChooser.getItems().addAll(
                         FXCollections.observableArrayList(projectilerTask.valueProperty().get()));
                 projectChooser.getSelectionModel().select(0);
+                projectChooser.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+                    @Override
+                    public void changed(final ObservableValue<? extends String> arg0, final String arg1,
+                            final String arg2) {
+                        if (arg2 != null && !arg2.isEmpty()) {
+                            projectiler.saveProjectName(arg2);
+                        }
+                    }
+                });
+                final String projectName = UserDataStore.getInstance().getProjectName();
+                projectChooser.getSelectionModel().select(projectName);
                 UITools.fadeIn(projectChooser);
             }
 
@@ -202,37 +215,59 @@ public class ProjectilerController {
         new Thread(projectilerTask).start();
     }
 
-    private void bookProjectAgainstProjectile() {
-        Task<?> task = null;
-        // if this is the first pull --> checkin
-        if (!projectiler.isCheckedIn()) {
-            task = new CheckInTask(projectiler);
-            ((CheckInTask) task).valueProperty().addListener(new ChangeListener<Date>() {
+    private void performCheckIn() {
+        if (projectiler.isCheckedIn()) {
+            // Already checked in
+            final Date startDate = UserDataStore.getInstance().getStartDate();
+            displayFromTimeLabel(startDate);
+            startTimeSpentCountUp(startDate);
+        } else {
+            final CheckInTask task = new CheckInTask(projectiler);
+            task.valueProperty().addListener(new ChangeListener<Date>() {
                 @Override
                 public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
                     displayFromTimeLabel(newDate);
                     startTimeSpentCountUp(newDate);
                 }
             });
-            timeSpentLabel.setOpacity(0.2);
-            UITools.fadeIn(timeSpentLabel);
-        } else {
-            // if this is the second pull --> checkout
-            final String projectKey = projectChooser.getSelectionModel().getSelectedItem();
-            if (projectKey.isEmpty()) {
-                return;
-            }
-            task = new CheckOutTask(projectiler, projectKey);
-            loadingIndication(true);
-            ((CheckOutTask) task).valueProperty().addListener(new ChangeListener<Date>() {
-                @Override
-                public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
+            new Thread(task).start();
+        }
+        timeSpentLabel.setOpacity(0.2);
+        UITools.fadeIn(timeSpentLabel);
+
+    }
+
+    private void performCheckOut() {
+        final String projectKey = projectChooser.getSelectionModel().getSelectedItem();
+        if (projectKey.isEmpty()) {
+            return;
+        }
+        final CheckOutTask task = new CheckOutTask(projectiler, projectKey);
+        loadingIndication(true);
+        task.valueProperty().addListener(new ChangeListener<Date>() {
+            @Override
+            public void changed(final ObservableValue<? extends Date> bean, final Date oldDate, final Date newDate) {
+                if (newDate != null) {
                     displayToTimeLabel(newDate);
                     loadingIndication(false);
+                } else {
+                    System.out.println("test");
                 }
-            });
-        }
+            }
+        });
         new Thread(task).start();
+    }
+
+    private void bookProjectAgainstProjectile() {
+
+        // if this is the first pull --> checkin
+        if (!projectiler.isCheckedIn()) {
+
+        } else {
+            // if this is the second pull --> checkout
+
+        }
+
     }
 
     private void loadingIndication(final boolean enabled) {
