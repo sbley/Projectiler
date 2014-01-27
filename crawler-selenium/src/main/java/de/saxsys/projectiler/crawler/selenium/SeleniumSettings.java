@@ -7,8 +7,7 @@ public class SeleniumSettings {
 	}
 
 	public String getFirefoxBinaryPath() {
-		return System.getProperty("firefox.path",
-				"c:\\Program Files (x86)\\Internet\\Mozilla Firefox\\firefox.exe");
+		return System.getProperty("firefox.path");
 	}
 
 }

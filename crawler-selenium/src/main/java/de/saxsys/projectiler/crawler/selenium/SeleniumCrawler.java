@@ -194,7 +194,11 @@ public class SeleniumCrawler implements Crawler {
 	}
 
 	private WebDriver firefoxDriver() {
-		return new FirefoxDriver(new FirefoxBinary(
-				new File(seleniumSettings.getFirefoxBinaryPath())), null);
+		try {
+			return new FirefoxDriver();
+		} catch (WebDriverException e) {
+			return new FirefoxDriver(new FirefoxBinary(new File(
+					seleniumSettings.getFirefoxBinaryPath())), null);
+		}
 	}
 }
