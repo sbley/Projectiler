@@ -25,7 +25,7 @@ public class UserDataStore implements Serializable {
 	private static final Path FILEPATH = Paths.get(FILENAME);
 
 	private Date startDate;
-	private String userName;
+	private String userName = "";
 	private String projectName;
 	private transient String password;
 
