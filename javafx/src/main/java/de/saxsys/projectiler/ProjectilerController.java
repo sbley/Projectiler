@@ -55,7 +55,6 @@ public class ProjectilerController {
 
     @FXML
     void initialize() {
-
         initLogin();
         initTransition();
         initProjectChooser();
@@ -71,6 +70,8 @@ public class ProjectilerController {
                 loggedIn();
                 fillDropDownWithProjects();
                 if (projectiler.isCheckedIn()) {
+                    Notification.Notifier.INSTANCE.notifySuccess("Bestehende Buchung",
+                            "Bestehende Buchung wiederhergestellt.");
                     performCheckIn();
                     pullCardDown();
                 }
@@ -108,8 +109,10 @@ public class ProjectilerController {
     }
 
     private void loggedIn() {
+        loadingIndication(false);
         login.setVisible(false);
         UITools.makeVisible(closeImage);
+        UITools.hide(fromTimeLabel, toTimeLabel, timeSpentLabel);
         UITools.fadeIn(timePane, timeImage);
         timePane.setMouseTransparent(false);
         root.getChildren().remove(login);
@@ -257,25 +260,11 @@ public class ProjectilerController {
             public void handle(final WorkerStateEvent arg0) {
                 if (task.getValue() != null) {
                     displayToTimeLabel(task.getValue());
-                    loadingIndication(false);
-                } else {
-                    System.out.println("test");
                 }
+                loadingIndication(false);
             }
         });
         new Thread(task).start();
-    }
-
-    private void bookProjectAgainstProjectile() {
-
-        // if this is the first pull --> checkin
-        if (!projectiler.isCheckedIn()) {
-
-        } else {
-            // if this is the second pull --> checkout
-
-        }
-
     }
 
     private void loadingIndication(final boolean enabled) {
@@ -289,7 +278,18 @@ public class ProjectilerController {
     }
 
     private void startTimeSpentCountUp(final Date date) {
-        new TimeSpentCountUpThread(timeSpentLabel.textProperty(), date).start();
+        final TimeSpentCountUpThread timeSpentCountUpThread =
+                new TimeSpentCountUpThread(timeSpentLabel.textProperty(), date);
+        timeSpentLabel.opacityProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(final ObservableValue<? extends Number> arg0, final Number arg1, final Number arg2) {
+                if (arg2.doubleValue() == 0) {
+                    timeSpentCountUpThread.interrupt();
+                }
+            }
+        });
+        UITools.fadeIn(timeSpentLabel);
+        timeSpentCountUpThread.start();
     }
 
 }

@@ -183,8 +183,14 @@ public class Notification {
          * @param NOTIFICATION
          */
         public void notify(final Notification NOTIFICATION) {
-            preOrder();
-            showPopup(NOTIFICATION);
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    preOrder();
+                    showPopup(NOTIFICATION);
+                }
+            });
         }
 
         /**

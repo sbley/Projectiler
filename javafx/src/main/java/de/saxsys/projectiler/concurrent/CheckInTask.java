@@ -1,11 +1,14 @@
 package de.saxsys.projectiler.concurrent;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
 
 public class CheckInTask extends Task<Date> {
+
+    private static final Logger LOGGER = Logger.getLogger(CheckInTask.class.getSimpleName());
 
     private final Projectiler projectiler;
 
@@ -14,13 +17,10 @@ public class CheckInTask extends Task<Date> {
     }
 
     @Override
-    protected Date call() throws Exception {
+    protected Date call() {
+        LOGGER.info("Perform checkin from GUI");
         Date checkin = null;
-        try {
-            checkin = projectiler.checkin();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        checkin = projectiler.checkin();
         this.succeeded();
         return checkin;
     }
