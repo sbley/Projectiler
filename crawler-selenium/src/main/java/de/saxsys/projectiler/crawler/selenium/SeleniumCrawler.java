@@ -45,47 +45,55 @@ public class SeleniumCrawler implements Crawler {
 
 	@Override
 	public void checkCredentials(final Credentials user) throws CrawlingException {
+		initDriver();
 		try {
-			initDriver();
 			login(user);
 			logout();
-			releaseDriver();
 		} catch (final WebDriverException e) {
 			throw new CrawlingException("Error while checking credentials.", e);
+		} finally {
+			releaseDriver();
+		}
+	}
+
+	@Override
+	public List<String> getProjectNames(final Credentials user) {
+		initDriver();
+		try {
+			login(user);
+			openTimeTracker();
+			return readProjectNames();
+		} catch (final WebDriverException e) {
+			throw new CrawlingException("Error while retrieving project names.", e);
+		} finally {
+			try {
+				logout();
+			} catch (final WebDriverException e) {
+				throw new CrawlingException("Error while retrieving project names.", e);
+			} finally {
+				releaseDriver();
+			}
 		}
 	}
 
 	@Override
 	public void clock(final Credentials user, final String projectName, final Date start,
 			final Date end) throws CrawlingException {
+		initDriver();
 		try {
-			initDriver();
 			login(user);
 			openTimeTracker();
-
 			clockTime(start, end, projectName);
-
-			logout();
-			releaseDriver();
 		} catch (final WebDriverException e) {
 			throw new CrawlingException("Error while clocking time.", e);
-		}
-	}
-
-	@Override
-	public List<String> getProjectNames(final Credentials user) {
-		try {
-			initDriver();
-			login(user);
-			openTimeTracker();
-
-			final List<String> projectNames = readProjectNames();
-
-			logout();
-			releaseDriver();
-			return projectNames;
-		} catch (final WebDriverException e) {
-			throw new CrawlingException("Error while retrieving project names.", e);
+		} finally {
+			try {
+				logout();
+			} catch (final WebDriverException e) {
+				throw new CrawlingException("Error while clocking time.", e);
+			} finally {
+				releaseDriver();
+			}
 		}
 	}
 
@@ -124,6 +132,20 @@ public class SeleniumCrawler implements Crawler {
 		LOGGER.info("Timetracker opened.");
 	}
 
+	private List<String> readProjectNames() {
+		final List<String> projectNames = new ArrayList<>();
+		final List<WebElement> options = driver.findElements(By
+				.cssSelector("select[id$='NewWhat_0_0'] option"));
+		for (final WebElement option : options) {
+			final String text = option.getText();
+			if (!text.trim().isEmpty()) {
+				projectNames.add(text);
+			}
+		}
+		LOGGER.info("Project names read.");
+		return projectNames;
+	}
+
 	/**
 	 * @param projectName
 	 *            can be substring of the project name but must be identify only
@@ -147,6 +169,7 @@ public class SeleniumCrawler implements Crawler {
 			LOGGER.info("Overwrite confirmed.");
 		} catch (final NoSuchElementException e) {
 		} finally {
+			// verify time has been clocked
 			String inputStartId = driver
 					.findElement(
 							By.cssSelector("input.rw[id*='Field_Start'][value='"
@@ -159,20 +182,6 @@ public class SeleniumCrawler implements Crawler {
 					+ "'] option[selected][value='" + selectedProjectValue + "']"));
 			LOGGER.info("Time clocked for project '" + projectName + "'.");
 		}
-	}
-
-	private List<String> readProjectNames() {
-		final List<String> projectNames = new ArrayList<>();
-		final List<WebElement> options = driver.findElements(By
-				.cssSelector("select[id$='NewWhat_0_0'] option"));
-		for (final WebElement option : options) {
-			final String text = option.getText();
-			if (!text.trim().isEmpty()) {
-				projectNames.add(text);
-			}
-		}
-		LOGGER.info("Project names read.");
-		return projectNames;
 	}
 
 	private void logout() {
