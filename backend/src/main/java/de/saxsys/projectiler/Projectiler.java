@@ -43,7 +43,7 @@ public class Projectiler {
      * @return checkin date
      * @throws ProjectilerException in case backend operations fail
      */
-    public Date checkin() throws ProjectilerException {
+    public Date checkin() {
         final Date start = new Date();
         dataStore.setStartDate(start);
         dataStore.save();
@@ -67,6 +67,8 @@ public class Projectiler {
         final Date start = dataStore.getStartDate();
         final Date end = new Date();
         if (formatHHmm(start).equals(formatHHmm(end))) {
+            dataStore.clearStartDate();
+            dataStore.save();
             throw new IllegalStateException("Work time must be at least 1 minute.");
         }
 
