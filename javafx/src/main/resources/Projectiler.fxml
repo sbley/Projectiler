@@ -54,7 +54,7 @@
         <Image url="@projectiler_close.png" />
       </image>
     </ImageView>
-    <ChoiceBox fx:id="projectChooser" maxWidth="295.0" minHeight="50.0" minWidth="295.0" prefWidth="295.0" translateY="0.0">
+    <ChoiceBox fx:id="projectChooser" maxWidth="295.0" minHeight="30.0" minWidth="295.0" prefWidth="295.0" translateY="0.0">
       <items>
         <FXCollections fx:factory="observableArrayList">
           <String fx:value="Item 1" />
