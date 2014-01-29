@@ -48,32 +48,32 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	@Override
-	public void clock(final Credentials credentials, final String projectName, final Date start,
-			final Date end) throws CrawlingException {
-		try {
-			Map<String, String> cookies = login(credentials);
-			Response response = openTimeTracker(cookies, "1");
-
-			clockTime(start, end, projectName, cookies, response.parse());
-
-			logout(cookies, "2");
-		} catch (final IOException e) {
-			throw new CrawlingException("Error while clocking time.", e);
-		}
-	}
-
-	@Override
 	public List<String> getProjectNames(final Credentials credentials) throws CrawlingException {
 		try {
 			Map<String, String> cookies = login(credentials);
-			Response response = openTimeTracker(cookies, "1");
+			Response response = openTimeTracker(cookies);
 
 			final List<String> projectNames = readProjectNames(response.parse());
 
 			logout(cookies, "2");
 			return projectNames;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new CrawlingException("Error while retrieving project names.", e);
+		}
+	}
+
+	@Override
+	public void clock(final Credentials credentials, final String projectName, final Date start,
+			final Date end) throws CrawlingException {
+		try {
+			Map<String, String> cookies = login(credentials);
+			Response response = openTimeTracker(cookies);
+
+			clockTime(start, end, projectName, cookies, response.parse());
+
+			logout(cookies, "3");
+		} catch (final IOException e) {
+			throw new CrawlingException("Error while clocking time.", e);
 		}
 	}
 
@@ -96,18 +96,16 @@ public class JSoupCrawler implements Crawler {
 		}
 	}
 
-	private Response openTimeTracker(final Map<String, String> cookies, String taid)
-			throws IOException {
+	private Response openTimeTracker(final Map<String, String> cookies) throws IOException {
 		String today = formatToday();
 		return Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).cookies(cookies)
-				.data("taid", taid).data("CurrentFocusField", "0").data("CurrentDraggable", "0")
-				.data("CurrentDropTraget", "0").data("Id_34L.val.MenuValue", "closeallwindows")
-				.data("Id_15L.FIELD.keyword", "").data("Id_15L.FIELD.querystring", "")
-				.data("Id_15L.FIELD.queryLogic", "ALL").data("Id_15L.FIELD.doctype", "-1")
-				.data("Id_15L.BUTTON.TimeTracker.x", "8").data("Id_15L.BUTTON.TimeTracker.y", "8")
-				.data("Id_14L.val.Invisible", "0").data("Id_18.val.BsmHiddenViewField", "1")
-				.data("Id_20.Field.0.Freetext", "").data("Id_20.Field.0.WordQueryType", "0")
-				.data("Id_20.Field.0.Category", "-1").data("Id_20.Field.0.DocumentType", "-1")
+				.data("taid", "1").data("CurrentFocusField", "0").data("CurrentDraggable", "0")
+				.data("CurrentDropTraget", "0").data("Id_15L.FIELD.queryLogic", "ALL")
+				.data("Id_15L.FIELD.doctype", "-1").data("Id_15L.BUTTON.TimeTracker.x", "8")
+				.data("Id_15L.BUTTON.TimeTracker.y", "8").data("Id_14L.val.Invisible", "0")
+				.data("Id_18.val.BsmHiddenViewField", "1").data("Id_20.Field.0.Freetext", "")
+				.data("Id_20.Field.0.WordQueryType", "0").data("Id_20.Field.0.Category", "-1")
+				.data("Id_20.Field.0.DocumentType", "-1")
 				.data("Id_20.Field.0.Field_TimeTracker", "4")
 				.data("Id_20.Field.0.Field_TimeTrackerDate:0", today)
 				.data("Id_20.Field.0.Field_TimeTrackerDate2:0", today).execute();
@@ -176,16 +174,12 @@ public class JSoupCrawler implements Crawler {
 
 	}
 
-	/** Transaction ID from a documents hidden input field */
-	private String taid(final Document page) {
-		return page.select("input[name=taid]").val();
-	}
-
+	/** Time formatted to Projectile format */
 	private String formatTime(final Date time) {
 		return new SimpleDateFormat(settings.getTimeFormat()).format(time);
 	}
 
-	/** current date formatted as dd.MM.yyyy */
+	/** Current date formatted as dd.MM.yyyy */
 	private String formatToday() {
 		return new SimpleDateFormat("dd.MM.yyyy").format(new Date());
 	}

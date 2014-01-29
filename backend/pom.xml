@@ -20,7 +20,7 @@
 		<!-- include crawler implementation here (selenium or jsoup) -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>crawler-selenium</artifactId>
+			<artifactId>crawler-jsoup</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

@@ -1,11 +1,16 @@
 package de.saxsys.projectiler.crawler;
 
-public class Credentials {
+/**
+ * Credentials to log into Projectile.
+ * 
+ * @author stefan.bley
+ */
+public final class Credentials {
 
-	private String username;
-	private String password;
+	private final String username;
+	private final String password;
 
-	public Credentials(String username, String password) {
+	public Credentials(final String username, final String password) {
 		this.username = username;
 		this.password = password;
 	}
@@ -17,5 +22,4 @@ public class Credentials {
 	public String getPassword() {
 		return password;
 	}
-
 }

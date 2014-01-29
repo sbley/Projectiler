@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import de.saxsys.projectiler.Notification;
 import de.saxsys.projectiler.Projectiler;
-import de.saxsys.projectiler.UserDataStore;
+//import de.saxsys.projectiler.UserDataStore;
 import de.saxsys.projectiler.concurrent.LoginTask;
 import de.saxsys.projectiler.misc.UITools;
 
@@ -93,7 +93,7 @@ public class Login extends VBox {
     }
 
     private void initTextFields() {
-        final String userName = UserDataStore.getInstance().getUserName();
+        final String userName = projectiler.getUserName();
         usernameField.setText(userName);
         if (!userName.isEmpty()) {
             passwordField.requestFocus();
