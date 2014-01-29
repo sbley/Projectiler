@@ -41,7 +41,7 @@ public class JSoupCrawler implements Crawler {
 	public void checkCredentials(final Credentials credentials) throws CrawlingException {
 		try {
 			Map<String, String> cookies = login(credentials);
-			logout(cookies);
+			logout(cookies, "1");
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while checking credentials.", e);
 		}
@@ -52,11 +52,11 @@ public class JSoupCrawler implements Crawler {
 			final Date end) throws CrawlingException {
 		try {
 			Map<String, String> cookies = login(credentials);
-			Response response = openTimeTracker(cookies);
+			Response response = openTimeTracker(cookies, "1");
 
 			clockTime(start, end, projectName, cookies, response.parse());
 
-			logout(cookies);
+			logout(cookies, "2");
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while clocking time.", e);
 		}
@@ -66,11 +66,11 @@ public class JSoupCrawler implements Crawler {
 	public List<String> getProjectNames(final Credentials credentials) throws CrawlingException {
 		try {
 			Map<String, String> cookies = login(credentials);
-			Response response = openTimeTracker(cookies);
+			Response response = openTimeTracker(cookies, "1");
 
 			final List<String> projectNames = readProjectNames(response.parse());
 
-			logout(cookies);
+			logout(cookies, "2");
 			return projectNames;
 		} catch (IOException e) {
 			throw new CrawlingException("Error while retrieving project names.", e);
@@ -96,19 +96,21 @@ public class JSoupCrawler implements Crawler {
 		}
 	}
 
-	private Response openTimeTracker(final Map<String, String> cookies) throws IOException {
+	private Response openTimeTracker(final Map<String, String> cookies, String taid)
+			throws IOException {
 		String today = formatToday();
-		Response response = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
-				.cookies(cookies).data("taid", "2").data("Id_34L.act.MenuSelect_showintro", "0")
-				.data("CurrentFocusField", "0").data("CurrentDraggable", "0")
-				.data("CurrentDropTraget", "0").data("Id_15L.FIELD.queryLogic", "ALL")
-				.data("Id_15L.FIELD.doctype", "-1").data("Id_14L.val.Invisible", "0")
-				.data("Id_18.val.BsmHiddenViewField", "1").data("Id_20.Field.0.WordQueryType", "0")
+		return Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).cookies(cookies)
+				.data("taid", taid).data("CurrentFocusField", "0").data("CurrentDraggable", "0")
+				.data("CurrentDropTraget", "0").data("Id_34L.val.MenuValue", "closeallwindows")
+				.data("Id_15L.FIELD.keyword", "").data("Id_15L.FIELD.querystring", "")
+				.data("Id_15L.FIELD.queryLogic", "ALL").data("Id_15L.FIELD.doctype", "-1")
+				.data("Id_15L.BUTTON.TimeTracker.x", "8").data("Id_15L.BUTTON.TimeTracker.y", "8")
+				.data("Id_14L.val.Invisible", "0").data("Id_18.val.BsmHiddenViewField", "1")
+				.data("Id_20.Field.0.Freetext", "").data("Id_20.Field.0.WordQueryType", "0")
 				.data("Id_20.Field.0.Category", "-1").data("Id_20.Field.0.DocumentType", "-1")
 				.data("Id_20.Field.0.Field_TimeTracker", "4")
 				.data("Id_20.Field.0.Field_TimeTrackerDate:0", today)
 				.data("Id_20.Field.0.Field_TimeTrackerDate2:0", today).execute();
-		return response;
 	}
 
 	private List<String> readProjectNames(Document timeTrackerPage) throws IOException {
@@ -161,11 +163,22 @@ public class JSoupCrawler implements Crawler {
 		LOGGER.info("Time clocked for project '" + projectName + "'.");
 	}
 
-	private void logout(final Map<String, String> cookies) throws IOException {
-		Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).cookies(cookies)
-				.data("Id_15L.BUTTON.logout.x", "3").data("Id_15L.BUTTON.logout.y", "9").execute();
-		LOGGER.info("User logged out.");
+	private void logout(final Map<String, String> cookies, String taid) throws IOException {
+		Response execute = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
+				.cookies(cookies).data("taid", taid).data("Id_15L.BUTTON.logout.x", "3")
+				.data("Id_15L.BUTTON.logout.y", "9").execute();
+		final Elements select = execute.parse().select("td:contains(korrekt beendet)");
+		if (!select.isEmpty()) {
+			LOGGER.info("User logged out.");
+		} else {
+			LOGGER.severe("Fehler beim Logout");
+		}
 
+	}
+
+	/** Transaction ID from a documents hidden input field */
+	private String taid(final Document page) {
+		return page.select("input[name=taid]").val();
 	}
 
 	private String formatTime(final Date time) {
