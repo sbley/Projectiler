@@ -22,32 +22,10 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.2.51</version>
+		</dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>systemPath</id>
-			<activation>
-				<activeByDefault />
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>javafx</groupId>
-					<artifactId>javafx</artifactId>
-					<scope>system</scope>
-					<version>2.2</version>
-					<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>oracle</id>
-			<dependencies>
-				<dependency>
-					<groupId>com.oracle</groupId>
-					<artifactId>javafx</artifactId>
-					<version>2.2.51</version>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 </project>
