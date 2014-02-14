@@ -23,6 +23,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+
+import org.apache.commons.lang3.StringUtils;
+
 import de.saxsys.projectiler.concurrent.CheckInTask;
 import de.saxsys.projectiler.concurrent.CheckOutTask;
 import de.saxsys.projectiler.concurrent.TimeSpentCountUpThread;
@@ -32,6 +35,10 @@ import de.saxsys.projectiler.misc.ProjectTask;
 import de.saxsys.projectiler.misc.UITools;
 
 public class ProjectilerController {
+
+    private static final double OPAQUE_VALUE = 0.8;
+
+    private static final double VISIBLE_VALUE = 1.0;
 
     private static final Logger LOGGER = Logger.getLogger(ProjectilerController.class.getSimpleName());
 
@@ -52,6 +59,8 @@ public class ProjectilerController {
     private TranslateTransition transition;
 
     private final Projectiler projectiler = Projectiler.createDefaultProjectiler();
+
+    private TimeSpentCountUpThread timeSpentCountUpThread;
 
     @FXML
     void initialize() {
@@ -177,6 +186,8 @@ public class ProjectilerController {
      * Labels
      */
     private void displayToTimeLabel(final Date date) {
+        // Stop Timer which counted the checkin time
+        timeSpentCountUpThread.interrupt();
         if (date == null) {
             toTimeLabel.setText("Error");
         } else {
@@ -250,14 +261,14 @@ public class ProjectilerController {
 
     private void performCheckOut() {
         final String projectKey = projectChooser.getSelectionModel().getSelectedItem();
-        if (projectKey.isEmpty()) {
+        if (StringUtils.isEmpty(projectKey)) {
             return;
         }
         final CheckOutTask task = new CheckOutTask(projectiler, projectKey);
         loadingIndication(true);
         task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
-            public void handle(final WorkerStateEvent arg0) {
+            public void handle(final WorkerStateEvent event) {
                 if (task.getValue() != null) {
                     displayToTimeLabel(task.getValue());
                 }
@@ -268,9 +279,9 @@ public class ProjectilerController {
     }
 
     private void loadingIndication(final boolean enabled) {
-        double opacity = 1.0;
+        double opacity = VISIBLE_VALUE;
         if (enabled) {
-            opacity = 0.8;
+            opacity = OPAQUE_VALUE;
         }
         final Parent root = timeImage.getScene().getRoot();
         root.setMouseTransparent(enabled);
@@ -278,16 +289,7 @@ public class ProjectilerController {
     }
 
     private void startTimeSpentCountUp(final Date date) {
-        final TimeSpentCountUpThread timeSpentCountUpThread =
-                new TimeSpentCountUpThread(timeSpentLabel.textProperty(), date);
-        timeSpentLabel.opacityProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(final ObservableValue<? extends Number> arg0, final Number arg1, final Number arg2) {
-                if (arg2.doubleValue() == 0) {
-                    timeSpentCountUpThread.interrupt();
-                }
-            }
-        });
+        timeSpentCountUpThread = new TimeSpentCountUpThread(timeSpentLabel.textProperty(), date);
         UITools.fadeIn(timeSpentLabel);
         timeSpentCountUpThread.start();
     }

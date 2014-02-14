@@ -16,9 +16,10 @@ public class ClientStarter extends Application {
     @Override
     public void start(final Stage stage) throws Exception {
         final URL rootUrl = ClientStarter.class.getResource("/Projectiler.fxml");
-        final StackPane vBox = FXMLLoader.load(rootUrl);
-
-        final Scene scene = new Scene(vBox);
+        final StackPane stackPane = FXMLLoader.load(rootUrl);
+        final MovablePane movablePane = new MovablePane(stage);
+        movablePane.getChildren().add(stackPane);
+        final Scene scene = new Scene(movablePane);
         stage.setScene(scene);
         stage.setTitle("Projectiler");
         stage.initStyle(StageStyle.TRANSPARENT);
