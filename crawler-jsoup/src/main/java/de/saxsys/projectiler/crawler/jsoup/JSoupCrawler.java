@@ -78,7 +78,7 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	/**
-	 * Login to Projectile and return the cookies contaning the session ID.
+	 * Login to Projectile and return the cookies containing the session ID.
 	 */
 	private Map<String, String> login(final Credentials cred) throws IOException {
 		Response response = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
@@ -114,6 +114,9 @@ public class JSoupCrawler implements Crawler {
 	private List<String> readProjectNames(Document timeTrackerPage) throws IOException {
 		List<String> projectNames = new ArrayList<>();
 		Elements options = timeTrackerPage.select("select[id$=NewWhat_0_0] option");
+		if (options.isEmpty()) {
+			throw new CrawlingException("No projects found.");
+		}
 		for (Element option : options) {
 			String text = option.text();
 			if (!text.trim().isEmpty()) {
@@ -166,12 +169,11 @@ public class JSoupCrawler implements Crawler {
 				.cookies(cookies).data("taid", taid).data("Id_15L.BUTTON.logout.x", "3")
 				.data("Id_15L.BUTTON.logout.y", "9").execute();
 		final Elements select = execute.parse().select("td:contains(korrekt beendet)");
-		if (!select.isEmpty()) {
-			LOGGER.info("User logged out.");
+		if (select.isEmpty()) {
+			LOGGER.severe("Error while logging out.");
 		} else {
-			LOGGER.severe("Fehler beim Logout");
+			LOGGER.info("User logged out.");
 		}
-
 	}
 
 	/** Time formatted to Projectile format */
