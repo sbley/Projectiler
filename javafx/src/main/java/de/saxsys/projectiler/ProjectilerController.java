@@ -2,7 +2,6 @@ package de.saxsys.projectiler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransitionBuilder;
@@ -37,29 +36,21 @@ import de.saxsys.projectiler.misc.UITools;
 public class ProjectilerController {
 
     private static final double OPAQUE_VALUE = 0.8;
-
     private static final double VISIBLE_VALUE = 1.0;
-
-    private static final Logger LOGGER = Logger.getLogger(ProjectilerController.class.getSimpleName());
-
-    @FXML
-    private StackPane root, timePane;
 
     private Login login;
 
     @FXML
+    private StackPane root, timePane;
+    @FXML
     private ImageView timeImage, closeImage;
-
     @FXML
     private Label fromTimeLabel, toTimeLabel, timeSpentLabel;
-
     @FXML
     private ChoiceBox<String> projectChooser;
 
     private TranslateTransition transition;
-
     private final Projectiler projectiler = Projectiler.createDefaultProjectiler();
-
     private TimeSpentCountUpThread timeSpentCountUpThread;
 
     @FXML

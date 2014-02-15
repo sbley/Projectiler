@@ -96,7 +96,12 @@ public class Login extends VBox {
         final String userName = projectiler.getUserName();
         usernameField.setText(userName);
         if (!userName.isEmpty()) {
-            passwordField.requestFocus();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    passwordField.requestFocus();
+                }
+            });
         }
     }
 
