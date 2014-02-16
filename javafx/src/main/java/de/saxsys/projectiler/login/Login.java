@@ -15,10 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import de.saxsys.projectiler.Notification;
 import de.saxsys.projectiler.Projectiler;
 //import de.saxsys.projectiler.UserDataStore;
 import de.saxsys.projectiler.concurrent.LoginTask;
+import de.saxsys.projectiler.misc.Notification;
 import de.saxsys.projectiler.misc.UITools;
 
 public class Login extends VBox {

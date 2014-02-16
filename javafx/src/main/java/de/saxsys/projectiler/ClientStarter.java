@@ -2,6 +2,9 @@ package de.saxsys.projectiler;
 
 import java.net.URL;
 
+import de.saxsys.projectiler.misc.MovablePane;
+import de.saxsys.projectiler.misc.Notification;
+import de.saxsys.projectiler.tray.Tray;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -24,14 +27,11 @@ public class ClientStarter extends Application {
         stage.setTitle("Projectiler");
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
+        Tray.getInstance().initTrayForStage(stage);
         stage.show();
         initConfiguration(stage);
-
     }
 
-    /**
-     * @param stage
-     */
     private void initConfiguration(final Stage stage) {
         final double notHeight = 30;
         final double notWidth = stage.getWidth() - 28;

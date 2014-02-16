@@ -1,4 +1,4 @@
-package de.saxsys.projectiler;
+package de.saxsys.projectiler.misc;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

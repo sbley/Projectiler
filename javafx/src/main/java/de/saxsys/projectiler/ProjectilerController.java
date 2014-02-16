@@ -7,7 +7,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
 import javafx.animation.TranslateTransitionBuilder;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,8 +29,10 @@ import de.saxsys.projectiler.concurrent.CheckOutTask;
 import de.saxsys.projectiler.concurrent.TimeSpentCountUpThread;
 import de.saxsys.projectiler.login.Login;
 import de.saxsys.projectiler.misc.DisableSceneOnHalfAnimation;
+import de.saxsys.projectiler.misc.Notification;
 import de.saxsys.projectiler.misc.ProjectTask;
 import de.saxsys.projectiler.misc.UITools;
+import de.saxsys.projectiler.tray.Tray;
 
 public class ProjectilerController {
 
@@ -191,7 +192,7 @@ public class ProjectilerController {
 
     @FXML
     void onCloseButtonClicked(final Event event) {
-        Platform.exit();
+        Tray.getInstance().hideStage();
     }
 
     private void fillDropDownWithProjects() {

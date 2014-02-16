@@ -11,7 +11,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane fx:id="root" minHeight="594.0" minWidth="350.0" prefHeight="594.0" prefWidth="350.0" style="-fx-background-color:transparent;" xmlns:fx="http://javafx.com/fxml" fx:controller="de.saxsys.projectiler.ProjectilerController">
+<StackPane fx:id="root" minHeight="594.0" minWidth="350.0" prefHeight="594.0" prefWidth="350.0" style="-fx-background-color:transparent;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.saxsys.projectiler.ProjectilerController">
   <!-- TODO Add Nodes -->
   <children>
     <StackPane id="StackPane" fx:id="timePane">
