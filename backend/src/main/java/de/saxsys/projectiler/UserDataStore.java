@@ -63,7 +63,7 @@ public class UserDataStore implements Serializable {
 			INSTANCE.setUserName(data.getUserName());
 			INSTANCE.setProjectName(data.getProjectName());
 		} catch (final Exception e) {
-			LOGGER.severe("Couldn't load existing profile from disk. " + e.getMessage());
+			LOGGER.warning("Couldn't load existing profile from disk. " + e.getMessage());
 		}
 	}
 
