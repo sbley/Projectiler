@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>javafx</artifactId>
 	<organization>
-		<name>Saxonia Systems AGF</name>
+		<name>Saxonia Systems AG</name>
 	</organization>
 	<dependencies>
 		<dependency>

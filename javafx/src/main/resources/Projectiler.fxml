@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -35,16 +36,6 @@
       </children>
     </StackPane>
     <ImageView fx:id="timeImage" fitHeight="0.0" fitWidth="0.0" opacity="1.0" pickOnBounds="true" preserveRatio="true" translateY="280.0" y="0.0" StackPane.alignment="TOP_CENTER">
-      <effect>
-        <Lighting diffuseConstant="1.7777777777777777" specularConstant="0.44444444444444453" specularExponent="33.968253968253975" surfaceScale="0.0">
-          <bumpInput>
-            <Shadow />
-          </bumpInput>
-          <light>
-            <javafx.scene.effect.Light.Spot pointsAtX="50.0" pointsAtY="50.0" specularExponent="0.8095238095238095" x="285.0" y="300.0" z="200.0" />
-          </light>
-        </Lighting>
-      </effect>
       <image>
         <Image url="@projectiler_uhr.png" />
       </image>
@@ -69,4 +60,7 @@
       </font>
     </Label>
   </children>
+  <stylesheets>
+    <URL value="@Projectiler.css" />
+  </stylesheets>
 </StackPane>

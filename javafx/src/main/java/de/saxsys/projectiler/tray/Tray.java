@@ -82,12 +82,12 @@ public class Tray {
     private void initTrayIcon() {
         Image image = null;
         try {
-            image = ImageIO.read(Tray.class.getResourceAsStream("/error.png"));
+            image = ImageIO.read(getClass().getResource("/projectiler.png"));
         } catch (IOException e1) {
             LOGGER.log(Level.SEVERE, "Error loading tray icon", e1);
         }
+
         trayIcon = new TrayIcon(image, "Projectiler", popup);
-        trayIcon.displayMessage("test", "test", MessageType.ERROR);
         trayIcon.addMouseListener(new ShowStageOnMouseDoubleClickListener(this));
         trayIcon.setImageAutoSize(true);
     }
