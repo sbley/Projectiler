@@ -53,7 +53,7 @@ public class Login extends VBox {
 
     @FXML
     void onCloseAction(final ActionEvent event) {
-        Platform.exit();
+        System.exit(1);
     }
 
     @FXML
