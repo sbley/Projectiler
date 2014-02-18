@@ -6,6 +6,14 @@
 		<artifactId>projectiler</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
+	<properties>
+	<!-- configuration of the setup -->
+		<innosetupdirectory>C:\Program Files (x86)\Inno Setup 5</innosetupdirectory>
+		<installerresources>rawfiles</installerresources>
+		<issfile>SetupConfiguration.iss</issfile>
+	</properties>
+
 	<artifactId>javafx</artifactId>
 	<organization>
 		<name>Saxonia Systems AG</name>
@@ -39,6 +47,7 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<build>
+				<!-- http://www.jrsoftware.org/isdl.php -->
 				<finalName>Projectiler-${project.version}</finalName>
 				<plugins>
 					<plugin>
@@ -58,6 +67,35 @@
 								<goals>
 									<goal>native</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- generate native client with dependencies -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>run-ant-exe</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<!-- copy to target to make replacements transient + replace variables in iss file -->
+										<copy file="${basedir}\${installerresources}\${issfile}"
+											tofile="${project.build.directory}\${issfile}" />
+										<replace token="@version@" value="${project.version}"
+											file="${project.build.directory}\${issfile}" />
+										<replace token="@IconDir@" value="${basedir}\${installerresources}"
+											file="${project.build.directory}\${issfile}" />
+										<exec executable="${innosetupdirectory}\iscc.exe"
+											failonerror="true">
+											<arg line="${project.build.directory}\${issfile}" />
+										</exec>
+									</tasks>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
