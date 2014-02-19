@@ -4,9 +4,8 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
-import de.saxsys.projectiler.InvalidCredentialsException;
 import de.saxsys.projectiler.Projectiler;
-import de.saxsys.projectiler.ProjectilerException;
+import de.saxsys.projectiler.crawler.InvalidCredentialsException;
 import de.saxsys.projectiler.misc.Notification;
 
 public class CheckOutTask extends Task<Date> {
@@ -28,19 +27,24 @@ public class CheckOutTask extends Task<Date> {
             LOGGER.info("Perform Checkout from GUI");
             checkout = projectiler.checkout(projectKey);
             Notification.Notifier.INSTANCE.notifySuccess("Buchung erfolgreich", "Buchung im Projectile durchgeführt.");
+
         } catch (final IllegalStateException e) {
             e.printStackTrace();
-            Notification.Notifier.INSTANCE.notifyWarning("Buchung abgebrochen", "Buchungsdauer war zu kurz.");
+            logError("Die Buchungsdauer war zu kurz (mind. 1 Minute).");
         } catch (final InvalidCredentialsException e) {
             e.printStackTrace();
-            Notification.Notifier.INSTANCE.notifyError("Fehler beim buchen", "Logindaten sind falsch.");
-        } catch (final ProjectilerException e) {
+            logError("Logindaten sind falsch.");
+        } catch (final Exception e) {
             e.printStackTrace();
-            Notification.Notifier.INSTANCE.notifyError("Fehler beim buchen", "Haha.");
+            logError("Unbekannter Fehler aufgetreten.");
         }
         projectiler.saveProjectName(projectKey);
 
         this.succeeded();
         return checkout;
+    }
+
+    private void logError(String error) {
+        Notification.Notifier.INSTANCE.notifyError("Fehler beim Buchen", error);
     }
 }

@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
+import de.saxsys.projectiler.crawler.ConnectionException;
+import de.saxsys.projectiler.crawler.InvalidCredentialsException;
+import de.saxsys.projectiler.misc.Notification;
 
 public class LoginTask extends Task<Boolean> {
 
@@ -21,15 +24,29 @@ public class LoginTask extends Task<Boolean> {
     }
 
     @Override
-    protected Boolean call() throws Exception {
+    protected Boolean call() {
+        LOGGER.info("Try to log in");
         try {
-            LOGGER.info("Try to log in");
             projectiler.saveCredentials(username, password);
-        } catch (final Exception e) {
+        } catch (InvalidCredentialsException e) {
             LOGGER.log(Level.SEVERE, "Error during login", e);
+            logError("Falsche Logindaten.");
+            return false;
+        } catch (ConnectionException e) {
+            LOGGER.log(Level.SEVERE, "Error during login", e);
+            logError("Projectile kann nicht erreicht werden.");
+            return false;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error during login", e);
+            logError("Unbekannter Fehler aufgetreten.");
             return false;
         }
+
         this.succeeded();
         return true;
+    }
+
+    private void logError(String error) {
+        Notification.Notifier.INSTANCE.notifyError("Fehler beim Login", error);
     }
 }

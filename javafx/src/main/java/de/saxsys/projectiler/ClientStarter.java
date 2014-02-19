@@ -39,7 +39,7 @@ public class ClientStarter extends Application {
     }
 
     private void initNotification(final Stage stage) {
-        final double notHeight = 30;
+        final double notHeight = 40;
         final double notWidth = stage.getWidth() - 28;
         Notification.Notifier.setOffsetY(-20);
         Notification.Notifier.setWidth(notWidth);

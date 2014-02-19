@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import de.saxsys.projectiler.Projectiler;
 //import de.saxsys.projectiler.UserDataStore;
 import de.saxsys.projectiler.concurrent.LoginTask;
-import de.saxsys.projectiler.misc.Notification;
 import de.saxsys.projectiler.misc.UITools;
 
 public class Login extends VBox {
@@ -78,10 +77,6 @@ public class Login extends VBox {
                 loginSucessful.set(sucessful);
                 loginFailed.set(!sucessful);
                 loginFinished();
-                if (!sucessful) {
-                    Notification.Notifier.INSTANCE.notifyError("Fehler beim Login",
-                            "Logindaten sind falsch\noder Konto ist gesperrt.");
-                }
             }
         });
     }
