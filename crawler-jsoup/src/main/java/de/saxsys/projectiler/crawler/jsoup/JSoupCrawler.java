@@ -1,6 +1,7 @@
 package de.saxsys.projectiler.crawler.jsoup;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.CrawlingException;
 import de.saxsys.projectiler.crawler.Credentials;
@@ -35,6 +37,7 @@ public class JSoupCrawler implements Crawler {
 
 	/** transaction id */
 	private String taid;
+	private Map<String, String> cookies;
 
 	public JSoupCrawler(final Settings settings) {
 		this.settings = settings;
@@ -43,8 +46,10 @@ public class JSoupCrawler implements Crawler {
 	@Override
 	public void checkCredentials(final Credentials credentials) throws CrawlingException {
 		try {
-			Map<String, String> cookies = login(credentials);
-			logout(cookies);
+			login(credentials);
+			logout();
+		} catch (final UnknownHostException e) {
+			throw new ConnectionException(e);
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while checking credentials.", e);
 		}
@@ -53,13 +58,15 @@ public class JSoupCrawler implements Crawler {
 	@Override
 	public List<String> getProjectNames(final Credentials credentials) throws CrawlingException {
 		try {
-			Map<String, String> cookies = login(credentials);
-			Document ttPage = openTimeTracker(cookies);
+			login(credentials);
+			Document ttPage = openTimeTracker();
 
 			List<String> projectNames = readProjectNames(ttPage);
 
-			logout(cookies);
+			logout();
 			return projectNames;
+		} catch (final UnknownHostException e) {
+			throw new ConnectionException(e);
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while retrieving project names.", e);
 		}
@@ -69,12 +76,14 @@ public class JSoupCrawler implements Crawler {
 	public void clock(final Credentials credentials, final String projectName, final Date start,
 			final Date end) throws CrawlingException {
 		try {
-			Map<String, String> cookies = login(credentials);
-			Document ttPage = openTimeTracker(cookies);
+			login(credentials);
+			Document ttPage = openTimeTracker();
 
-			clockTime(start, end, projectName, cookies, ttPage);
+			clockTime(start, end, projectName, ttPage);
 
-			logout(cookies);
+			logout();
+		} catch (final UnknownHostException e) {
+			throw new ConnectionException(e);
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while clocking time.", e);
 		}
@@ -83,24 +92,24 @@ public class JSoupCrawler implements Crawler {
 	/**
 	 * Login to Projectile and return the cookies containing the session ID.
 	 */
-	private Map<String, String> login(final Credentials cred) throws IOException {
+	private void login(final Credentials cred) throws IOException {
 		Response response = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
 				.data("login", cred.getUsername()).data("password", cred.getPassword())
 				.data("jsenabled", "0").data("external.loginOK.x", "8")
 				.data("external.loginOK.y", "8").execute();
 		Document startPage = response.parse();
 		if (startPage.getElementsByAttributeValue("name", "password").isEmpty()) {
-			readTaid(startPage);
 			String sessionId = response.cookie(JSESSIONID);
 			LOGGER.info("User " + cred.getUsername() + " logged in with session ID " + sessionId
 					+ ".");
-			return response.cookies();
+			saveTaid(startPage);
+			cookies = response.cookies();
 		} else {
 			throw new InvalidCredentialsException();
 		}
 	}
 
-	private Document openTimeTracker(final Map<String, String> cookies) throws IOException {
+	private Document openTimeTracker() throws IOException {
 		String today = formatToday();
 		Response response = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
 				.cookies(cookies).data("taid", taid).data("CurrentFocusField", "0")
@@ -111,7 +120,7 @@ public class JSoupCrawler implements Crawler {
 				.data("Id_19.Field.0.Field_TimeTrackerDate:0", today)
 				.data("Id_19.Field.0.Field_TimeTrackerDate2:0", today).execute();
 		Document ttPage = response.parse();
-		readTaid(ttPage);
+		saveTaid(ttPage);
 		return ttPage;
 	}
 
@@ -132,7 +141,7 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	private void clockTime(final Date start, final Date end, final String projectName,
-			final Map<String, String> cookies, final Document ttPage) throws IOException {
+			final Document ttPage) throws IOException {
 		String optionValue = null;
 		Elements options = ttPage.select("select[id$=NewWhat_0_0] option");
 		for (Element option : options) {
@@ -163,11 +172,11 @@ public class JSoupCrawler implements Crawler {
 				.data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
 				.data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
 				.data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), "").execute();
-		readTaid(response.parse());
+		saveTaid(response.parse());
 		LOGGER.info("Time clocked for project '" + projectName + "'.");
 	}
 
-	private void logout(final Map<String, String> cookies) throws IOException {
+	private void logout() throws IOException {
 		Response execute = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
 				.cookies(cookies).data("taid", taid).data("Id_14L.BUTTON.logout.x", "3")
 				.data("Id_14L.BUTTON.logout.y", "9").execute();
@@ -180,7 +189,7 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	/** Reads the transaction ID from the response and stores it to a field */
-	private void readTaid(final Document page) {
+	private void saveTaid(final Document page) {
 		taid = page.select("input[name=taid]").val();
 		LOGGER.finer("TAID: " + taid);
 	}

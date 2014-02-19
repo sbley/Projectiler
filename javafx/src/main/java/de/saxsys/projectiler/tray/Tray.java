@@ -59,8 +59,8 @@ public class Tray {
 
     private void initTrayPopup() {
         popup = new PopupMenu();
-        MenuItem open = new MenuItem("Open");
-        MenuItem exit = new MenuItem("Exit");
+        MenuItem open = new MenuItem("Öffnen");
+        MenuItem exit = new MenuItem("Beenden");
         ActionListener exitListener = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent arg0) {
