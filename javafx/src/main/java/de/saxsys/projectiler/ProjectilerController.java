@@ -18,7 +18,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -29,6 +28,7 @@ import de.saxsys.projectiler.concurrent.CheckOutTask;
 import de.saxsys.projectiler.concurrent.TimeSpentCountUpThread;
 import de.saxsys.projectiler.login.Login;
 import de.saxsys.projectiler.misc.DisableSceneOnHalfAnimation;
+import de.saxsys.projectiler.misc.MouseEventDistanceChecker;
 import de.saxsys.projectiler.misc.Notification;
 import de.saxsys.projectiler.misc.ProjectTask;
 import de.saxsys.projectiler.misc.UITools;
@@ -53,6 +53,7 @@ public class ProjectilerController {
     private TranslateTransition transition;
     private final Projectiler projectiler = Projectiler.createDefaultProjectiler();
     private TimeSpentCountUpThread timeSpentCountUpThread;
+    private MouseEventDistanceChecker distanceChecker;
 
     @FXML
     void initialize() {
@@ -148,16 +149,17 @@ public class ProjectilerController {
      */
 
     private void createListeners() {
-        timePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        distanceChecker = new MouseEventDistanceChecker(timePane) {
             @Override
-            public void handle(final MouseEvent arg0) {
+            public void fire() {
+                // If a click was performed on the timePane we have to check, whether it was not caused by a drag
                 if (pullCardDown()) {
                     performCheckIn();
                 } else if (liftCardUp()) {
                     performCheckOut();
                 }
             }
-        });
+        };
     }
 
     /*
