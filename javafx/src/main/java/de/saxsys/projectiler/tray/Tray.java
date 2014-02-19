@@ -58,7 +58,7 @@ public class Tray {
     }
 
     private void initTrayPopup() {
-        PopupMenu popup = new PopupMenu();
+        popup = new PopupMenu();
         MenuItem open = new MenuItem("Open");
         MenuItem exit = new MenuItem("Exit");
         ActionListener exitListener = new ActionListener() {
