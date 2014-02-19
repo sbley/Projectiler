@@ -178,8 +178,6 @@ public class ProjectilerController {
      * Labels
      */
     private void displayToTimeLabel(final Date date) {
-        // Stop Timer which counted the checkin time
-        timeSpentCountUpThread.interrupt();
         if (date == null) {
             toTimeLabel.setText("Error");
         } else {
@@ -265,6 +263,8 @@ public class ProjectilerController {
                     displayToTimeLabel(task.getValue());
                 }
                 loadingIndication(false);
+                // Stop Timer which counted the checkin time
+                timeSpentCountUpThread.interrupt();
             }
         });
         new Thread(task).start();
