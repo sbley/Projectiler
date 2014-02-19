@@ -8,8 +8,9 @@
 	</parent>
 
 	<properties>
-	<!-- configuration of the setup -->
-		<innosetupdirectory>C:\Program Files (x86)\Inno Setup 5</innosetupdirectory>
+		<!-- configuration of the setup -->
+		<!-- set property innosetup.dir in your settings.xml -->
+		<innosetupdirectory>${innosetup.dir}</innosetupdirectory>
 		<installerresources>rawfiles</installerresources>
 		<issfile>SetupConfiguration.iss</issfile>
 	</properties>
@@ -83,10 +84,13 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<!-- copy to target to make replacements transient + replace variables in iss file -->
-										<copy file="${basedir}\${installerresources}\${issfile}"
+										<!-- copy to target to make replacements transient + replace variables 
+											in iss file -->
+										<copy file="${project.basedir}\${installerresources}\${issfile}"
 											tofile="${project.build.directory}\${issfile}" />
 										<replace token="@version@" value="${project.version}"
+											file="${project.build.directory}\${issfile}" />
+										<replace token="@targetdir@" value="${project.build.directory}"
 											file="${project.build.directory}\${issfile}" />
 										<replace token="@IconDir@" value="${basedir}\${installerresources}"
 											file="${project.build.directory}\${issfile}" />

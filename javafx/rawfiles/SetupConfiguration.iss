@@ -37,10 +37,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\Users\alexander.casall\Documents\workspaces\work\Projectiler\javafx\target\jfx\native\bundles\Projectiler-@version@\Projectiler-@version@.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\alexander.casall\Documents\workspaces\work\Projectiler\javafx\target\jfx\native\bundles\Projectiler-@version@\Projectiler-@version@.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\alexander.casall\Documents\workspaces\work\Projectiler\javafx\target\jfx\native\bundles\Projectiler-@version@\app\*"; DestDir: "{app}\app"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\alexander.casall\Documents\workspaces\work\Projectiler\javafx\target\jfx\native\bundles\Projectiler-@version@\runtime\*"; DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "@targetdir@\jfx\native\bundles\Projectiler-@version@\Projectiler-@version@.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@targetdir@\jfx\native\bundles\Projectiler-@version@\Projectiler-@version@.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "@targetdir@\jfx\native\bundles\Projectiler-@version@\app\*"; DestDir: "{app}\app"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "@targetdir@\jfx\native\bundles\Projectiler-@version@\runtime\*"; DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#IconDir}\{#IconName}"; DestDir: "{app}"; Flags: ignoreversion; 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
