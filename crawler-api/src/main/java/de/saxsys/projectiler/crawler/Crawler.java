@@ -19,20 +19,25 @@ public interface Crawler {
 	 * 
 	 * @throws InvalidCredentialsException
 	 *             if the credentials are invalid
+	 * @throws ConnectionException
+	 *             if connection to Projectile cannot be established
 	 * @throws CrawlingException
 	 *             in case the crawling fails
 	 */
 	void checkCredentials(Credentials credentials) throws InvalidCredentialsException,
-			CrawlingException;
+			ConnectionException, CrawlingException;
 
 	/**
 	 * Get a list of all available project names.
 	 * 
+	 * @throws ConnectionException
+	 *             if connection to Projectile cannot be established
 	 * @throws CrawlingException
 	 *             in case the crawling fails
 	 * @return project names or empty list
 	 */
-	List<String> getProjectNames(Credentials credentials) throws CrawlingException;
+	List<String> getProjectNames(Credentials credentials) throws ConnectionException,
+			CrawlingException;
 
 	/**
 	 * Clock time for given user and project.
@@ -41,9 +46,11 @@ public interface Crawler {
 	 * method.
 	 * </p>
 	 * 
+	 * @throws ConnectionException
+	 *             if connection to Projectile cannot be established
 	 * @throws CrawlingException
 	 *             in case the crawling fails
 	 */
 	void clock(Credentials credentials, String projectName, Date start, Date end)
-			throws CrawlingException;
+			throws ConnectionException, CrawlingException;
 }

@@ -43,8 +43,6 @@ public class Projectiler {
 	 * Invoke a checkin, i.e. start a working period.
 	 * 
 	 * @return checkin date
-	 * @throws ProjectilerException
-	 *             in case backend operations fail
 	 */
 	public Date checkin() {
 		final Date start = new Date();
@@ -59,14 +57,16 @@ public class Projectiler {
 	 * 
 	 * @param projectName
 	 *            project to clock your time to
+	 * @throws ConnectionException
+	 *             if connection to Projectile fails
 	 * @throws ProjectilerException
 	 *             in case backend operations fail
 	 * @throws IllegalStateException
 	 *             if invoked while not being checked in or if work time is less
 	 *             than one minute
 	 */
-	public Date checkout(final String projectName) throws ProjectilerException,
-			IllegalStateException, InvalidCredentialsException {
+	public Date checkout(final String projectName) throws ConnectionException,
+			ProjectilerException, IllegalStateException {
 		if (!isCheckedIn()) {
 			throw new IllegalStateException("Must be checked in before checking out.");
 		}
@@ -85,8 +85,8 @@ public class Projectiler {
 			dataStore.save();
 			LOGGER.info("Checked out at " + formatDate(end));
 			return end;
-		} catch (final de.saxsys.projectiler.crawler.InvalidCredentialsException e) {
-			throw new InvalidCredentialsException();
+		} catch (final de.saxsys.projectiler.crawler.ConnectionException e) {
+			throw new ConnectionException(e);
 		} catch (final CrawlingException e) {
 			throw new ProjectilerException(e.getMessage(), e);
 		}
@@ -96,21 +96,45 @@ public class Projectiler {
 	 * Retrieve available project names.
 	 * 
 	 * @return list of project names or empty list
+	 * @throws ConnectionException
+	 *             if connection to Projectile fails
 	 * @throws ProjectilerException
 	 *             in case backend operations fail
 	 */
-	public List<String> getProjectNames() throws ProjectilerException {
-		return crawler.getProjectNames(createCredentials());
+	public List<String> getProjectNames() throws ConnectionException, ProjectilerException {
+		try {
+			return crawler.getProjectNames(createCredentials());
+		} catch (final de.saxsys.projectiler.crawler.ConnectionException e) {
+			throw new ConnectionException(e);
+		} catch (final CrawlingException e) {
+			throw new ProjectilerException(e.getMessage(), e);
+		}
 	}
 
+	/**
+	 * Verify credentials and save them to the userdata store.
+	 * 
+	 * @param username
+	 *            Projectile username
+	 * @param password
+	 *            Projectile password
+	 * @throws ConnectionException
+	 *             if connection to Projectile fails
+	 * @throws InvalidCredentialsException
+	 *             if credentials are invalid
+	 * @throws ProjectilerException
+	 *             in case backend operations fail
+	 */
 	public void saveCredentials(final String username, final String password)
-			throws ProjectilerException {
+			throws InvalidCredentialsException, ConnectionException, ProjectilerException {
 		try {
 			crawler.checkCredentials(new Credentials(username, password));
 			dataStore.setCredentials(username, password);
 			dataStore.save();
 		} catch (final de.saxsys.projectiler.crawler.InvalidCredentialsException e) {
 			throw new InvalidCredentialsException();
+		} catch (final de.saxsys.projectiler.crawler.ConnectionException e) {
+			throw new ConnectionException(e);
 		} catch (final CrawlingException e) {
 			throw new ProjectilerException(e.getMessage(), e);
 		}
