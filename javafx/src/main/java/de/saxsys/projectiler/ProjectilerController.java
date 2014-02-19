@@ -53,7 +53,6 @@ public class ProjectilerController {
     private TranslateTransition transition;
     private final Projectiler projectiler = Projectiler.createDefaultProjectiler();
     private TimeSpentCountUpThread timeSpentCountUpThread;
-    private MouseEventDistanceChecker distanceChecker;
 
     @FXML
     void initialize() {
@@ -149,7 +148,7 @@ public class ProjectilerController {
      */
 
     private void createListeners() {
-        distanceChecker = new MouseEventDistanceChecker(timePane) {
+        new MouseEventDistanceChecker(timePane) {
             @Override
             public void fire() {
                 // If a click was performed on the timePane we have to check, whether it was not caused by a drag
