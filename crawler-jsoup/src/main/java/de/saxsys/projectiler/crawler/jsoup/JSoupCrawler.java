@@ -160,7 +160,7 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	private void clockTime(final Date start, final Date end, final String projectName,
-			final Document ttPage) throws IOException {
+			final Document ttPage) throws IOException, CrawlingException {
 		String optionValue = null;
 		Elements options = ttPage.select("select[id$=NewWhat_0_0] option");
 		for (Element option : options) {
@@ -191,7 +191,29 @@ public class JSoupCrawler implements Crawler {
 				.data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
 				.data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
 				.data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), "").execute();
-		saveTaid(response.parse());
+		Document document = response.parse();
+		saveTaid(document);
+
+		// verify time has been clocked
+		boolean clocked = false;
+		try {
+			String inputStartId = document
+					.select("input.rw[id*=Field_Start][value=" + formatTime(start) + "]").first()
+					.id();
+			String inputEndId = inputStartId.replace("Start", "End");
+			clocked = !document.select(
+					"input.rw[id=" + inputEndId + "][value=" + formatTime(end) + "]").isEmpty();
+			String inputWhatId = inputStartId.replace("Start", "What");
+			clocked = !document.select(
+					"select[id=" + inputWhatId + "] option[selected][value=" + optionValue + "]")
+					.isEmpty();
+		} catch (NullPointerException e) {
+			clocked = false;
+		} finally {
+			if (!clocked) {
+				throw new CrawlingException("Time has not been clocked.");
+			}
+		}
 		LOGGER.info("Time clocked for project '" + projectName + "'.");
 	}
 
