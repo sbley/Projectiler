@@ -1,5 +1,6 @@
 package de.saxsys.projectiler;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -9,9 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import de.saxsys.projectiler.initialization.ApplicationAlreadyRunningChecker;
+import de.saxsys.projectiler.initialization.ProjectilerFonts;
 import de.saxsys.projectiler.misc.MovablePane;
 import de.saxsys.projectiler.misc.Notification;
 import de.saxsys.projectiler.tray.Tray;
@@ -20,29 +22,34 @@ public class ClientStarter extends Application {
 
     @Override
     public void start(final Stage stage) throws Exception {
-        initFont();
+        ApplicationAlreadyRunningChecker.check();
+        ProjectilerFonts.initFonts();
+        initStage(stage, createRootElement(stage));
+        initNotification(stage);
+    }
+
+    private MovablePane createRootElement(final Stage stage) throws IOException {
+        final MovablePane movablePane = new MovablePane(stage);
         final URL rootUrl = ClientStarter.class.getResource("/Projectiler.fxml");
         final StackPane stackPane = FXMLLoader.load(rootUrl);
-        final MovablePane movablePane = new MovablePane(stage);
         movablePane.getChildren().add(stackPane);
-        final Scene scene = new Scene(movablePane);
+        return movablePane;
+    }
+
+    private void initStage(final Stage stage, final MovablePane rootElement) {
+        final Scene scene = new Scene(rootElement);
         stage.setScene(scene);
         stage.setTitle("Projectiler");
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
         stage.getIcons().add(new Image(ClientStarter.class.getResourceAsStream("/projectiler.png")));
-        Tray.getInstance().initTrayForStage(stage);
         stage.show();
-        initNotification(stage);
-    }
-
-    private void initFont() {
-        Font.loadFont(ClientStarter.class.getResource("/segoeuil.ttf").toExternalForm(), 10);
+        Tray.getInstance().initTrayForStage(stage);
     }
 
     private void initNotification(final Stage stage) {
         final double notHeight = 40;
-        final double notWidth = stage.getWidth() - 28;
+        final double notWidth = 322;
         Notification.Notifier.setOffsetY(-20);
         Notification.Notifier.setWidth(notWidth);
         Notification.Notifier.setHeight(notHeight);
