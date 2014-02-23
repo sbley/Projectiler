@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,6 +30,7 @@ public class ClientStarter extends Application {
         stage.setTitle("Projectiler");
         stage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
+        stage.getIcons().add(new Image(ClientStarter.class.getResourceAsStream("/projectiler.png")));
         Tray.getInstance().initTrayForStage(stage);
         stage.show();
         initNotification(stage);

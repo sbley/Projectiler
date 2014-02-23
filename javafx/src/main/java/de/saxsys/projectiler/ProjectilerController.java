@@ -248,7 +248,6 @@ public class ProjectilerController {
         timeSpentLabel.setOpacity(0.2);
         UITools.fadeIn(timeSpentLabel);
         UITools.hide(toTimeLabel);
-
     }
 
     private void performCheckOut() {
