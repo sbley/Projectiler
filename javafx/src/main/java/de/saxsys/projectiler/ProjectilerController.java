@@ -247,6 +247,7 @@ public class ProjectilerController {
         }
         timeSpentLabel.setOpacity(0.2);
         UITools.fadeIn(timeSpentLabel);
+        UITools.hide(toTimeLabel);
 
     }
 
@@ -282,6 +283,9 @@ public class ProjectilerController {
     }
 
     private void startTimeSpentCountUp(final Date date) {
+        if (timeSpentCountUpThread != null) {
+            timeSpentCountUpThread.interrupt();
+        }
         timeSpentCountUpThread = new TimeSpentCountUpThread(timeSpentLabel.textProperty(), date);
         UITools.fadeIn(timeSpentLabel);
         timeSpentCountUpThread.start();
