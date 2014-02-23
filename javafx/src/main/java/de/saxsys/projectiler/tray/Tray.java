@@ -1,20 +1,19 @@
 package de.saxsys.projectiler.tray;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
-import javax.imageio.ImageIO;
 
 public class Tray {
 
@@ -80,13 +79,9 @@ public class Tray {
     }
 
     private void initTrayIcon() {
-        Image image = null;
-        try {
-            image = ImageIO.read(getClass().getResource("/projectiler.png"));
-        } catch (IOException e1) {
-            LOGGER.log(Level.SEVERE, "Error loading tray icon", e1);
-        }
-
+        Image image = Toolkit.getDefaultToolkit().getImage(Tray.class.getResource("/projectiler-100.png"));
+        Dimension trayIconSize = tray.getTrayIconSize();
+        image = image.getScaledInstance(trayIconSize.width, trayIconSize.height, Image.SCALE_SMOOTH);
         trayIcon = new TrayIcon(image, "Projectiler", popup);
         trayIcon.addMouseListener(new ShowStageOnMouseDoubleClickListener(this));
         trayIcon.setImageAutoSize(true);
