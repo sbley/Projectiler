@@ -80,9 +80,12 @@ public class Projectiler {
 			throw new IllegalStateException("Work time must be at least 1 minute.");
 		}
 
-		crawler.clock(createCredentials(), projectName, start, end);
-		dataStore.clearStartDate();
-		dataStore.save();
+		try {
+			crawler.clock(createCredentials(), projectName, start, end);
+		} finally {
+			dataStore.clearStartDate();
+			dataStore.save();
+		}
 		LOGGER.info("Checked out at " + DateUtil.formatShort(end));
 		return end;
 	}
