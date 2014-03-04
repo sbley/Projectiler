@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.saxsys.projectiler</groupId>
 		<artifactId>projectiler</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>crawler-selenium</artifactId>
 	<properties>

@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>de.saxsys.projectiler</groupId>
 		<artifactId>projectiler</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
 		<!-- configuration of the setup -->
 		<!-- set property innosetup.dir in your settings.xml -->
-		<innosetupdirectory>${innosetup.dir}</innosetupdirectory>
+		<innosetupdirectory>C:\Program Files (x86)\Inno Setup 5</innosetupdirectory>
 		<installerresources>rawfiles</installerresources>
 		<issfile>SetupConfiguration.iss</issfile>
 	</properties>

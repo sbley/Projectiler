@@ -28,13 +28,16 @@ OutputBaseFilename={#MyAppName}-Setup
 Compression=lzma
 SolidCompression=yes
 SetupIconFile={#IconDir}\{#IconName}
+UninstallDisplayIcon={#IconDir}\{#IconName}
 
 [Languages]
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked;
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1;
+Name: "StartMenuEntry" ; Description: "Autostart der App" ; GroupDescription: "Windows Startup"; MinVersion: 4,4;
+
 
 [Files]
 Source: "@targetdir@\jfx\native\bundles\Projectiler-@version@\Projectiler-@version@.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -45,11 +48,12 @@ Source: "{#IconDir}\{#IconName}"; DestDir: "{app}"; Flags: ignoreversion;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFileName: "{app}\projectiler.ico"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon       
-
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";IconFileName: "{app}\projectiler.ico";
+Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}";IconFileName: "{app}\projectiler.ico";
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFileName: "{app}\projectiler.ico"; Tasks: desktopicon;
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon;IconFileName:"{app}\projectiler.ico";       
+Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";Tasks:StartMenuEntry;IconFileName: "{app}\projectiler.ico";
+Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";Tasks:StartMenuEntry;IconFileName: "{app}\projectiler.ico";
 
 
 [Run]
