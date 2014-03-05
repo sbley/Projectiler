@@ -37,6 +37,7 @@ public class ClientStarter extends Application {
     }
 
     private void initStage(final Stage stage, final MovablePane rootElement) {
+        rootElement.setStyle("-fx-background-color:transparent;");
         final Scene scene = new Scene(rootElement);
         stage.setScene(scene);
         stage.setTitle("Projectiler");
