@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.saxsys.projectiler</groupId>
 		<artifactId>projectiler</artifactId>
-		<version>1.0.0-beta</version>
+		<version>1.0.0-beta-2</version>
 	</parent>
 	<artifactId>backend</artifactId>
 	<dependencies>

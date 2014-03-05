@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>de.saxsys.projectiler</groupId>
 		<artifactId>projectiler</artifactId>
-		<version>1.0.0-beta</version>
+		<version>1.0.0-beta-2</version>
 	</parent>
 
 	<properties>
 		<!-- configuration of the setup -->
 		<!-- set property innosetup.dir in your settings.xml -->
-		<innosetupdirectory>C:\Program Files (x86)\Inno Setup 5</innosetupdirectory>
+		<innosetupdirectory>${innosetup.dir}</innosetupdirectory>
 		<installerresources>rawfiles</installerresources>
 		<issfile>SetupConfiguration.iss</issfile>
 	</properties>
@@ -60,6 +60,7 @@
 							<jvmArgs>
 								<jvmArg>-Dsun.java2d.opengl=True</jvmArg>
 								<jvmArg>-Dfile.encoding=UTF-8</jvmArg>
+								<jvmArg>-Djava.util.logging.config.file=logging.properties</jvmArg>
 							</jvmArgs>
 						</configuration>
 						<executions>
