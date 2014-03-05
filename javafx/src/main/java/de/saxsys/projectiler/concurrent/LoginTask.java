@@ -29,16 +29,13 @@ public class LoginTask extends Task<Boolean> {
         try {
             projectiler.saveCredentials(username, password);
         } catch (InvalidCredentialsException e) {
-            LOGGER.log(Level.SEVERE, "Error during login", e);
-            logError("Falsche Logindaten.");
+            logError("Falsche Logindaten.", e);
             return false;
         } catch (ConnectionException e) {
-            LOGGER.log(Level.SEVERE, "Error during login", e);
-            logError("Projectile kann nicht erreicht werden.");
+            logError("Projectile kann nicht erreicht werden.", e);
             return false;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error during login", e);
-            logError("Unbekannter Fehler aufgetreten.");
+            logError("Unbekannter Fehler aufgetreten.", e);
             return false;
         }
 
@@ -46,7 +43,8 @@ public class LoginTask extends Task<Boolean> {
         return true;
     }
 
-    private void logError(String error) {
+    private void logError(String error, Throwable e) {
+        LOGGER.log(Level.SEVERE, "Error during login", e);
         Notification.Notifier.INSTANCE.notifyError("Fehler beim Login", error);
     }
 }

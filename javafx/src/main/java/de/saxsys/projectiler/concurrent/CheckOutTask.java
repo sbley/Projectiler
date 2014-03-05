@@ -1,6 +1,7 @@
 package de.saxsys.projectiler.concurrent;
 
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
@@ -29,14 +30,11 @@ public class CheckOutTask extends Task<Date> {
             Notification.Notifier.INSTANCE.notifySuccess("Buchung erfolgreich", "Buchung im Projectile durchgeführt.");
 
         } catch (final IllegalStateException e) {
-            e.printStackTrace();
-            logError("Die Buchungsdauer war zu kurz (mind. 1 Minute).");
+            logError("Die Buchungsdauer war zu kurz (mind. 1 Minute).", e);
         } catch (final InvalidCredentialsException e) {
-            e.printStackTrace();
-            logError("Logindaten sind falsch.");
+            logError("Logindaten sind falsch.", e);
         } catch (final Exception e) {
-            e.printStackTrace();
-            logError("Unbekannter Fehler aufgetreten.");
+            logError("Unbekannter Fehler aufgetreten.", e);
         }
         projectiler.saveProjectName(projectKey);
 
@@ -44,7 +42,8 @@ public class CheckOutTask extends Task<Date> {
         return checkout;
     }
 
-    private void logError(String error) {
+    private void logError(String error, Throwable e) {
+        LOGGER.log(Level.SEVERE, "Error during login", e);
         Notification.Notifier.INSTANCE.notifyError("Fehler beim Buchen", error);
     }
 }

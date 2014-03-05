@@ -1,7 +1,9 @@
 package de.saxsys.projectiler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.LogManager;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,10 +24,21 @@ public class ClientStarter extends Application {
 
     @Override
     public void start(final Stage stage) throws Exception {
+        initLogging();
         ApplicationAlreadyRunningChecker.check();
         ProjectilerFonts.initFonts();
         initStage(stage, createRootElement(stage));
         initNotification(stage);
+    }
+
+    private void initLogging() {
+        final InputStream inputStream = ClientStarter.class.getResourceAsStream("/logging.properties");
+        try {
+            LogManager.getLogManager().readConfiguration(inputStream);
+        } catch (SecurityException | IOException e) {
+            System.err.println("Could not initialize logging");
+            e.printStackTrace();
+        }
     }
 
     private MovablePane createRootElement(final Stage stage) throws IOException {

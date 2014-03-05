@@ -24,4 +24,5 @@ public class CheckInTask extends Task<Date> {
         this.succeeded();
         return checkin;
     }
+
 }
