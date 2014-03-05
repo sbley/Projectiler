@@ -52,7 +52,6 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";IconFileName: "{
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}";IconFileName: "{app}\projectiler.ico";
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFileName: "{app}\projectiler.ico"; Tasks: desktopicon;
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon;IconFileName:"{app}\projectiler.ico";       
-Name: "{commonstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";Tasks:StartMenuEntry;IconFileName: "{app}\projectiler.ico";
 Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}";Tasks:StartMenuEntry;IconFileName: "{app}\projectiler.ico";
 
 
