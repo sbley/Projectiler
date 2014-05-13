@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.saxsys.android.projectiler.app.MainActivity" >
+    <item android:id="@+id/action_logout"
+        android:title="@string/action_example"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_nfc"
+        android:title="@string/action_nfc"
+        app:showAsAction="always" />
+
+</menu>
