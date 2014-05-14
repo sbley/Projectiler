@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -202,41 +201,6 @@ public class MainActivity extends ActionBarActivity
         }
 
     }
-
-    private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
-
-        @Override
-        protected String doInBackground(Tag... params) {
-            Tag tag = params[0];
-
-            Ndef ndef = Ndef.get(tag);
-            if (ndef == null) {
-                // NDEF is not supported by this Tag.
-                return null;
-            }
-
-            NdefMessage ndefMessage = ndef.getCachedNdefMessage();
-
-            NdefRecord[] records = ndefMessage.getRecords();
-            for (NdefRecord ndefRecord : records) {
-                if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
-                        return "";
-                }
-            }
-
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result != null) {
-
-                // vlt noch vibrieren
-            }
-        }
-    }
-
 
     private void write(String text, Tag tag) throws IOException, FormatException {
 
@@ -483,10 +447,12 @@ public class MainActivity extends ActionBarActivity
 
     private class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>>{
 
+        private Projectiler defaultProjectiler;
+
         @Override
         protected List<String> doInBackground(Void... voids) {
 
-            Projectiler defaultProjectiler = Projectiler.createDefaultProjectiler();
+            defaultProjectiler = Projectiler.createDefaultProjectiler();
             try {
 
                 List<String> projectNames = defaultProjectiler.getProjectNames(getApplicationContext());
@@ -507,7 +473,16 @@ public class MainActivity extends ActionBarActivity
             super.onPostExecute(itemList);
             setProgressBarIndeterminateVisibility(false);
 
-            mNavigationDrawerFragment.setItems(itemList);
+            // tritt auf bei autologin wenn das passwort geaendert wurde
+            if(itemList != null){
+                mNavigationDrawerFragment.setItems(itemList);
+            }else {
+                defaultProjectiler.setAutoLogin(getApplicationContext(), false);
+
+                MainActivity.this.finish();
+
+            }
+
 
         }
     }

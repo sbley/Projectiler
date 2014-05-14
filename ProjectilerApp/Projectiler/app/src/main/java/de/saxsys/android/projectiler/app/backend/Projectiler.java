@@ -135,4 +135,8 @@ public class Projectiler {
     public boolean getAutoLogin(Context context) {
         return dataStore.getAutoLogin(context);
     }
+
+    public void setAutoLogin(final Context context, boolean autoLogin) {
+        dataStore.setAutoLogin(context, autoLogin);
+    }
 }
