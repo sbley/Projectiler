@@ -39,7 +39,9 @@ public class StartIntentService extends IntentService {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            projectiler.checkin(getApplicationContext());
+            if(!projectiler.getProjectName(getApplicationContext()).equals("")) {
+                projectiler.checkin(getApplicationContext());
+            }
 
             return null;
         }

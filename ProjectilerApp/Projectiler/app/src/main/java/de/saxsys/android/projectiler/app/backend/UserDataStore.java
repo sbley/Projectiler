@@ -131,6 +131,10 @@ public class UserDataStore implements Serializable {
 
         int ret = -1;
 
+        if(getStartDate(context) == null){
+            return -1;
+        }
+
         String selectedProject = getProjectName(context);
 
         if(selectedProject.equals("")){

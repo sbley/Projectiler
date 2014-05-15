@@ -486,7 +486,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void refreshNavigationDrawer(String projectName) {
-        mNavigationDrawerFragment.setProjectActive(projectName);
+        Projectiler projectiler = Projectiler.createDefaultProjectiler();
+
+        if(projectiler.getStartDate(getApplicationContext()) != null){
+            mNavigationDrawerFragment.setProjectActive(projectName);
+        }
     }
 
 

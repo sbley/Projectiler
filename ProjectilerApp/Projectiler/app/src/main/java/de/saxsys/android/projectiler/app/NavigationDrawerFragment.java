@@ -259,6 +259,17 @@ public class NavigationDrawerFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(itemList != null){
+            int currentActiveIndex = UserDataStore.getInstance().getCurrentActiveIndex(getActivity().getApplicationContext(), itemList);
+
+            mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
+        }
+
+    }
+
     /**
      * Per the navigation drawer design guidelines, updates the action bar to show the global app
      * 'context', rather than just what's in the current screen.

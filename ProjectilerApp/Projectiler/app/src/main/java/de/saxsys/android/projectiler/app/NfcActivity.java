@@ -20,6 +20,7 @@ import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
 import de.saxsys.android.projectiler.app.ui.NavigationDrawerAdapter;
+import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
 public class NfcActivity extends ActionBarActivity {
@@ -115,6 +116,8 @@ public class NfcActivity extends ActionBarActivity {
 
                 sendNotification(002, "Zeiterfassung beendet", "Projekt " + projectName + " gebucht!");
 
+                WidgetUtils.refreshWidget(getApplicationContext());
+
                 NfcActivity.this.finish();
             }
 
@@ -190,6 +193,8 @@ public class NfcActivity extends ActionBarActivity {
             String projectName = projectiler.getProjectName(getApplicationContext());
 
             sendNotification(001, "Zeiterfassung gestartet", startTime + " für das Projekt " + projectName);
+
+            WidgetUtils.refreshWidget(getApplicationContext());
 
 
             finish();
