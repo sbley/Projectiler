@@ -19,6 +19,7 @@ public class UserDataStore implements Serializable {
     private static final String PROJECT_NAME = "project_name";
     private static final String AUTO_LOGIN = "auto_login";
     private static final String START_DATE = "start_date";
+    private static final String WIDGET_LOADING = "widget_loading";
 
 	private static UserDataStore INSTANCE;
 
@@ -155,5 +156,20 @@ public class UserDataStore implements Serializable {
 
     private static SharedPreferences getDefaultSharedPreferences(final Context context) {
         return context.getSharedPreferences("projectiler", Context.MODE_PRIVATE);
+    }
+
+    public void setWidgetLoading(Context context, boolean loading) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(WIDGET_LOADING, loading);
+
+        editor.commit();
+    }
+
+    public boolean isWidgetLoading(final Context context){
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+
+        return mySharedPreferences.getBoolean(WIDGET_LOADING, false);
     }
 }

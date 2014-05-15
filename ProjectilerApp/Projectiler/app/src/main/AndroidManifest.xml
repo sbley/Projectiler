@@ -9,7 +9,9 @@
         android:name="android.hardware.nfc"
         android:required="true" />
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -34,22 +36,50 @@
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_list" />
-
         </activity>
         <activity
             android:name="de.saxsys.android.projectiler.app.NfcActivity"
             android:label="@string/title_activity_nfc" >
-
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_list" />
-
         </activity>
+
+        <receiver android:name="de.saxsys.android.projectiler.app.ProjectilerAppWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/projectiler_app_widget_info" />
+        </receiver>
+
+        <service
+            android:name="de.saxsys.android.projectiler.app.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name="de.saxsys.android.projectiler.app.StopIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name="de.saxsys.android.projectiler.app.ResetIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name="de.saxsys.android.projectiler.app.StartIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name="de.saxsys.android.projectiler.app.ProjectNameIntentService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

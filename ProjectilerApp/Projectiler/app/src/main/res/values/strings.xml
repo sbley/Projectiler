@@ -17,5 +17,7 @@
     <string name="title_activity_login">Projectiler</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_nfc">NfcActivity</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/rl_widget"
     android:padding="8dp">
 
 
@@ -19,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:textIsSelectable="false"
         android:id="@+id/tv_project_name"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/iv_active" />

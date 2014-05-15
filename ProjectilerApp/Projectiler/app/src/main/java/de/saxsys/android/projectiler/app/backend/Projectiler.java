@@ -139,4 +139,12 @@ public class Projectiler {
     public void setAutoLogin(final Context context, boolean autoLogin) {
         dataStore.setAutoLogin(context, autoLogin);
     }
+
+    public void setWidgetLoading(final Context context, boolean loading) {
+        dataStore.setWidgetLoading(context, loading);
+    }
+
+    public boolean isWidgetLoading(Context context) {
+        return dataStore.isWidgetLoading(context);
+    }
 }
