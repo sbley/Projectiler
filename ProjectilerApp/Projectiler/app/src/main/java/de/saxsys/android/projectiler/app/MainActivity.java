@@ -2,8 +2,6 @@ package de.saxsys.android.projectiler.app;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.FormatException;
@@ -39,6 +37,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
+import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
 public class MainActivity extends ActionBarActivity
@@ -77,6 +76,27 @@ public class MainActivity extends ActionBarActivity
 
         setProgressBarIndeterminateVisibility(true);
         new GetProjectsAsyncTask().execute();
+
+
+        // gibt es bereits ein laufendes Projekt?
+        Projectiler projectiler = Projectiler.createDefaultProjectiler();
+
+
+        if(projectiler.getStartDate(getApplicationContext()) != null){
+
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            PlaceholderFragment fragment = new PlaceholderFragment();
+
+            fragment.setArguments(PlaceholderFragment.newInstance(projectiler.getProjectName(getApplicationContext()), false, true));
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+
+
+        }
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         nfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -159,6 +179,11 @@ public class MainActivity extends ActionBarActivity
             return true;
         } else if (id == R.id.action_logout) {
             UserDataStore.getInstance().setAutoLogin(getApplicationContext(), false);
+            UserDataStore.getInstance().setUserName(getApplicationContext(), "");
+            UserDataStore.getInstance().setPassword(getApplicationContext(), "");
+
+            WidgetUtils.refreshWidget(getApplicationContext());
+
             finish();
         } else if (id == R.id.action_nfc) {
             try {
@@ -368,24 +393,33 @@ public class MainActivity extends ActionBarActivity
                     projectiler.saveProjectName(getActivity().getApplicationContext(), "");
                     projectiler.resetStartTime(getActivity().getApplicationContext());
 
-                    btnReset.setEnabled(false);
-                    btnStart.setEnabled(true);
-                    btnStop.setEnabled(false);
+                    btnReset.setVisibility(View.GONE);
+                    btnStart.setVisibility(View.VISIBLE);
+                    btnStop.setVisibility(View.GONE);
 
                     setStartDateTextView();
 
                     ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
                     // update Widget
-                    updateWidget();
-
+                    WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 
                 }
             });
 
-            btnStart.setEnabled(startVisible);
-            btnStop.setEnabled(stopVisible);
-            btnReset.setEnabled(stopVisible);
+            if(startVisible){
+                btnStart.setVisibility(View.VISIBLE);
+            }else{
+                btnStart.setVisibility(View.GONE);
+            }
+
+            if(stopVisible){
+                btnStop.setVisibility(View.VISIBLE);
+                btnReset.setVisibility(View.VISIBLE);
+            }else{
+                btnStop.setVisibility(View.GONE);
+                btnReset.setVisibility(View.GONE);
+            }
 
             // ist ein startDate gesetzt?
             setStartDateTextView();
@@ -418,25 +452,15 @@ public class MainActivity extends ActionBarActivity
                 // navigation Drawer aktualisieren
                 ((MainActivity) getActivity()).refreshNavigationDrawer(projectName);
 
-                btnStart.setEnabled(false);
-                btnStop.setEnabled(true);
-                btnReset.setEnabled(true);
+                btnReset.setVisibility(View.VISIBLE);
+                btnStart.setVisibility(View.GONE);
+                btnStop.setVisibility(View.VISIBLE);
 
                 setStartDateTextView();
 
-                updateWidget();
+                WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 
             }
-        }
-
-        private void updateWidget() {
-            Intent intent = new Intent(getActivity(), ProjectilerAppWidget.class);
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
-            // since it seems the onUpdate() is only fired on that:
-            int[] appWidgetIds = AppWidgetManager.getInstance(getActivity().getApplication()).getAppWidgetIds(new ComponentName(getActivity().getApplication(), ProjectilerAppWidget.class));
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-            getActivity().sendBroadcast(intent);
         }
 
         private class StopAsyncTask extends AsyncTask<Void, Void, String> {
@@ -463,19 +487,19 @@ public class MainActivity extends ActionBarActivity
                 getActivity().setProgressBarIndeterminateVisibility(false);
 
                 if (aVoid == null) {
+                    projectiler.resetStartTime(getActivity().getApplicationContext());
                     ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
-                    btnStart.setEnabled(true);
-                    btnStop.setEnabled(false);
-                    btnReset.setEnabled(false);
+                    btnReset.setVisibility(View.GONE);
+                    btnStart.setVisibility(View.VISIBLE);
+                    btnStop.setVisibility(View.GONE);
 
-                    projectiler.resetStartTime(getActivity().getApplicationContext());
 
                     setStartDateTextView();
+
+                    WidgetUtils.refreshWidget(getActivity().getApplicationContext());
+
                     Crouton.makeText(getActivity(), "Zeit wurd erfolgreich gebucht", Style.INFO).show();
-
-                    updateWidget();
-
 
                 } else {
                     Crouton.makeText(getActivity(), aVoid, Style.ALERT).show();
@@ -490,6 +514,8 @@ public class MainActivity extends ActionBarActivity
 
         if(projectiler.getStartDate(getApplicationContext()) != null){
             mNavigationDrawerFragment.setProjectActive(projectName);
+        }else{
+            mNavigationDrawerFragment.setProjectActive("");
         }
     }
 
@@ -552,15 +578,20 @@ public class MainActivity extends ActionBarActivity
         Log.d("", "enableForegroundMode");
 
         // foreground mode gives the current active application priority for reading scanned tags
-        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED); // filter for tags
-        IntentFilter[] writeTagFilters = new IntentFilter[]{tagDetected};
-        nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
+
+        if(nfcAdapter != null){
+            IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED); // filter for tags
+            IntentFilter[] writeTagFilters = new IntentFilter[]{tagDetected};
+            nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
+        }
+
     }
 
     public void disableForegroundMode() {
         Log.d("", "disableForegroundMode");
-
-        nfcAdapter.disableForegroundDispatch(this);
+        if(nfcAdapter != null){
+            nfcAdapter.disableForegroundDispatch(this);
+        }
     }
 
 }

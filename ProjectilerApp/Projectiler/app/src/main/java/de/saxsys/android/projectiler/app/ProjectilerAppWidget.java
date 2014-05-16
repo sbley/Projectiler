@@ -14,6 +14,7 @@ import android.widget.RemoteViews;
 import java.util.Date;
 
 import de.saxsys.android.projectiler.app.backend.Projectiler;
+import de.saxsys.android.projectiler.app.backend.UserDataStore;
 
 
 /**
@@ -53,75 +54,93 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.projectiler_app_widget);
 
-        Intent stopIntent = new Intent(context, StopIntentService.class);
-        PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, stopIntent, 0);
-
-        Intent resetIntent = new Intent(context, ResetIntentService.class);
-        PendingIntent resetPendingIntent = PendingIntent.getService(context, 0, resetIntent, 0);
-
-        Intent startIntent = new Intent(context, StartIntentService.class);
-        PendingIntent startPendingIntent = PendingIntent.getService(context, 0, startIntent, 0);
-
-        views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
-        views.setOnClickPendingIntent(R.id.buttonStop, stopPendingIntent);
-        views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
-
         Projectiler projectiler = Projectiler.createDefaultProjectiler();
 
-        String currentProject = projectiler.getProjectName(context);
-        views.setTextViewText(R.id.tv_current_project, currentProject);
+        // ist der nutzer eingelogged?
+        if(UserDataStore.getInstance().getUserName(context).equals("")){
 
-        Date startDate = projectiler.getStartDate(context);
-        // ist gestartet
-        if(startDate != null){
+            Intent loginIntent = new Intent(context, LoginActivity.class);
+            PendingIntent loginPendingIntent = PendingIntent.getActivity(context, 0, loginIntent, 0);
+            views.setOnClickPendingIntent(R.id.buttonLogin, loginPendingIntent);
 
-            long currentDatetime = System.currentTimeMillis();
-            views.setChronometer(R.id.chronometer, SystemClock.elapsedRealtime() - (currentDatetime - startDate.getTime()), null, true);
+            views.setViewVisibility(R.id.rl_widget_login, View.VISIBLE);
+            views.setViewVisibility(R.id.ll_widget_content, View.GONE);
 
-            views.setViewVisibility(R.id.rlWidget_left, View.GONE);
-            views.setViewVisibility(R.id.buttonStart, View.GONE);
-            views.setViewVisibility(R.id.buttonStop, View.VISIBLE);
-            views.setViewVisibility(R.id.buttonReset, View.VISIBLE);
 
         }else{
-            views.setChronometer(R.id.chronometer, SystemClock.elapsedRealtime(), null, false);
-            //RemoteViews Service needed to provide adapter for ListView
-            Intent svcIntent = new Intent(context, WidgetService.class);
-            //passing app widget id to that RemoteViews Service
-            svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            //setting a unique Uri to the intent
-            //don't know its purpose to me right now
-            svcIntent.setData(Uri.parse(
-                    svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
-            views.setRemoteAdapter(R.id.lvProjectsWidget, svcIntent);
+            views.setViewVisibility(R.id.rl_widget_login, View.GONE);
+            views.setViewVisibility(R.id.ll_widget_content, View.VISIBLE);
 
+            Intent stopIntent = new Intent(context, StopIntentService.class);
+            PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, stopIntent, 0);
 
+            Intent resetIntent = new Intent(context, ResetIntentService.class);
+            PendingIntent resetPendingIntent = PendingIntent.getService(context, 0, resetIntent, 0);
 
-            final Intent onClickIntent = new Intent(context, ProjectNameIntentService.class);
-            onClickIntent.setAction(ProjectilerAppWidget.CLICK_ACTION);
-            onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            final PendingIntent onClickPendingIntent = PendingIntent.getService(context, 0,
-                    onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            views.setPendingIntentTemplate(R.id.lvProjectsWidget, onClickPendingIntent);
+            Intent startIntent = new Intent(context, StartIntentService.class);
+            PendingIntent startPendingIntent = PendingIntent.getService(context, 0, startIntent, 0);
+
+            views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
+            views.setOnClickPendingIntent(R.id.buttonStop, stopPendingIntent);
+            views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
 
 
+            String currentProject = projectiler.getProjectName(context);
+            views.setTextViewText(R.id.tv_current_project, currentProject);
 
-            views.setViewVisibility(R.id.rlWidget_left, View.VISIBLE);
-            views.setViewVisibility(R.id.buttonStart, View.VISIBLE);
-            views.setViewVisibility(R.id.buttonStop, View.GONE);
-            views.setViewVisibility(R.id.buttonReset, View.GONE);
+            Date startDate = projectiler.getStartDate(context);
+            // ist gestartet
+            if(startDate != null){
 
-        }
+                long currentDatetime = System.currentTimeMillis();
+                views.setChronometer(R.id.chronometer, SystemClock.elapsedRealtime() - (currentDatetime - startDate.getTime()), null, true);
+
+                views.setViewVisibility(R.id.rlWidget_left, View.GONE);
+                views.setViewVisibility(R.id.buttonStart, View.GONE);
+                views.setViewVisibility(R.id.buttonStop, View.VISIBLE);
+                views.setViewVisibility(R.id.buttonReset, View.VISIBLE);
+
+            }else{
+                views.setChronometer(R.id.chronometer, SystemClock.elapsedRealtime(), null, false);
+                //RemoteViews Service needed to provide adapter for ListView
+                Intent svcIntent = new Intent(context, WidgetService.class);
+                //passing app widget id to that RemoteViews Service
+                svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                //setting a unique Uri to the intent
+                //don't know its purpose to me right now
+                svcIntent.setData(Uri.parse(
+                        svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+                views.setRemoteAdapter(R.id.lvProjectsWidget, svcIntent);
 
 
-        boolean isLoading = projectiler.isWidgetLoading(context);
 
-        if(isLoading){
-            views.setViewVisibility(R.id.progressBarWidget, View.VISIBLE);
-        }else{
-            views.setViewVisibility(R.id.progressBarWidget, View.GONE);
+                final Intent onClickIntent = new Intent(context, ProjectNameIntentService.class);
+                onClickIntent.setAction(ProjectilerAppWidget.CLICK_ACTION);
+                onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
+                final PendingIntent onClickPendingIntent = PendingIntent.getService(context, 0,
+                        onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                views.setPendingIntentTemplate(R.id.lvProjectsWidget, onClickPendingIntent);
+
+
+
+                views.setViewVisibility(R.id.rlWidget_left, View.VISIBLE);
+                views.setViewVisibility(R.id.buttonStart, View.VISIBLE);
+                views.setViewVisibility(R.id.buttonStop, View.GONE);
+                views.setViewVisibility(R.id.buttonReset, View.GONE);
+
+            }
+
+
+            boolean isLoading = projectiler.isWidgetLoading(context);
+
+            if(isLoading){
+                views.setViewVisibility(R.id.progressBarWidget, View.VISIBLE);
+            }else{
+                views.setViewVisibility(R.id.progressBarWidget, View.GONE);
+            }
         }
 
         // Instruct the widget manager to update the widget

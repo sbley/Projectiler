@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="StartButton" parent="@style/_StartButton"/>
+
+  <style name="_StartButton" parent="Theme.AppCompat.Light">
+
+    <item name="android:buttonStyle">@style/ButtonStartButton</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonStartButton</item>
+
+  </style>
+
+</resources>

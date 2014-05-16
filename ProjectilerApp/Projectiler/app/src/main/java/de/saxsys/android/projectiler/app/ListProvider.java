@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -37,11 +36,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
             listItem.add(projectNames.get(i));
 
             listItemList.add(listItem);
-
-
-
         }
-
 
     }
 
@@ -83,28 +78,17 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public RemoteViews getViewAt(int position) {
 
-        Log.i("Listprovider", "getViewAt " + position);
+        //Log.i("Listprovider", "getViewAt " + position);
 
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.adapter_navigation_drawer);
-        //ListItem listItem = listItemList.get(position);
         remoteView.setTextViewText(R.id.tv_project_name, projectNames.get(position));
-/*
-        Intent i = new Intent();
-        Bundle extras = new Bundle();
-
-        extras.putInt(EXTRA_LIST_VIEW_ROW_NUMBER, position);
-        i.putExtras(extras);
-        remoteView.setOnClickFillInIntent(R.id.rl_widget, i);
-*/
 
         final Intent fillInIntent = new Intent();
         final Bundle extras = new Bundle();
         extras.putString(ProjectilerAppWidget.EXTRA_PROJECT_NAME, projectNames.get(position));
         fillInIntent.putExtras(extras);
         remoteView.setOnClickFillInIntent(R.id.rl_widget, fillInIntent);
-
-
 
         return remoteView;
     }

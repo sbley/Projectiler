@@ -8,6 +8,71 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="de.saxsys.android.projectiler.app.MainActivity$PlaceholderFragment">
 
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:id="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/section_label">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:text="Zeiterfassung starten"
+            android:id="@+id/btnStart"
+            android:visibility="gone"
+            style="@style/StartButton"
+            android:background="@drawable/startbutton_btn_default_holo_light"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:text="Zeiterfassung beenden"
+            android:id="@+id/btnStop"
+            style="@style/StopButton"
+            android:background="@drawable/stopbutton_btn_default_holo_light"
+            android:layout_below="@+id/btnStart"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:visibility="visible"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/resetbutton_btn_default_holo_light"
+            android:id="@+id/btnReset"
+            android:layout_below="@+id/btnStop"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/tvStartDate"
+            android:layout_alignTop="@+id/tvStartDateLabel"
+            android:layout_toRightOf="@+id/tvStartDateLabel"
+            android:layout_alignRight="@+id/btnReset"
+            android:layout_alignEnd="@+id/btnReset" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zeit gestartet um: "
+            android:layout_marginTop="10dp"
+            android:id="@+id/tvStartDateLabel"
+            android:layout_below="@+id/btnStop"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        </RelativeLayout>
+
+
     <TextView
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
@@ -21,54 +86,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Zeiterfassung starten"
-        android:id="@+id/btnStart"
-        android:layout_below="@+id/section_label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/btnStop"
-        android:layout_alignEnd="@+id/btnStop" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Zeiterfassung beenden"
-        android:id="@+id/btnStop"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/btnStart"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reset"
-        android:id="@+id/btnReset"
-        android:layout_alignTop="@+id/btnStart"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/tvStartDate"
-        android:layout_alignTop="@+id/tvStartDateLabel"
-        android:layout_toRightOf="@+id/tvStartDateLabel"
-        android:layout_alignRight="@+id/btnReset"
-        android:layout_alignEnd="@+id/btnReset" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Zeit gestartet um: "
-        android:id="@+id/tvStartDateLabel"
-        android:layout_below="@+id/btnStop"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="31dp" />
 
 </RelativeLayout>

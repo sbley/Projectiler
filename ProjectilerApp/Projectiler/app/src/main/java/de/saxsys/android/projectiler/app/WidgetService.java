@@ -48,15 +48,6 @@ public class WidgetService extends RemoteViewsService {
             e.printStackTrace();
         }
 
-        while(ret == null){
-            try {
-                Thread.sleep(500);
-                Log.i("ListProvider", "ret is nullListProvider");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         return ret;
     }
 

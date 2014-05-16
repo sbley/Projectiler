@@ -17,6 +17,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
+import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -120,8 +121,14 @@ public class LoginActivity extends ActionBarActivity {
             setProgressBarIndeterminateVisibility(false);
 
             if(aVoid == null){
+
+                WidgetUtils.refreshWidget(getApplicationContext());
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+
+                finish();
+
             }else{
                 Crouton.makeText(LoginActivity.this, aVoid, Style.ALERT).show();
             }

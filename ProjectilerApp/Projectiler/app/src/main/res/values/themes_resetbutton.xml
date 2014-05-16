@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="ResetButton" parent="@style/_ResetButton"/>
+
+  <style name="_ResetButton" parent="Theme.AppCompat.Light">
+
+    <item name="android:buttonStyle">@style/ButtonResetButton</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonResetButton</item>
+
+  </style>
+
+</resources>
