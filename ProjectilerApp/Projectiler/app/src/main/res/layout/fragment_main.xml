@@ -8,9 +8,52 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="de.saxsys.android.projectiler.app.MainActivity$PlaceholderFragment">
 
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:id="@+id/rl_container_not_started"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Derzeit gibt es keine Buchung gestartet!"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:id="@+id/textView"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
 
     <RelativeLayout
         android:gravity="center_vertical"
+        android:visibility="gone"
+        android:id="@+id/rl_container_other_project_selected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Derzeit gibt es keine Buchung gestartet!"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:id="@+id/tvOtherProjectSelected"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:visibility="visible"
         android:id="@+id/rl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -69,8 +112,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-
-        </RelativeLayout>
+    </RelativeLayout>
 
 
     <TextView

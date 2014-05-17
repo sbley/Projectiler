@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -83,11 +84,9 @@ public class MainActivity extends ActionBarActivity
         Projectiler projectiler = Projectiler.createDefaultProjectiler();
 
 
-        if(projectiler.getStartDate(getApplicationContext()) != null){
-
+        if (projectiler.getStartDate(getApplicationContext()) != null) {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-
             PlaceholderFragment fragment = new PlaceholderFragment();
 
             fragment.setArguments(PlaceholderFragment.newInstance(projectiler.getProjectName(getApplicationContext()), false, true));
@@ -129,7 +128,7 @@ public class MainActivity extends ActionBarActivity
             } else if (UserDataStore.getInstance().getProjectName(getApplicationContext()).equals(projectName)) {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, false, true));
             } else {
-                fragment.setArguments(PlaceholderFragment.newInstance(projectName, false, false));
+                fragment.setArguments(PlaceholderFragment.newInstance(projectName, true, false));
             }
 
 
@@ -225,7 +224,7 @@ public class MainActivity extends ActionBarActivity
             Crouton.makeText(MainActivity.this, "NFC in Reichweite", Style.CONFIRM).show();
 
             MenuItem item = menu.findItem(R.id.action_nfc);
-            if(item == null){
+            if (item == null) {
                 getMenuInflater().inflate(R.menu.nfcitem, menu);
             }
 
@@ -287,6 +286,10 @@ public class MainActivity extends ActionBarActivity
 
         private final Projectiler projectiler;
         private View rootView;
+        private RelativeLayout rlContainer;
+        private RelativeLayout rlContainerNotStarted;
+        private TextView tvProject;
+        private RelativeLayout rlOtherProject;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -345,7 +348,7 @@ public class MainActivity extends ActionBarActivity
             super.onResume();
             Log.i("Fragment", "onResume");
 
-            if(rootView != null){
+            if (rootView != null) {
                 if (UserDataStore.getInstance().getProjectName(getActivity().getApplicationContext()).equals("")) {
                     startVisible = true;
                     stopVisible = false;
@@ -353,7 +356,7 @@ public class MainActivity extends ActionBarActivity
                     startVisible = false;
                     stopVisible = true;
                 } else {
-                    startVisible = false;
+                    startVisible = true;
                     stopVisible = false;
                 }
 
@@ -363,73 +366,104 @@ public class MainActivity extends ActionBarActivity
         }
 
         private void initView(View rootView) {
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            tvProject = (TextView) rootView.findViewById(R.id.section_label);
             btnStart = (Button) rootView.findViewById(R.id.btnStart);
             btnStop = (Button) rootView.findViewById(R.id.btnStop);
             btnReset = (Button) rootView.findViewById(R.id.btnReset);
             tvStartDateLabel = (TextView) rootView.findViewById(R.id.tvStartDateLabel);
             tvStartDate = (TextView) rootView.findViewById(R.id.tvStartDate);
+            rlContainer = (RelativeLayout) rootView.findViewById(R.id.rl_container);
+            rlContainerNotStarted = (RelativeLayout) rootView.findViewById(R.id.rl_container_not_started);
+            rlOtherProject = (RelativeLayout) rootView.findViewById(R.id.rl_container_other_project_selected);
 
-            textView.setText(projectName);
-            btnStart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().setProgressBarIndeterminateVisibility(true);
 
-                    projectiler.saveProjectName(getActivity().getApplicationContext(), projectName);
 
-                    new StartAsyncTask().execute();
+            if (projectName.equals("")) {
+                tvProject.setVisibility(View.GONE);
+                rlContainer.setVisibility(View.GONE);
+                rlContainerNotStarted.setVisibility(View.VISIBLE);
+                rlOtherProject.setVisibility(View.GONE);
+            }else if(projectiler.getStartDate(getActivity().getApplicationContext()) != null && !projectiler.getProjectName(getActivity().getApplicationContext()).equals(projectName)){
+                // ein anderes Projekt wurde schon gestartet
+                rlContainer.setVisibility(View.GONE);
+                rlContainerNotStarted.setVisibility(View.GONE);
+                tvProject.setVisibility(View.GONE);
+                TextView tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
-                }
-            });
+                tvOtherProjectSelected.setText("Es wurde eine Buchung für das Project " + projectiler.getProjectName(getActivity().getApplicationContext()) + " gestartet");
 
-            btnStop.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().setProgressBarIndeterminateVisibility(true);
 
-                    new StopAsyncTask().execute();
 
-                }
-            });
+                rlOtherProject.setVisibility(View.VISIBLE);
 
-            btnReset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            }else{
+                tvProject.setText(projectName);
+                rlContainer.setVisibility(View.VISIBLE);
+                rlContainerNotStarted.setVisibility(View.GONE);
+                rlOtherProject.setVisibility(View.GONE);
 
-                    projectiler.saveProjectName(getActivity().getApplicationContext(), "");
-                    projectiler.resetStartTime(getActivity().getApplicationContext());
+                btnStart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().setProgressBarIndeterminateVisibility(true);
 
-                    btnReset.setVisibility(View.GONE);
+                        projectiler.saveProjectName(getActivity().getApplicationContext(), projectName);
+
+                        new StartAsyncTask().execute();
+
+                    }
+                });
+
+                btnStop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().setProgressBarIndeterminateVisibility(true);
+
+                        new StopAsyncTask().execute();
+
+                    }
+                });
+
+                btnReset.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        projectiler.saveProjectName(getActivity().getApplicationContext(), "");
+                        projectiler.resetStartTime(getActivity().getApplicationContext());
+
+                        btnReset.setVisibility(View.GONE);
+                        btnStart.setVisibility(View.VISIBLE);
+                        btnStop.setVisibility(View.GONE);
+
+                        setStartDateTextView();
+
+                        ((MainActivity) getActivity()).refreshNavigationDrawer("");
+
+                        // update Widget
+                        WidgetUtils.refreshWidget(getActivity().getApplicationContext());
+
+                    }
+                });
+
+                if (startVisible) {
                     btnStart.setVisibility(View.VISIBLE);
-                    btnStop.setVisibility(View.GONE);
-
-                    setStartDateTextView();
-
-                    ((MainActivity) getActivity()).refreshNavigationDrawer("");
-
-                    // update Widget
-                    WidgetUtils.refreshWidget(getActivity().getApplicationContext());
-
+                } else {
+                    btnStart.setVisibility(View.GONE);
                 }
-            });
 
-            if(startVisible){
-                btnStart.setVisibility(View.VISIBLE);
-            }else{
-                btnStart.setVisibility(View.GONE);
+                if (stopVisible) {
+                    btnStop.setVisibility(View.VISIBLE);
+                    btnReset.setVisibility(View.VISIBLE);
+                } else {
+                    btnStop.setVisibility(View.GONE);
+                    btnReset.setVisibility(View.GONE);
+                }
+
+                // ist ein startDate gesetzt?
+                setStartDateTextView();
             }
 
-            if(stopVisible){
-                btnStop.setVisibility(View.VISIBLE);
-                btnReset.setVisibility(View.VISIBLE);
-            }else{
-                btnStop.setVisibility(View.GONE);
-                btnReset.setVisibility(View.GONE);
-            }
 
-            // ist ein startDate gesetzt?
-            setStartDateTextView();
         }
 
         @Override
@@ -519,9 +553,9 @@ public class MainActivity extends ActionBarActivity
     private void refreshNavigationDrawer(String projectName) {
         Projectiler projectiler = Projectiler.createDefaultProjectiler();
 
-        if(projectiler.getStartDate(getApplicationContext()) != null){
+        if (projectiler.getStartDate(getApplicationContext()) != null) {
             mNavigationDrawerFragment.setProjectActive(projectName);
-        }else{
+        } else {
             mNavigationDrawerFragment.setProjectActive("");
         }
     }
@@ -555,6 +589,20 @@ public class MainActivity extends ActionBarActivity
             // tritt auf bei autologin wenn das passwort geaendert wurde
             if (itemList != null) {
                 mNavigationDrawerFragment.setItems(itemList);
+
+
+                if(defaultProjectiler.getProjectName(getApplicationContext()).equals("")){
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    PlaceholderFragment fragment = new PlaceholderFragment();
+
+                    fragment.setArguments(PlaceholderFragment.newInstance("", false, true));
+
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, fragment)
+                            .commit();
+                }
+
+
             } else {
                 defaultProjectiler.setAutoLogin(getApplicationContext(), false);
 
@@ -583,7 +631,7 @@ public class MainActivity extends ActionBarActivity
 
         // foreground mode gives the current active application priority for reading scanned tags
 
-        if(nfcAdapter != null){
+        if (nfcAdapter != null) {
             IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED); // filter for tags
             IntentFilter[] writeTagFilters = new IntentFilter[]{tagDetected};
             nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
@@ -593,7 +641,7 @@ public class MainActivity extends ActionBarActivity
 
     public void disableForegroundMode() {
         Log.d("", "disableForegroundMode");
-        if(nfcAdapter != null){
+        if (nfcAdapter != null) {
             nfcAdapter.disableForegroundDispatch(this);
         }
     }
