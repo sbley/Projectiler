@@ -3,7 +3,6 @@ package de.saxsys.android.projectiler.app;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.RemoteViewsService;
 
 import java.util.List;
@@ -62,9 +61,6 @@ public class WidgetService extends RemoteViewsService {
             try {
 
                 projectNames = defaultProjectiler.getProjectNames(getApplicationContext());
-                for (String projectName : projectNames) {
-                    Log.i("ListProvider", "" + projectName);
-                }
 
                 return (new ListProvider(getApplicationContext(), intent, projectNames));
             } catch (CrawlingException e) {

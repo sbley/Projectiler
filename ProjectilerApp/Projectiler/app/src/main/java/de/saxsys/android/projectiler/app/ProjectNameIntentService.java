@@ -20,13 +20,11 @@ public class ProjectNameIntentService extends IntentService {
 
     public ProjectNameIntentService() {
         super("ProjectNameIntentService");
-        Log.i("ProjectNameIntentService", "ProjectNameIntentService");
         projectiler = Projectiler.createDefaultProjectiler();
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i("ProjectNameIntentService", "onHandleIntent");
         if (intent != null) {
 
             String selectedProject = intent.getStringExtra(ProjectilerAppWidget.EXTRA_PROJECT_NAME);

@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity
     private NfcAdapter nfcAdapter;
     private PendingIntent nfcPendingIntent;
     private IntentFilter[] writeTagFilters;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +156,9 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        this.menu = menu;
+
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
@@ -181,6 +185,7 @@ public class MainActivity extends ActionBarActivity
             UserDataStore.getInstance().setAutoLogin(getApplicationContext(), false);
             UserDataStore.getInstance().setUserName(getApplicationContext(), "");
             UserDataStore.getInstance().setPassword(getApplicationContext(), "");
+            UserDataStore.getInstance().setProjectName(getApplicationContext(), "");
 
             WidgetUtils.refreshWidget(getApplicationContext());
 
@@ -219,9 +224,11 @@ public class MainActivity extends ActionBarActivity
             Log.d("", "projectilerTag gesetzt");
             Crouton.makeText(MainActivity.this, "NFC in Reichweite", Style.CONFIRM).show();
 
-            //Toast.makeText(this, "okay: " + mytag.toString(), Toast.LENGTH_LONG ).show();
+            MenuItem item = menu.findItem(R.id.action_nfc);
+            if(item == null){
+                getMenuInflater().inflate(R.menu.nfcitem, menu);
+            }
 
-            //new NdefReaderTask().execute(projectilerTag);
 
         }
 
@@ -531,9 +538,6 @@ public class MainActivity extends ActionBarActivity
             try {
 
                 List<String> projectNames = defaultProjectiler.getProjectNames(getApplicationContext());
-                for (String projectName : projectNames) {
-                    Log.i("Projects: ", "" + projectName);
-                }
 
                 return projectNames;
             } catch (CrawlingException e) {
