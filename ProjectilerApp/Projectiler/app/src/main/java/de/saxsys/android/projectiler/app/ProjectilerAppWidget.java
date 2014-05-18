@@ -95,6 +95,8 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
                 long currentDatetime = System.currentTimeMillis();
                 views.setChronometer(R.id.chronometer, SystemClock.elapsedRealtime() - (currentDatetime - startDate.getTime()), null, true);
 
+                views.setViewVisibility(R.id.chronometer, View.VISIBLE);
+
                 views.setViewVisibility(R.id.rlWidget_left, View.GONE);
                 views.setViewVisibility(R.id.buttonStart, View.GONE);
                 views.setViewVisibility(R.id.buttonStop, View.VISIBLE);
@@ -112,6 +114,8 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
                         svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
                 views.setRemoteAdapter(R.id.lvProjectsWidget, svcIntent);
+
+                views.setViewVisibility(R.id.chronometer, View.GONE);
 
 
 

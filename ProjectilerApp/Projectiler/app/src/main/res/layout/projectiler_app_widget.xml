@@ -5,6 +5,16 @@
     android:id="@+id/rl_widget"
     android:background="@android:color/white">
 
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:layout_margin="15dp"
+        android:src="@drawable/projectiler_background_widget"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
     <RelativeLayout
         android:id="@+id/rl_widget_login"
         android:visibility="gone"
@@ -32,7 +42,7 @@
         <RelativeLayout
             android:id="@+id/rlWidget_left"
             android:layout_weight="1"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -62,8 +72,9 @@
             <RelativeLayout
                 android:id="@+id/ll_buttons"
                 android:orientation="horizontal"
-                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:paddingBottom="5dp"
+                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -71,7 +82,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Start"
+                    android:layout_marginRight="5dp"
                     android:id="@+id/buttonStart"
+                    android:background="@drawable/startbutton_btn_default_holo_light"
                     android:layout_alignParentTop="true"
                     android:layout_toLeftOf="@+id/buttonStop" />
 
@@ -79,7 +92,9 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:text="Reset"
+                    android:background="@drawable/resetbutton_btn_default_holo_light"
                     android:id="@+id/buttonReset"
                     android:layout_alignParentTop="true"
                     android:layout_toRightOf="@+id/buttonStop" />
@@ -89,6 +104,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Stop"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/stopbutton_btn_default_holo_light"
                     android:id="@+id/buttonStop"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" />
@@ -99,13 +117,14 @@
 
             <Chronometer
                 android:id="@+id/chronometer"
-                android:format="%m"
+                android:format="HH:MM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
                 android:gravity="end"
+                android:layout_margin="10dp"
                 android:textColor="@android:color/black"
-                android:layout_below="@+id/ll_buttons"
+                android:layout_centerInParent="true"
                 android:layout_centerHorizontal="true" />
 
             <ProgressBar
@@ -123,9 +142,14 @@
                 android:id="@+id/tv_current_project"
                 android:text="fdasfds"
                 android:textStyle="bold"
-                android:textSize="14sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:gravity="center_horizontal"
-                android:layout_below="@+id/chronometer"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentRight="true"/>
@@ -136,5 +160,6 @@
 
 
     </LinearLayout>
+
 
 </RelativeLayout>

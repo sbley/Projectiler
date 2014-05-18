@@ -12,6 +12,7 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -281,8 +283,6 @@ public class MainActivity extends ActionBarActivity
         private Button btnStart;
         private Button btnStop;
         private Button btnReset;
-        private TextView tvStartDateLabel;
-        private TextView tvStartDate;
 
         private final Projectiler projectiler;
         private View rootView;
@@ -290,6 +290,7 @@ public class MainActivity extends ActionBarActivity
         private RelativeLayout rlContainerNotStarted;
         private TextView tvProject;
         private RelativeLayout rlOtherProject;
+        private Chronometer chronometer;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -326,17 +327,17 @@ public class MainActivity extends ActionBarActivity
             Date startDate = projectiler.getStartDate(getActivity().getApplicationContext());
 
             if (startDate == null) {
-                tvStartDateLabel.setVisibility(View.GONE);
-                tvStartDate.setVisibility(View.GONE);
+                chronometer.setVisibility(View.INVISIBLE);
             } else {
 
                 if (projectiler.getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
-                    tvStartDateLabel.setVisibility(View.VISIBLE);
-                    tvStartDate.setVisibility(View.VISIBLE);
+                    chronometer.setVisibility(View.VISIBLE);
+                    long currentDatetime = System.currentTimeMillis();
+                    chronometer.setBase(SystemClock.elapsedRealtime() - (currentDatetime - startDate.getTime()));
+                    chronometer.start();
 
-                    tvStartDate.setText(projectiler.getStartDateAsString(getActivity().getApplicationContext()));
                 } else {
-                    tvStartDateLabel.setVisibility(View.GONE);
+                    chronometer.setVisibility(View.INVISIBLE);
                 }
 
 
@@ -370,8 +371,7 @@ public class MainActivity extends ActionBarActivity
             btnStart = (Button) rootView.findViewById(R.id.btnStart);
             btnStop = (Button) rootView.findViewById(R.id.btnStop);
             btnReset = (Button) rootView.findViewById(R.id.btnReset);
-            tvStartDateLabel = (TextView) rootView.findViewById(R.id.tvStartDateLabel);
-            tvStartDate = (TextView) rootView.findViewById(R.id.tvStartDate);
+            chronometer = (Chronometer) rootView.findViewById(R.id.chronometer);
             rlContainer = (RelativeLayout) rootView.findViewById(R.id.rl_container);
             rlContainerNotStarted = (RelativeLayout) rootView.findViewById(R.id.rl_container_not_started);
             rlOtherProject = (RelativeLayout) rootView.findViewById(R.id.rl_container_other_project_selected);
@@ -418,6 +418,7 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onClick(View view) {
                         getActivity().setProgressBarIndeterminateVisibility(true);
+                        btnStop.setEnabled(false);
 
                         new StopAsyncTask().execute();
 
@@ -536,6 +537,7 @@ public class MainActivity extends ActionBarActivity
                     btnStop.setVisibility(View.GONE);
 
 
+
                     setStartDateTextView();
 
                     WidgetUtils.refreshWidget(getActivity().getApplicationContext());
@@ -545,6 +547,7 @@ public class MainActivity extends ActionBarActivity
                 } else {
                     Crouton.makeText(getActivity(), aVoid, Style.ALERT).show();
                 }
+                btnStop.setEnabled(true);
             }
         }
 

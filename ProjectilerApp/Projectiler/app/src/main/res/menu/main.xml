@@ -4,7 +4,6 @@
     tools:context="de.saxsys.android.projectiler.app.MainActivity" >
     <item android:id="@+id/action_logout"
         android:title="@string/action_example"
-        android:icon="@drawable/ic_action_logout_icon"
         app:showAsAction="always" />
 
 </menu>
