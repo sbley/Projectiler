@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity
             if (UserDataStore.getInstance().getProjectName(getApplicationContext()).equals("")) {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, true, false));
 
-            } else if (UserDataStore.getInstance().getProjectName(getApplicationContext()).equals(projectName)) {
+            } else if (UserDataStore.getInstance().getProjectName(getApplicationContext()).equals(projectName) && UserDataStore.getInstance().getStartDate(getApplicationContext()) != null) {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, false, true));
             } else {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, true, false));
@@ -352,7 +352,7 @@ public class MainActivity extends ActionBarActivity
                 if (UserDataStore.getInstance().getProjectName(getActivity().getApplicationContext()).equals("")) {
                     startVisible = true;
                     stopVisible = false;
-                } else if (UserDataStore.getInstance().getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
+                } else if (UserDataStore.getInstance().getProjectName(getActivity().getApplicationContext()).equals(projectName) && UserDataStore.getInstance().getStartDate(getActivity().getApplicationContext()) != null) {
                     startVisible = false;
                     stopVisible = true;
                 } else {

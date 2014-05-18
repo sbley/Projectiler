@@ -65,19 +65,11 @@
             android:name="de.saxsys.android.projectiler.app.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
-            android:name="de.saxsys.android.projectiler.app.StopIntentService"
-            android:exported="false" >
-        </service>
-        <service
-            android:name="de.saxsys.android.projectiler.app.ResetIntentService"
-            android:exported="false" >
-        </service>
-        <service
-            android:name="de.saxsys.android.projectiler.app.StartIntentService"
-            android:exported="false" >
-        </service>
-        <service
             android:name="de.saxsys.android.projectiler.app.ProjectNameIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name=".ProjectilerIntentService"
             android:exported="false" >
         </service>
     </application>

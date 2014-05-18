@@ -72,14 +72,13 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
             views.setViewVisibility(R.id.rl_widget_login, View.GONE);
             views.setViewVisibility(R.id.ll_widget_content, View.VISIBLE);
 
-            Intent stopIntent = new Intent(context, StopIntentService.class);
-            PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, stopIntent, 0);
-
-            Intent resetIntent = new Intent(context, ResetIntentService.class);
-            PendingIntent resetPendingIntent = PendingIntent.getService(context, 0, resetIntent, 0);
-
-            Intent startIntent = new Intent(context, StartIntentService.class);
-            PendingIntent startPendingIntent = PendingIntent.getService(context, 0, startIntent, 0);
+            Intent intent = new Intent(context, ProjectilerIntentService.class);
+            intent.setAction(ProjectilerIntentService.ACTION_START);
+            PendingIntent startPendingIntent = PendingIntent.getService(context, 0, intent, 0);
+            intent.setAction(ProjectilerIntentService.ACTION_STOP);
+            PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, intent, 0);
+            intent.setAction(ProjectilerIntentService.ACTION_RESET);
+            PendingIntent resetPendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
             views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
             views.setOnClickPendingIntent(R.id.buttonStop, stopPendingIntent);

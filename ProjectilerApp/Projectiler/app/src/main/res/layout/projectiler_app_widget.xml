@@ -5,7 +5,6 @@
     android:id="@+id/rl_widget"
     android:background="@android:color/white">
 
-
     <RelativeLayout
         android:id="@+id/rl_widget_login"
         android:visibility="gone"

@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Derzeit gibt es keine Buchung gestartet!"
+            android:text="Derzeit ist keine Buchung gestartet!"
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="20sp"
