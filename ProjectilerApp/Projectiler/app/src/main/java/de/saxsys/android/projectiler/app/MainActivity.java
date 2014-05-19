@@ -383,11 +383,13 @@ public class MainActivity extends ActionBarActivity
                 rlContainer.setVisibility(View.GONE);
                 rlContainerNotStarted.setVisibility(View.VISIBLE);
                 rlOtherProject.setVisibility(View.GONE);
+                chronometer.setVisibility(View.INVISIBLE);
             }else if(projectiler.getStartDate(getActivity().getApplicationContext()) != null && !projectiler.getProjectName(getActivity().getApplicationContext()).equals(projectName)){
                 // ein anderes Projekt wurde schon gestartet
                 rlContainer.setVisibility(View.GONE);
                 rlContainerNotStarted.setVisibility(View.GONE);
                 tvProject.setVisibility(View.GONE);
+                chronometer.setVisibility(View.INVISIBLE);
                 TextView tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
                 tvOtherProjectSelected.setText("Es wurde eine Buchung für das Project " + projectiler.getProjectName(getActivity().getApplicationContext()) + " gestartet");

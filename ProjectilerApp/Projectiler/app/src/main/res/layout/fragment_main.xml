@@ -60,7 +60,7 @@
         android:layout_below="@+id/chronometer">
         <Button
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="220dp"
             android:text="Zeiterfassung starten"
             android:id="@+id/btnStart"
             android:visibility="gone"
@@ -71,28 +71,29 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="220dp"
             android:text="Zeiterfassung beenden"
             android:id="@+id/btnStop"
             style="@style/StopButton"
             android:background="@drawable/stopbutton_btn_default_holo_light"
-            android:layout_below="@+id/btnStart"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@+id/btnReset" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reset"
             android:visibility="visible"
-            android:layout_marginTop="10dp"
             android:background="@drawable/resetbutton_btn_default_holo_light"
             android:id="@+id/btnReset"
-            android:layout_below="@+id/btnStop"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
 
@@ -103,7 +104,6 @@
     <TextView
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
-        android:text="test"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_margin="10dp"

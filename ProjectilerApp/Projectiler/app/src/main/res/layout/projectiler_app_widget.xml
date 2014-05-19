@@ -117,7 +117,6 @@
 
             <Chronometer
                 android:id="@+id/chronometer"
-                android:format="HH:MM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="40sp"
@@ -132,15 +131,13 @@
                 android:layout_height="wrap_content"
                 android:visibility="visible"
                 android:id="@+id/progressBarWidget"
-                android:layout_below="@+id/ll_buttons"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignTop="@+id/chronometer"
+                android:layout_toRightOf="@+id/chronometer" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_current_project"
-                android:text="fdasfds"
                 android:textStyle="bold"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
