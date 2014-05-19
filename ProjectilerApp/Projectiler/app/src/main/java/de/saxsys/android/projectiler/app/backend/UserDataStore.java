@@ -127,7 +127,7 @@ public class UserDataStore implements Serializable {
 		this.setPassword(context, password);
 	}
 
-    public int getCurrentActiveIndex(final Context context, final List<String> items){
+    public int getCurrentActiveProjectIndex(final Context context, final List<String> items){
 
         int ret = -1;
 

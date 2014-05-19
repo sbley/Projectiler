@@ -5,29 +5,27 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
-import de.saxsys.android.projectiler.app.utils.WidgetUtils;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
 public class ProjectilerIntentService extends IntentService {
 
-    public static final String ACTION_START = "de.saxsys.android.projectiler.app.action.START";
-    public static final String ACTION_STOP = "de.saxsys.android.projectiler.app.action.STOP";
-    public static final String ACTION_RESET = "de.saxsys.android.projectiler.app.action.RESET";
+    public static final String ACTION_START = "de.saxsys.android.businessProcess.app.action.START";
+    public static final String ACTION_STOP = "de.saxsys.android.businessProcess.app.action.STOP";
+    public static final String ACTION_RESET = "de.saxsys.android.businessProcess.app.action.RESET";
 
-    private final Projectiler projectiler;
+    private final BusinessProcess businessProcess;
 
     public ProjectilerIntentService() {
         super("TestIntentService");
-        projectiler = Projectiler.createDefaultProjectiler();
+        businessProcess = BusinessProcess.getInstance();
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.i("TestIntentService", "");
         if (intent != null) {
-            WidgetUtils.showProgressBarOnWidget(getApplicationContext(), projectiler);
             final String action = intent.getAction();
             if (ACTION_START.equals(action)) {
                 handleActionStart();
@@ -44,6 +42,7 @@ public class ProjectilerIntentService extends IntentService {
      * parameters.
      */
     private void handleActionStart() {
+        businessProcess.showProgressBarOnWidget(getApplicationContext());
         new StartAsyncTask().execute();
     }
 
@@ -52,16 +51,12 @@ public class ProjectilerIntentService extends IntentService {
      * parameters.
      */
     private void handleActionStop() {
+        businessProcess.showProgressBarOnWidget(getApplicationContext());
         new StopAsyncTask().execute();
     }
 
     private void handleActionReset() {
-        WidgetUtils.showProgressBarOnWidget(getApplicationContext(), projectiler);
-
-        projectiler.saveProjectName(getApplicationContext(), "");
-        projectiler.resetStartTime(getApplicationContext());
-
-        WidgetUtils.hideProgressBarOnWidget(getApplicationContext(), projectiler);
+        businessProcess.resetProject(getApplicationContext());
     }
 
     // AsyncTasks
@@ -70,8 +65,8 @@ public class ProjectilerIntentService extends IntentService {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            if(!projectiler.getProjectName(getApplicationContext()).equals("")) {
-                projectiler.checkin(getApplicationContext());
+            if(!businessProcess.getProjectName(getApplicationContext()).equals("")) {
+                businessProcess.checkin(getApplicationContext());
             }
 
             return null;
@@ -80,7 +75,7 @@ public class ProjectilerIntentService extends IntentService {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            WidgetUtils.hideProgressBarOnWidget(getApplicationContext(), projectiler);
+            businessProcess.hideProgressBarOnWidget(getApplicationContext());
 
         }
     }
@@ -91,7 +86,7 @@ public class ProjectilerIntentService extends IntentService {
         protected String doInBackground(Void... voids) {
 
             try {
-                projectiler.checkout(getApplicationContext(), projectiler.getProjectName(getApplicationContext()));
+                businessProcess.checkout(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()));
             } catch (CrawlingException e) {
                 e.printStackTrace();
                 return e.getMessage();
@@ -106,7 +101,7 @@ public class ProjectilerIntentService extends IntentService {
         protected void onPostExecute(String aVoid) {
             super.onPostExecute(aVoid);
 
-            WidgetUtils.hideProgressBarOnWidget(getApplicationContext(), projectiler);
+            businessProcess.hideProgressBarOnWidget(getApplicationContext());
         }
     }
 

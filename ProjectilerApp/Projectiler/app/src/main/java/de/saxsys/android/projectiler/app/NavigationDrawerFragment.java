@@ -23,8 +23,8 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.ui.NavigationDrawerAdapter;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -62,6 +62,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private List<String> itemList;
+    private BusinessProcess businessProcess;
 
     public NavigationDrawerFragment() {
     }
@@ -69,6 +70,8 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        businessProcess = BusinessProcess.getInstance();
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
@@ -261,7 +264,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if(itemList != null){
-            int currentActiveIndex = UserDataStore.getInstance().getCurrentActiveIndex(getActivity().getApplicationContext(), itemList);
+            int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
 
             mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
         }
@@ -286,7 +289,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void setItems(List<String> itemList) {
         this.itemList = itemList;
 
-        int currentActiveIndex = UserDataStore.getInstance().getCurrentActiveIndex(getActivity().getApplicationContext(), itemList);
+        int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
 
         mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
     }

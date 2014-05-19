@@ -16,11 +16,7 @@ public class WidgetUtils {
 
 
     public static void refreshWidget(final Context context){
-        Intent widgetIntent = new Intent(context, ProjectilerAppWidget.class);
-        widgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] appWidgetIds = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, ProjectilerAppWidget.class));
-        widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-        context.sendBroadcast(widgetIntent);
+        new RefreshWidgetAsyncTask(context).execute();
     }
 
 

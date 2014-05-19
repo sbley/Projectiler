@@ -8,9 +8,8 @@ import android.widget.RemoteViewsService;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
-import de.saxsys.android.projectiler.app.utils.WidgetUtils;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
  * Created by stefan.heinze on 14.05.2014.
@@ -19,7 +18,7 @@ public class WidgetService extends RemoteViewsService {
     private List<String> projectNames;
     private RemoteViewsService.RemoteViewsFactory ret = null;
     private Intent intent;
-    private Projectiler defaultProjectiler;
+    private BusinessProcess businessProcess;
 /*
 * So pretty simple just defining the Adapter of the listview
 * here Adapter is ListProvider
@@ -34,13 +33,13 @@ public class WidgetService extends RemoteViewsService {
 
         try {
 
-            defaultProjectiler = Projectiler.createDefaultProjectiler();
+            businessProcess = BusinessProcess.getInstance();
 
-            WidgetUtils.showProgressBarOnWidget(getApplicationContext(), defaultProjectiler);
+            businessProcess.showProgressBarOnWidget(getApplicationContext());
 
             ret = new GetProjectsAsyncTask().execute().get();
 
-            WidgetUtils.hideProgressBarOnWidget(getApplicationContext(), defaultProjectiler);
+            businessProcess.hideProgressBarOnWidget(getApplicationContext());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -60,7 +59,7 @@ public class WidgetService extends RemoteViewsService {
 
             try {
 
-                projectNames = defaultProjectiler.getProjectNames(getApplicationContext());
+                projectNames = businessProcess.getProjectNames(getApplicationContext());
 
                 return (new ListProvider(getApplicationContext(), intent, projectNames));
             } catch (CrawlingException e) {

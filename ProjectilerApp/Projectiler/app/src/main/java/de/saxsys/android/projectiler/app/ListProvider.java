@@ -103,15 +103,4 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         return 1;
     }
 
-
-    private void notifyWidget(){
-        Intent intent = new Intent(context, ProjectilerAppWidget.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
-        // since it seems the onUpdate() is only fired on that:
-        int[] appWidgetIds = {appWidgetId};
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-        context.sendBroadcast(intent);
-    }
-
 }

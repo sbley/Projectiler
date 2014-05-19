@@ -30,13 +30,6 @@
             android:hint="@string/dialog_login_hint_password"
             android:inputType="textPassword" />
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dialog_login_padding"
-            android:layout_marginRight="@dimen/dialog_login_padding"
-            android:text="angemeldet bleiben"
-            android:id="@+id/cb_save_login" />
 
         <Button
             android:id="@+id/btn_login"

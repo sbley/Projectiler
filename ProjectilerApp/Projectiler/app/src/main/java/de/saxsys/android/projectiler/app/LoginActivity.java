@@ -9,14 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import de.saxsys.android.projectiler.app.backend.Projectiler;
-import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
@@ -25,7 +23,7 @@ public class LoginActivity extends ActionBarActivity {
     private Button login;
     private EditText username;
     private EditText password;
-    private CheckBox saveLogin;
+    private BusinessProcess businessProcess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +31,7 @@ public class LoginActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_login);
 
+        businessProcess = BusinessProcess.getInstance();
 
         // click listener
         login = (Button) findViewById(R.id.btn_login);
@@ -40,19 +39,16 @@ public class LoginActivity extends ActionBarActivity {
         username = (EditText) findViewById(R.id.et_name);
         password = (EditText) findViewById(R.id.et_password);
 
-        saveLogin = (CheckBox) findViewById(R.id.cb_save_login);
-
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setProgressBarIndeterminateVisibility(true);
-                new LoginTask(username.getText().toString(),password.getText().toString(), saveLogin.isChecked()).execute();
+                new LoginTask(username.getText().toString(),password.getText().toString(), true).execute();
             }
         });
 
 
-        if(UserDataStore.getInstance().getAutoLogin(getApplicationContext())){
+        if(businessProcess.getAutoLogin(getApplicationContext())){
 
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -101,10 +97,8 @@ public class LoginActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(Void... voids) {
 
-            Projectiler defaultProjectiler = Projectiler.createDefaultProjectiler();
-
             try {
-                defaultProjectiler.saveCredentials(getApplicationContext(), username, password, saveLogin);
+                businessProcess.saveCredentials(getApplicationContext(), username, password, saveLogin);
             } catch (CrawlingException e) {
                 e.printStackTrace();
                 return e.getMessage();

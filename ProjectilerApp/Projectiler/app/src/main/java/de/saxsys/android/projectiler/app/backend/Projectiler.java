@@ -147,4 +147,15 @@ public class Projectiler {
     public boolean isWidgetLoading(Context context) {
         return dataStore.isWidgetLoading(context);
     }
+
+    public void logout(final Context context) {
+        dataStore.setAutoLogin(context, false);
+        dataStore.setCredentials(context, "", "");
+        dataStore.setProjectName(context, "");
+    }
+
+    public int getCurrentActiveProjectIndex(Context context, List<String> itemList) {
+        return dataStore.getCurrentActiveProjectIndex(context, itemList);
+    }
+
 }

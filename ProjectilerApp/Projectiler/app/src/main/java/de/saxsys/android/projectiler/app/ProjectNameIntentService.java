@@ -4,8 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import de.saxsys.android.projectiler.app.backend.Projectiler;
-import de.saxsys.android.projectiler.app.utils.WidgetUtils;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -16,11 +15,11 @@ import de.saxsys.android.projectiler.app.utils.WidgetUtils;
  */
 public class ProjectNameIntentService extends IntentService {
 
-    private Projectiler projectiler;
+    private BusinessProcess businessProcess;
 
     public ProjectNameIntentService() {
         super("ProjectNameIntentService");
-        projectiler = Projectiler.createDefaultProjectiler();
+        businessProcess = BusinessProcess.getInstance();
     }
 
     @Override
@@ -30,14 +29,7 @@ public class ProjectNameIntentService extends IntentService {
             String selectedProject = intent.getStringExtra(ProjectilerAppWidget.EXTRA_PROJECT_NAME);
 
             Log.i("ProjectNameIntentService", "selected Project " + selectedProject);
-
-            WidgetUtils.showProgressBarOnWidget(getApplicationContext(), projectiler);
-
-            projectiler.saveProjectName(getApplicationContext(), selectedProject);
-
-            WidgetUtils.hideProgressBarOnWidget(getApplicationContext(), projectiler);
-
-
+            businessProcess.saveProjectName(getApplicationContext(), selectedProject);
         }
     }
 

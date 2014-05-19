@@ -13,8 +13,7 @@ import android.widget.RemoteViews;
 
 import java.util.Date;
 
-import de.saxsys.android.projectiler.app.backend.Projectiler;
-import de.saxsys.android.projectiler.app.backend.UserDataStore;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
 /**
@@ -25,9 +24,13 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
     private static final String CLICK_ACTION = "de.saxsys.android.projectiler.app.widget.CLICK";
     public static final String EXTRA_PROJECT_NAME = "de.saxsys.android.projectiler.app.widget.PROJECT_NAME";
 
+
+    private static BusinessProcess businessProcess;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+        businessProcess = BusinessProcess.getInstance();
         final int N = appWidgetIds.length;
         for (int i=0; i<N; i++) {
             updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
@@ -53,11 +56,8 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.projectiler_app_widget);
 
-        Projectiler projectiler = Projectiler.createDefaultProjectiler();
-
-
         // ist der nutzer eingelogged?
-        if(UserDataStore.getInstance().getUserName(context).equals("")){
+        if(businessProcess.getUserName(context).equals("")){
 
             Intent loginIntent = new Intent(context, LoginActivity.class);
             PendingIntent loginPendingIntent = PendingIntent.getActivity(context, 0, loginIntent, 0);
@@ -65,7 +65,6 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
 
             views.setViewVisibility(R.id.rl_widget_login, View.VISIBLE);
             views.setViewVisibility(R.id.ll_widget_content, View.GONE);
-
 
         }else{
 
@@ -85,10 +84,10 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
 
 
-            String currentProject = projectiler.getProjectName(context);
+            String currentProject = businessProcess.getProjectName(context);
             views.setTextViewText(R.id.tv_current_project, currentProject);
 
-            Date startDate = projectiler.getStartDate(context);
+            Date startDate = businessProcess.getStartDate(context);
             // ist gestartet
             if(startDate != null){
 
@@ -137,7 +136,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
             }
 
 
-            boolean isLoading = projectiler.isWidgetLoading(context);
+            boolean isLoading = businessProcess.isWidgetLoading(context);
 
             if(isLoading){
                 views.setViewVisibility(R.id.progressBarWidget, View.VISIBLE);

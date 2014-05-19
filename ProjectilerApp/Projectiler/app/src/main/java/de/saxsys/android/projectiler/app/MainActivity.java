@@ -37,9 +37,8 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import de.saxsys.android.projectiler.app.backend.Projectiler;
-import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.crawler.CrawlingException;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
@@ -61,12 +60,15 @@ public class MainActivity extends ActionBarActivity
     private PendingIntent nfcPendingIntent;
     private IntentFilter[] writeTagFilters;
     private Menu menu;
+    private BusinessProcess businessProcess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
+
+        businessProcess = BusinessProcess.getInstance();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -83,15 +85,12 @@ public class MainActivity extends ActionBarActivity
 
 
         // gibt es bereits ein laufendes Projekt?
-        Projectiler projectiler = Projectiler.createDefaultProjectiler();
-
-
-        if (projectiler.getStartDate(getApplicationContext()) != null) {
+        if (businessProcess.getStartDate(getApplicationContext()) != null) {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             PlaceholderFragment fragment = new PlaceholderFragment();
 
-            fragment.setArguments(PlaceholderFragment.newInstance(projectiler.getProjectName(getApplicationContext()), false, true));
+            fragment.setArguments(PlaceholderFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true));
 
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
@@ -121,13 +120,15 @@ public class MainActivity extends ActionBarActivity
 
             PlaceholderFragment fragment = new PlaceholderFragment();
 
-            Log.i("Projekt", "gestartetes Projekt: " + UserDataStore.getInstance().getProjectName(getApplicationContext()) + " selectes Project: " + projectName);
+            String currentProjectName = businessProcess.getProjectName(getApplicationContext());
+
+            Log.i("Projekt", "gestartetes Projekt: " + currentProjectName + " selectes Project: " + projectName);
 
             // beide Buttons sichtbar, weil kein aktives projekt
-            if (UserDataStore.getInstance().getProjectName(getApplicationContext()).equals("")) {
+            if (currentProjectName.equals("")) {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, true, false));
 
-            } else if (UserDataStore.getInstance().getProjectName(getApplicationContext()).equals(projectName) && UserDataStore.getInstance().getStartDate(getApplicationContext()) != null) {
+            } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getApplicationContext()) != null) {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, false, true));
             } else {
                 fragment.setArguments(PlaceholderFragment.newInstance(projectName, true, false));
@@ -151,6 +152,11 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+
+        if(mTitle.equals("")){
+            mTitle = getString(R.string.app_name);
+        }
+
         actionBar.setTitle(mTitle);
     }
 
@@ -165,7 +171,7 @@ public class MainActivity extends ActionBarActivity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
 
-            if (UserDataStore.getInstance().getAutoLogin(getApplicationContext())) {
+            if (businessProcess.getAutoLogin(getApplicationContext())) {
                 getMenuInflater().inflate(R.menu.main, menu);
             }
             restoreActionBar();
@@ -183,12 +189,8 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_logout) {
-            UserDataStore.getInstance().setAutoLogin(getApplicationContext(), false);
-            UserDataStore.getInstance().setUserName(getApplicationContext(), "");
-            UserDataStore.getInstance().setPassword(getApplicationContext(), "");
-            UserDataStore.getInstance().setProjectName(getApplicationContext(), "");
 
-            WidgetUtils.refreshWidget(getApplicationContext());
+            businessProcess.logout(getApplicationContext());
 
             finish();
         } else if (id == R.id.action_nfc) {
@@ -284,7 +286,7 @@ public class MainActivity extends ActionBarActivity
         private Button btnStop;
         private Button btnReset;
 
-        private final Projectiler projectiler;
+        private final BusinessProcess businessProcess;
         private View rootView;
         private RelativeLayout rlContainer;
         private RelativeLayout rlContainerNotStarted;
@@ -305,7 +307,7 @@ public class MainActivity extends ActionBarActivity
         }
 
         public PlaceholderFragment() {
-            projectiler = Projectiler.createDefaultProjectiler();
+            businessProcess = BusinessProcess.getInstance();
         }
 
         @Override
@@ -324,13 +326,13 @@ public class MainActivity extends ActionBarActivity
         }
 
         private void setStartDateTextView() {
-            Date startDate = projectiler.getStartDate(getActivity().getApplicationContext());
+            Date startDate = businessProcess.getStartDate(getActivity().getApplicationContext());
 
             if (startDate == null) {
                 chronometer.setVisibility(View.INVISIBLE);
             } else {
 
-                if (projectiler.getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
+                if (businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
                     chronometer.setVisibility(View.VISIBLE);
                     long currentDatetime = System.currentTimeMillis();
                     chronometer.setBase(SystemClock.elapsedRealtime() - (currentDatetime - startDate.getTime()));
@@ -350,10 +352,13 @@ public class MainActivity extends ActionBarActivity
             Log.i("Fragment", "onResume");
 
             if (rootView != null) {
-                if (UserDataStore.getInstance().getProjectName(getActivity().getApplicationContext()).equals("")) {
+
+                String currentProjectName = businessProcess.getProjectName(getActivity().getApplicationContext());
+
+                if (currentProjectName.equals("")) {
                     startVisible = true;
                     stopVisible = false;
-                } else if (UserDataStore.getInstance().getProjectName(getActivity().getApplicationContext()).equals(projectName) && UserDataStore.getInstance().getStartDate(getActivity().getApplicationContext()) != null) {
+                } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getActivity().getApplicationContext()) != null) {
                     startVisible = false;
                     stopVisible = true;
                 } else {
@@ -384,7 +389,7 @@ public class MainActivity extends ActionBarActivity
                 rlContainerNotStarted.setVisibility(View.VISIBLE);
                 rlOtherProject.setVisibility(View.GONE);
                 chronometer.setVisibility(View.INVISIBLE);
-            }else if(projectiler.getStartDate(getActivity().getApplicationContext()) != null && !projectiler.getProjectName(getActivity().getApplicationContext()).equals(projectName)){
+            }else if(businessProcess.getStartDate(getActivity().getApplicationContext()) != null && !businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)){
                 // ein anderes Projekt wurde schon gestartet
                 rlContainer.setVisibility(View.GONE);
                 rlContainerNotStarted.setVisibility(View.GONE);
@@ -392,7 +397,7 @@ public class MainActivity extends ActionBarActivity
                 chronometer.setVisibility(View.INVISIBLE);
                 TextView tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
-                tvOtherProjectSelected.setText("Es wurde eine Buchung für das Project " + projectiler.getProjectName(getActivity().getApplicationContext()) + " gestartet");
+                tvOtherProjectSelected.setText("Es wurde eine Buchung für das Project " + businessProcess.getProjectName(getActivity().getApplicationContext()) + " gestartet");
 
 
 
@@ -409,7 +414,7 @@ public class MainActivity extends ActionBarActivity
                     public void onClick(View view) {
                         getActivity().setProgressBarIndeterminateVisibility(true);
 
-                        projectiler.saveProjectName(getActivity().getApplicationContext(), projectName);
+                        businessProcess.saveProjectName(getActivity().getApplicationContext(), projectName);
 
                         new StartAsyncTask().execute();
 
@@ -431,8 +436,7 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onClick(View view) {
 
-                        projectiler.saveProjectName(getActivity().getApplicationContext(), "");
-                        projectiler.resetStartTime(getActivity().getApplicationContext());
+                        businessProcess.resetProject(getActivity().getApplicationContext());
 
                         btnReset.setVisibility(View.GONE);
                         btnStart.setVisibility(View.VISIBLE);
@@ -441,9 +445,6 @@ public class MainActivity extends ActionBarActivity
                         setStartDateTextView();
 
                         ((MainActivity) getActivity()).refreshNavigationDrawer("");
-
-                        // update Widget
-                        WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 
                     }
                 });
@@ -482,7 +483,7 @@ public class MainActivity extends ActionBarActivity
             @Override
             protected Void doInBackground(Void... voids) {
 
-                projectiler.checkin(getActivity().getApplicationContext());
+                businessProcess.checkin(getActivity().getApplicationContext());
 
                 return null;
             }
@@ -513,7 +514,7 @@ public class MainActivity extends ActionBarActivity
             protected String doInBackground(Void... voids) {
 
                 try {
-                    projectiler.checkout(getActivity().getApplicationContext(), projectName);
+                    businessProcess.checkout(getActivity().getApplicationContext(), projectName);
                 } catch (CrawlingException e) {
                     e.printStackTrace();
                     return e.getMessage();
@@ -531,7 +532,7 @@ public class MainActivity extends ActionBarActivity
                 getActivity().setProgressBarIndeterminateVisibility(false);
 
                 if (aVoid == null) {
-                    projectiler.resetStartTime(getActivity().getApplicationContext());
+                    businessProcess.resetStartTime(getActivity().getApplicationContext());
                     ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
                     btnReset.setVisibility(View.GONE);
@@ -556,9 +557,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void refreshNavigationDrawer(String projectName) {
-        Projectiler projectiler = Projectiler.createDefaultProjectiler();
 
-        if (projectiler.getStartDate(getApplicationContext()) != null) {
+        if (businessProcess.getStartDate(getApplicationContext()) != null) {
             mNavigationDrawerFragment.setProjectActive(projectName);
         } else {
             mNavigationDrawerFragment.setProjectActive("");
@@ -568,15 +568,11 @@ public class MainActivity extends ActionBarActivity
 
     private class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>> {
 
-        private Projectiler defaultProjectiler;
-
         @Override
         protected List<String> doInBackground(Void... voids) {
-
-            defaultProjectiler = Projectiler.createDefaultProjectiler();
             try {
 
-                List<String> projectNames = defaultProjectiler.getProjectNames(getApplicationContext());
+                List<String> projectNames = businessProcess.getProjectNames(getApplicationContext());
 
                 return projectNames;
             } catch (CrawlingException e) {
@@ -596,7 +592,7 @@ public class MainActivity extends ActionBarActivity
                 mNavigationDrawerFragment.setItems(itemList);
 
 
-                if(defaultProjectiler.getProjectName(getApplicationContext()).equals("")){
+                if(businessProcess.getProjectName(getApplicationContext()).equals("")){
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     PlaceholderFragment fragment = new PlaceholderFragment();
 
@@ -609,7 +605,7 @@ public class MainActivity extends ActionBarActivity
 
 
             } else {
-                defaultProjectiler.setAutoLogin(getApplicationContext(), false);
+                businessProcess.setAutoLogin(getApplicationContext(), false);
 
                 MainActivity.this.finish();
 
