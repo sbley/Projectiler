@@ -15,5 +15,12 @@
     <string name="title_activity_nfc">Projectiler NFC</string>
     <string name="appwidget_text">Example</string>
     <string name="add_widget">Add widget</string>
+    <string name="ncf_in_range">NFC in range</string>
+    <string name="other_project_booked">the Project %s is currently tracked</string>
+    <string name="time_booked_successfull">time was tracked successful</string>
+    <string name="no_connection_to_server">no connection to server available</string>
+    <string name="stop_time_tracking">stop time tracking</string>
+    <string name="start_time_tracking">start time tracking</string>
+    <string name="no_booking_started">there is no tracking currently started</string>
 
 </resources>

@@ -202,7 +202,7 @@ public class MainActivity extends ActionBarActivity
                     Log.d("", "write nfc");
 
                     write(NFC_KEY_WORD, projectilerTag);
-                    Crouton.makeText(MainActivity.this, "NFC in Reichweite", Style.CONFIRM).show();
+                    Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
                 } else {
                     // bitte NFC hinlegen
                 }
@@ -225,7 +225,7 @@ public class MainActivity extends ActionBarActivity
             projectilerTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
             Log.d("", "projectilerTag gesetzt");
-            Crouton.makeText(MainActivity.this, "NFC in Reichweite", Style.CONFIRM).show();
+            Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
 
             MenuItem item = menu.findItem(R.id.action_nfc);
             if (item == null) {
@@ -397,7 +397,9 @@ public class MainActivity extends ActionBarActivity
                 chronometer.setVisibility(View.INVISIBLE);
                 TextView tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
-                tvOtherProjectSelected.setText("Es wurde eine Buchung für das Project " + businessProcess.getProjectName(getActivity().getApplicationContext()) + " gestartet");
+                String text = String.format(getString(R.string.other_project_booked), businessProcess.getProjectName(getActivity().getApplicationContext()));
+
+                tvOtherProjectSelected.setText(text);
 
 
 
@@ -545,7 +547,7 @@ public class MainActivity extends ActionBarActivity
 
                     WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 
-                    Crouton.makeText(getActivity(), "Zeit wurd erfolgreich gebucht", Style.INFO).show();
+                    Crouton.makeText(getActivity(), getString(R.string.time_booked_successfull), Style.INFO).show();
 
                 } else {
                     Crouton.makeText(getActivity(), aVoid, Style.ALERT).show();
@@ -604,7 +606,7 @@ public class MainActivity extends ActionBarActivity
                             .commit();
                 }
             }else{
-                Crouton.makeText(MainActivity.this, "Keine Verbindung zum Server", Style.ALERT).show();
+                Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
             }
 
 
