@@ -576,6 +576,8 @@ public class MainActivity extends ActionBarActivity
 
                 return projectNames;
             } catch (CrawlingException e) {
+                // TODO: hier muss unterschieden werden, ob die user credentials nicht mehr stimmen oder kein empfang ist
+
                 e.printStackTrace();
             }
 
@@ -591,7 +593,6 @@ public class MainActivity extends ActionBarActivity
             if (itemList != null) {
                 mNavigationDrawerFragment.setItems(itemList);
 
-
                 if(businessProcess.getProjectName(getApplicationContext()).equals("")){
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     PlaceholderFragment fragment = new PlaceholderFragment();
@@ -602,13 +603,8 @@ public class MainActivity extends ActionBarActivity
                             .replace(R.id.container, fragment)
                             .commit();
                 }
-
-
-            } else {
-                businessProcess.setAutoLogin(getApplicationContext(), false);
-
-                MainActivity.this.finish();
-
+            }else{
+                Crouton.makeText(MainActivity.this, "Keine Verbindung zum Server", Style.ALERT).show();
             }
 
 

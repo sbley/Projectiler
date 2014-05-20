@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Projectiler</string>
+    <string name="navigation_drawer_open">Navigation Drawer öffnen</string>
+    <string name="navigation_drawer_close">Navigation Drawer schließen</string>
+    <string name="action_example">Abmelden</string>
+    <string name="action_nfc">NFC</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="dialog_login_button_label">Anmelden</string>
+    <string name="dialog_login_hint_password">Passwort</string>
+    <string name="dialog_login_hint_username">Benutzername</string>
+    <string name="dialog_login_title">Anmelden</string>
+    <string name="title_activity_login">Projectiler</string>
+    <string name="title_activity_nfc">Projectiler NFC</string>
+    <string name="appwidget_text">Beispiel</string>
+    <string name="add_widget">Widget hinzufügen</string>
+
+</resources>

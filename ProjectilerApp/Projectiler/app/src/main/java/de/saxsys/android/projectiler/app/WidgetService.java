@@ -52,10 +52,8 @@ public class WidgetService extends RemoteViewsService {
 
     private class GetProjectsAsyncTask extends AsyncTask<Void, Void, RemoteViewsService.RemoteViewsFactory> {
 
-
         @Override
         protected RemoteViewsService.RemoteViewsFactory doInBackground(Void... voids) {
-
 
             try {
 
