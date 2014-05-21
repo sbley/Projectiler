@@ -4,7 +4,7 @@
     <string name="app_name">Projectiler</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Logout</string>
+    <string name="action_logout">Logout</string>
     <string name="action_nfc">Write NFC</string>
     <string name="action_settings">Settings</string>
     <string name="dialog_login_button_label">Login</string>
@@ -22,5 +22,6 @@
     <string name="stop_time_tracking">stop time tracking</string>
     <string name="start_time_tracking">start time tracking</string>
     <string name="no_booking_started">there is no tracking currently started</string>
+    <string name="do_you_really_wan_to_logout">Current startet trackings will be dismissed by logout. Do you really want to logout?</string>
 
 </resources>

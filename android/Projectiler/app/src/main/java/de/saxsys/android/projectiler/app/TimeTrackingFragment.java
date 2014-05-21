@@ -25,7 +25,7 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 /**
- * Created by stefan.heinze on 21.05.2014.
+ * Created by spaxx86 on 21.05.2014.
  */
 public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fragment implements View.OnClickListener{
     /**
@@ -137,7 +137,7 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
                 stopVisible = false;
             }
             initView();
-            
+
         }
     }
 

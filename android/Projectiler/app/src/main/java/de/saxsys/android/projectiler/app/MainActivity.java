@@ -25,6 +25,7 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
@@ -181,9 +182,9 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
             return true;
         } else if (id == R.id.action_logout) {
 
-            businessProcess.logout(getApplicationContext());
+            LogoutDialog dialogFragment = new LogoutDialog();
+            dialogFragment.show(getFragmentManager(), "logoutDialog");
 
-            finish();
         } else if (id == R.id.action_nfc) {
             try {
 
