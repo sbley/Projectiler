@@ -6,7 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="de.saxsys.android.projectiler.app.MainActivity$PlaceholderFragment">
+    tools:context="de.saxsys.android.projectiler.app.MainActivity.TimeTrackingFragment">
 
     <RelativeLayout
         android:gravity="center_vertical"
@@ -102,7 +102,7 @@
 
 
     <TextView
-        android:id="@+id/section_label"
+        android:id="@+id/tvProjectName"
         android:layout_width="wrap_content"
         android:textStyle="bold"
         android:textSize="20sp"
@@ -122,9 +122,9 @@
         android:gravity="center"
         android:paddingBottom="10dp"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/section_label"
-        android:layout_alignRight="@+id/section_label"
-        android:layout_alignEnd="@+id/section_label"
+        android:layout_below="@+id/tvProjectName"
+        android:layout_alignRight="@+id/tvProjectName"
+        android:layout_alignEnd="@+id/tvProjectName"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

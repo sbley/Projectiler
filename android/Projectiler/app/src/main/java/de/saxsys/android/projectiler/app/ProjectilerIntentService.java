@@ -2,10 +2,12 @@ package de.saxsys.android.projectiler.app;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import de.saxsys.android.projectiler.app.crawler.CrawlingException;
+import org.droidparts.concurrent.task.AsyncTaskResultListener;
+
+import de.saxsys.android.projectiler.app.asynctasks.StartAsyncTask;
+import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
@@ -42,8 +44,11 @@ public class ProjectilerIntentService extends IntentService {
      * parameters.
      */
     private void handleActionStart() {
-        businessProcess.showProgressBarOnWidget(getApplicationContext());
-        new StartAsyncTask().execute();
+
+        if(!businessProcess.getProjectName(getApplicationContext()).equals("")) {
+            businessProcess.showProgressBarOnWidget(getApplicationContext());
+            new StartAsyncTask(getApplicationContext(), startTaskResultListener).execute();
+        }
     }
 
     /**
@@ -52,58 +57,37 @@ public class ProjectilerIntentService extends IntentService {
      */
     private void handleActionStop() {
         businessProcess.showProgressBarOnWidget(getApplicationContext());
-        new StopAsyncTask().execute();
+        new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()), stopTaskResultListener).execute();
     }
 
     private void handleActionReset() {
         businessProcess.resetProject(getApplicationContext());
     }
 
-    // AsyncTasks
-    private class StartAsyncTask extends AsyncTask<Void, Void, Void> {
 
+    private AsyncTaskResultListener<Void> startTaskResultListener = new AsyncTaskResultListener<Void>() {
         @Override
-        protected Void doInBackground(Void... voids) {
-
-            if(!businessProcess.getProjectName(getApplicationContext()).equals("")) {
-                businessProcess.checkin(getApplicationContext());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            businessProcess.hideProgressBarOnWidget(getApplicationContext());
-
-        }
-    }
-
-    private class StopAsyncTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-
-            try {
-                businessProcess.checkout(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()));
-            } catch (CrawlingException e) {
-                e.printStackTrace();
-                return e.getMessage();
-            } catch (IllegalStateException e1) {
-                return e1.getMessage();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String aVoid) {
-            super.onPostExecute(aVoid);
-
+        public void onAsyncTaskSuccess(Void aVoid) {
             businessProcess.hideProgressBarOnWidget(getApplicationContext());
         }
-    }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            businessProcess.hideProgressBarOnWidget(getApplicationContext());
+        }
+    };
+
+    private AsyncTaskResultListener<Void> stopTaskResultListener = new AsyncTaskResultListener<Void>() {
+        @Override
+        public void onAsyncTaskSuccess(Void aVoid) {
+            businessProcess.hideProgressBarOnWidget(getApplicationContext());
+        }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            businessProcess.hideProgressBarOnWidget(getApplicationContext());
+        }
+    };
 
 
 }
