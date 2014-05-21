@@ -137,6 +137,7 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
                 stopVisible = false;
             }
             initView();
+            
         }
     }
 
