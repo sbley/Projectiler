@@ -98,7 +98,7 @@ public class NfcActivity extends ActionBarActivity {
                 e.printStackTrace();
             } catch (IllegalStateException e1) {
                 e1.printStackTrace();
-                sendNotification(003, "Fehler beim Buchen der Zeit", e1.getMessage());
+                sendNotification(003, getString(R.string.error_stop_tracking), e1.getMessage());
 
                 finish();
             }
@@ -113,7 +113,7 @@ public class NfcActivity extends ActionBarActivity {
             if (o != null) {
                 progressBar.setVisibility(View.GONE);
 
-                sendNotification(002, "Zeiterfassung beendet", "Projekt " + projectName + " gebucht!");
+                sendNotification(002, getString(R.string.stopped_time_tracking), getString(R.string.project_booked, projectName));
 
                 WidgetUtils.refreshWidget(getApplicationContext());
 
@@ -190,7 +190,7 @@ public class NfcActivity extends ActionBarActivity {
 
             String projectName = businessProcess.getProjectName(getApplicationContext());
 
-            sendNotification(001, "Zeiterfassung gestartet", startTime + " für das Projekt " + projectName);
+            sendNotification(001, getString(R.string.start_tracking), getString(R.string.start_tracking_project, startTime, projectName));
 
             WidgetUtils.refreshWidget(getApplicationContext());
 

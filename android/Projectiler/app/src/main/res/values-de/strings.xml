@@ -23,5 +23,10 @@
     <string name="start_time_tracking">Zeiterfassung starten</string>
     <string name="no_booking_started">Derzeit ist keine Buchung gestartet!</string>
     <string name="do_you_really_wan_to_logout">Wenn Sie sich abmelden werden gestartete Buchungen verworfen. Wollen Sie sich wirklich abmelden?</string>
+    <string name="stopped_time_tracking">Zeiterfassung beendet</string>
+    <string name="project_booked">Projekt %s gebucht!</string>
+    <string name="error_stop_tracking">Fehler beim Buchen der Zeit</string>
+    <string name="start_tracking">Zeiterfassung gestartet</string>
+    <string name="start_tracking_project">%1$s für das Projekt %2$s</string>
 
 </resources>
