@@ -1,0 +1,15 @@
+<resources>
+        <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Allgemein</string>
+
+    <string name="pref_title_google_analytics">Aktivieren von Google Analytics</string>
+    <string name="pref_description_google_analytics">Wird benutzt, um die Usability der App zu verbessern...</string>
+
+    <string name="pref_title_projectile_url">Projectile-URL</string>
+    <string name="pref_default_display_name">https://pt.saxsys.de/projectile/start</string>
+
+</resources>
