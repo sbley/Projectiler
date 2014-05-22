@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.saxsys.android.projectiler.app" >
 
-    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -71,14 +70,9 @@
             android:exported="false" >
         </service>
         <service
-            android:name="de.saxsys.android.projectiler.app.ProjectilerIntentService"
+            android:name=".ProjectilerIntentService"
             android:exported="false" >
         </service>
-
-        <activity
-            android:name="de.saxsys.android.projectiler.app.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>
