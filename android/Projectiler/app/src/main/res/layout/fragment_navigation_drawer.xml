@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="de.saxsys.android.projectiler.app.NavigationDrawerFragment"
     android:layout_width="match_parent"
+    android:background="@android:color/darker_gray"
     android:layout_height="match_parent">
 
 
@@ -10,7 +11,7 @@
         android:layout_height="match_parent"
         android:id="@+id/lvProjects"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/darker_gray"
+        android:divider="@color/saxsysred"
         android:dividerHeight="1dp"
         android:background="#cccc"
         android:layout_alignParentTop="true"

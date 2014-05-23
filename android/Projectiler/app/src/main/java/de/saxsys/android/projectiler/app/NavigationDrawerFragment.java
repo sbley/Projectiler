@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+
+import org.droidparts.annotation.inject.InjectView;
+import org.droidparts.fragment.support.v4.Fragment;
 
 import java.util.List;
 
@@ -53,16 +55,18 @@ public class NavigationDrawerFragment extends Fragment {
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private DrawerLayout mDrawerLayout;
-    private ExpandableListView mDrawerListView;
-    private View mFragmentContainerView;
-
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
     private List<String> itemList;
     private BusinessProcess businessProcess;
-    private View rootView;
+
+    private DrawerLayout mDrawerLayout;
+    private View mFragmentContainerView;
+
+    @InjectView(id = R.id.lvProjects)
+    private ExpandableListView mDrawerListView;
 
     public NavigationDrawerFragment() {
     }
@@ -95,15 +99,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
-        rootView = inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-
-        mDrawerListView = (ExpandableListView) rootView.findViewById(R.id.lvProjects);
-
-        return rootView;
+    public View onCreateView(Bundle savedInstanceState, LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
     }
 
     public boolean isDrawerOpen() {
@@ -299,7 +296,7 @@ public class NavigationDrawerFragment extends Fragment {
                             .replace(R.id.container, currentTracksFragment)
                             .commit();
                     mDrawerLayout.closeDrawers();
-                    
+
                 }else if (groupPosition == 1){
 
                     fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true));

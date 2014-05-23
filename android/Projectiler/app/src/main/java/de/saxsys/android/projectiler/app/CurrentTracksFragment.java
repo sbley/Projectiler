@@ -1,13 +1,20 @@
 package de.saxsys.android.projectiler.app;
 
 
-
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import org.droidparts.annotation.inject.InjectView;
+import org.droidparts.concurrent.task.AsyncTaskResultListener;
+
+import java.util.List;
+
+import de.saxsys.android.projectiler.app.asynctasks.GetDailyTrackAsyncTask;
+import de.saxsys.projectiler.crawler.Booking;
 
 
 /**
@@ -16,7 +23,10 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  *
  */
-public class CurrentTracksFragment extends Fragment {
+public class CurrentTracksFragment extends org.droidparts.fragment.support.v4.Fragment {
+
+    @InjectView(id = R.id.lvCurrentTracks)
+    private ListView lvBooking;
 
     public static CurrentTracksFragment newInstance() {
         CurrentTracksFragment fragment = new CurrentTracksFragment();
@@ -38,11 +48,29 @@ public class CurrentTracksFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(Bundle savedInstanceState, LayoutInflater inflater, ViewGroup container) {
+        getActivity().setProgressBarIndeterminateVisibility(true);
+        new GetDailyTrackAsyncTask(getActivity().getApplicationContext(), getDailyTracksListener).execute();
         return inflater.inflate(R.layout.fragment_current_tracks, container, false);
     }
 
+    private AsyncTaskResultListener<List<Booking>> getDailyTracksListener = new AsyncTaskResultListener<List<Booking>>() {
+        @Override
+        public void onAsyncTaskSuccess(List<Booking> bookings) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            lvBooking.setAdapter(new CurrentTrackAdapter(getActivity().getApplicationContext(), bookings));
+        }
 
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+        }
+    };
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((MainActivity) activity).onSectionAttached(
+                activity.getString(R.string.current_tracks));
+    }
 }

@@ -29,5 +29,11 @@
     <string name="start_tracking">start time tracking</string>
     <string name="start_tracking_project">%1$s for project %2$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="current_tracks">Tracks today</string>
+
+    <array name="navigation_drawer_groups">
+        <item>Functions</item>
+        <item>Projects</item>
+    </array>
 
 </resources>

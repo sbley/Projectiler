@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.saxsys.android.projectiler.app.backend.Projectiler;
+import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.CrawlingException;
 import de.saxsys.projectiler.crawler.InvalidCredentialsException;
@@ -118,4 +119,9 @@ public class BusinessProcess {
     public void hideProgressBarOnWidget(Context context) {
         WidgetUtils.hideProgressBarOnWidget(context, projectiler);
     }
+
+    public List<Booking> getCurrentBookings(final Context context) throws CrawlingException {
+        return projectiler.getDailyReports(context);
+    }
+
 }

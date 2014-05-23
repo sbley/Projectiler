@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.CrawlingException;
@@ -158,4 +159,7 @@ public class Projectiler {
         return dataStore.getCurrentActiveProjectIndex(context, itemList);
     }
 
+    public List<Booking> getDailyReports(final Context context) throws CrawlingException {
+        return crawler.getDailyReport(createCredentials(context));
+    }
 }

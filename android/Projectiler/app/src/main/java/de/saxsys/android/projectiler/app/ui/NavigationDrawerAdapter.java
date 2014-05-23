@@ -25,16 +25,18 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
     private List<String> navigation;
 
     public NavigationDrawerAdapter(Context context, List<String> objects, int activeElement) {
-        //super(context, R.layout.adapter_navigation_drawer, objects);
-
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.activeElement = activeElement;
         this.projects = objects;
         groups = new ArrayList<String>();
-        groups.add("Funktionen");
-        groups.add("Projekte");
+
+        String[] stringArray = context.getResources().getStringArray(R.array.navigation_drawer_groups);
+
+        for(int i = 0; i < stringArray.length; i++){
+            groups.add(stringArray[i]);
+        }
         navigation = new ArrayList<String>();
-        navigation.add("Zeiten Heute");
+        navigation.add(context.getString(R.string.current_tracks));
     }
 
 

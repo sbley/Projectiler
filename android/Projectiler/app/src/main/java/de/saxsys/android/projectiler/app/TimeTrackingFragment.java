@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
+import org.droidparts.fragment.support.v4.Fragment;
 
 import java.util.Date;
 
@@ -27,7 +28,7 @@ import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 /**
  * Created by spaxx86 on 21.05.2014.
  */
-public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fragment implements View.OnClickListener{
+public class TimeTrackingFragment extends Fragment implements View.OnClickListener{
     /**
      * The fragment argument representing the section number for this
      * fragment.
