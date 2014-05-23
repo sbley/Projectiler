@@ -75,20 +75,25 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
         setProgressBarIndeterminateVisibility(true);
         new GetProjectsAsyncTask(getApplicationContext()).execute();
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        TimeTrackingFragment fragment = new TimeTrackingFragment();
 
         // gibt es bereits ein laufendes Projekt?
         if (businessProcess.getStartDate(getApplicationContext()) != null) {
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            TimeTrackingFragment fragment = new TimeTrackingFragment();
-
-            fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true));
+            fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true, false));
 
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
 
 
+        }else{
+            fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true, true));
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
         }
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -118,12 +123,12 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
 
             // beide Buttons sichtbar, weil kein aktives projekt
             if (currentProjectName.equals("")) {
-                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
+                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false, false));
 
             } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getApplicationContext()) != null) {
-                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, false, true));
+                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, false, true, false));
             } else {
-                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
+                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false, false));
             }
 
 
@@ -249,7 +254,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 TimeTrackingFragment fragment = new TimeTrackingFragment();
 
-                fragment.setArguments(TimeTrackingFragment.newInstance("", false, true));
+                fragment.setArguments(TimeTrackingFragment.newInstance("", false, true, false));
 
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, fragment)

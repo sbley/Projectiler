@@ -12,6 +12,8 @@ import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.todddavies.components.progressbar.ProgressWheel;
+
 import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
@@ -35,10 +37,12 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
     private static final String ARG_PROJECT_NAME = "project_name";
     private static final String ARG_START_VISIBLE = "start_visible";
     private static final String ARG_STOP_VISIBLE = "stop_visible";
+    private static final String ARG_IS_LOADING = "is_loading";
 
     private String projectName;
     private boolean startVisible;
     private boolean stopVisible;
+    private boolean isLoading;
 
 
     private final BusinessProcess businessProcess;
@@ -63,16 +67,19 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
     private Button btnStop;
     @InjectView(id = R.id.btnReset, click = true)
     private Button btnReset;
+    @InjectView(id = R.id.pw_spinner)
+    private ProgressWheel pw;
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static Bundle newInstance(String projectName, boolean startVisible, boolean stopVisible) {
+    public static Bundle newInstance(String projectName, boolean startVisible, boolean stopVisible, boolean isLoading) {
         Bundle args = new Bundle();
         args.putString(ARG_PROJECT_NAME, projectName);
         args.putBoolean(ARG_START_VISIBLE, startVisible);
         args.putBoolean(ARG_STOP_VISIBLE, stopVisible);
+        args.putBoolean(ARG_IS_LOADING, isLoading);
         return args;
     }
 
@@ -84,6 +91,7 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
     @Override
     public View onCreateView(Bundle savedInstanceState, LayoutInflater inflater, ViewGroup container) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
         return rootView;
     }
 
@@ -93,8 +101,15 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
         projectName = getArguments().getString(ARG_PROJECT_NAME);
         startVisible = getArguments().getBoolean(ARG_START_VISIBLE);
         stopVisible = getArguments().getBoolean(ARG_STOP_VISIBLE);
+        isLoading = getArguments().getBoolean(ARG_IS_LOADING);
 
-        initView();
+        if(isLoading){
+            pw.spin();
+        }else{
+            pw.setVisibility(View.GONE);
+            initView();
+        }
+
 
     }
 
@@ -136,55 +151,61 @@ public class TimeTrackingFragment extends org.droidparts.fragment.support.v4.Fra
                 startVisible = true;
                 stopVisible = false;
             }
-            initView();
-
+            if(!isLoading){
+                initView();
+            }
         }
     }
 
     private void initView() {
 
-        if (projectName.equals("")) {
-            tvProject.setVisibility(View.GONE);
-            rlContainer.setVisibility(View.GONE);
-            rlContainerNotStarted.setVisibility(View.VISIBLE);
-            rlOtherProject.setVisibility(View.GONE);
-            chronometer.setVisibility(View.INVISIBLE);
-        }else if(businessProcess.getStartDate(getActivity().getApplicationContext()) != null && !businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)){
-            // ein anderes Projekt wurde schon gestartet
-            rlContainer.setVisibility(View.GONE);
-            rlContainerNotStarted.setVisibility(View.GONE);
-            tvProject.setVisibility(View.GONE);
-            chronometer.setVisibility(View.INVISIBLE);
-            tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
-            String text = String.format(getString(R.string.other_project_booked), businessProcess.getProjectName(getActivity().getApplicationContext()));
-
-            tvOtherProjectSelected.setText(text);
-
-            rlOtherProject.setVisibility(View.VISIBLE);
-
+        if(isLoading){
+            pw.spin();
         }else{
-            tvProject.setText(projectName);
-            rlContainer.setVisibility(View.VISIBLE);
-            rlContainerNotStarted.setVisibility(View.GONE);
-            rlOtherProject.setVisibility(View.GONE);
+            if (projectName.equals("")) {
+                tvProject.setVisibility(View.GONE);
+                rlContainer.setVisibility(View.GONE);
+                rlContainerNotStarted.setVisibility(View.VISIBLE);
+                rlOtherProject.setVisibility(View.GONE);
+                chronometer.setVisibility(View.INVISIBLE);
+            }else if(businessProcess.getStartDate(getActivity().getApplicationContext()) != null && !businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)){
+                // ein anderes Projekt wurde schon gestartet
+                rlContainer.setVisibility(View.GONE);
+                rlContainerNotStarted.setVisibility(View.GONE);
+                tvProject.setVisibility(View.GONE);
+                chronometer.setVisibility(View.INVISIBLE);
+                tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
-            if (startVisible) {
-                btnStart.setVisibility(View.VISIBLE);
-            } else {
-                btnStart.setVisibility(View.GONE);
+                String text = String.format(getString(R.string.other_project_booked), businessProcess.getProjectName(getActivity().getApplicationContext()));
+
+                tvOtherProjectSelected.setText(text);
+
+                rlOtherProject.setVisibility(View.VISIBLE);
+
+            }else{
+                tvProject.setText(projectName);
+                rlContainer.setVisibility(View.VISIBLE);
+                rlContainerNotStarted.setVisibility(View.GONE);
+                rlOtherProject.setVisibility(View.GONE);
+
+                if (startVisible) {
+                    btnStart.setVisibility(View.VISIBLE);
+                } else {
+                    btnStart.setVisibility(View.GONE);
+                }
+
+                if (stopVisible) {
+                    btnStop.setVisibility(View.VISIBLE);
+                    btnReset.setVisibility(View.VISIBLE);
+                } else {
+                    btnStop.setVisibility(View.GONE);
+                    btnReset.setVisibility(View.GONE);
+                }
+
+                // ist ein startDate gesetzt?
+                setStartDateTextView();
             }
-
-            if (stopVisible) {
-                btnStop.setVisibility(View.VISIBLE);
-                btnReset.setVisibility(View.VISIBLE);
-            } else {
-                btnStop.setVisibility(View.GONE);
-                btnReset.setVisibility(View.GONE);
-            }
-
-            // ist ein startDate gesetzt?
-            setStartDateTextView();
         }
 
     }

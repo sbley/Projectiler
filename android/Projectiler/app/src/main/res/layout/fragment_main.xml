@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -53,7 +54,7 @@
 
     <RelativeLayout
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/rl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -95,9 +96,6 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
-
-
-
     </RelativeLayout>
 
 
@@ -116,6 +114,7 @@
     <Chronometer
         android:id="@+id/chronometer"
         android:format="%s"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40sp"
@@ -127,6 +126,22 @@
         android:layout_alignEnd="@+id/tvProjectName"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <com.todddavies.components.progressbar.ProgressWheel
+        android:id="@+id/pw_spinner"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerInParent="true"
+        ProgressWheel:text="Lade Daten..."
+        ProgressWheel:textColor="#222"
+        ProgressWheel:textSize="14sp"
+        ProgressWheel:rimColor="@color/saxsysgreen"
+        ProgressWheel:barColor="@color/saxsysblue"
+        ProgressWheel:contourColor="@color/saxsysred"
+        ProgressWheel:contourSize="10dp"
+        ProgressWheel:barLength="60dp"
+        ProgressWheel:barWidth="5dp"
+        ProgressWheel:rimWidth="2dp" />
 
 
 

@@ -3,4 +3,9 @@
 
     <color name="Grey">#999999</color>
 
+    <color name="saxsysblack">#333333</color>
+    <color name="saxsysgreen">#79B52E</color>
+    <color name="saxsysred">#E6431F</color>
+    <color name="saxsysblue">#009FE2</color>
+
 </resources>
