@@ -70,7 +70,6 @@ public class CurrentTracksFragment extends org.droidparts.fragment.support.v4.Fr
         public void onAsyncTaskSuccess(List<Booking> bookings) {
             getActivity().setProgressBarIndeterminateVisibility(false);
             lvBooking.setAdapter(new CurrentTrackAdapter(getActivity().getApplicationContext(), bookings));
-
             lvBooking.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
 

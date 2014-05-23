@@ -147,7 +147,7 @@ public class NfcActivity extends ActionBarActivity {
             super.onPostExecute(itemList);
 
             int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getApplicationContext(), itemList);
-
+            // TODO: eine eigene Listview machen
             //lvPorjects.setAdapter(new NavigationDrawerAdapter(getApplicationContext(), itemList, currentActiveIndex));
 
             progressBar.setVisibility(View.GONE);

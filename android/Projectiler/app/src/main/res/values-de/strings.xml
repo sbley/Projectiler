@@ -29,6 +29,8 @@
     <string name="start_tracking">Zeiterfassung gestartet</string>
     <string name="start_tracking_project">%1$s für das Projekt %2$s</string>
     <string name="current_tracks">Zeiten Heute</string>
+    <string name="load_projects">Lade Projekte...</string>
+    <string name="load_tracks">Lade Zeiten...</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>
