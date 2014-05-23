@@ -1,5 +1,7 @@
 package de.saxsys.android.projectiler.app.crawler;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Projectile settings.
  * 
@@ -7,12 +9,17 @@ package de.saxsys.android.projectiler.app.crawler;
  */
 public class Settings {
 
-	public String getProjectileUrl() {
-		return System.getProperty("projectile.url", "https://pt.saxsys.de/projectile/start");
-	}
+    public String getProjectileUrl() {
+        return System.getProperty("projectile.url", "https://pt.saxsys.de/projectile/start");
+    }
 
-	/** Time format used in Projectile */
-	public String getTimeFormat() {
-		return "HH:mm";
-	}
+    /** Time format used in Projectile */
+    public String getTimeFormat() {
+        return "HH:mm";
+    }
+
+    /** Connection timeout in millis */
+    public int getTimeout() {
+        return (int) TimeUnit.SECONDS.toMillis(10);
+    }
 }
