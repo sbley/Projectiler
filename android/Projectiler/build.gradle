@@ -3,7 +3,6 @@
 buildscript {
     repositories {
         //mavenCentral();
-
         maven{
             url "http://nexus.saxsys.de/content/repositories/external/"
         }

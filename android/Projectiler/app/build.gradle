@@ -17,6 +17,13 @@ android {
         }
     }
 }
+repositories {
+    mavenLocal();
+    maven{
+        url "http://nexus.saxsys.de/content/repositories/external/"
+    }
+
+}
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.android.support:support-v4:19.1.0'
@@ -26,7 +33,6 @@ dependencies {
     compile files('libs/crouton-1.6.1.jar')
     compile files('libs/droidparts-2.0.5.jar')
     compile files('libs/droidparts-support-2.0.5.jar')
-    //compile 'de.saxsys.projectiler:crawler-jsoup:1.0.0-beta-3@jar'
-    compile files('libs/crawler-jsoup-1.0.0-beta-3.jar')
-    compile files('libs/crawler-api-1.0.0-beta-3.jar')
+    compile 'de.saxsys.projectiler:crawler-jsoup:1.0.0-beta-3@jar'
+    compile 'de.saxsys.projectiler:crawler-api:1.0.0-beta-3@jar'
 }
