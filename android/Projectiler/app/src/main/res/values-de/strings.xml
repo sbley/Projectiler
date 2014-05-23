@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Projectiler</string>
+    <string name="navigation_drawer_open">Navigation Drawer öffnen</string>
+    <string name="navigation_drawer_close">Navigation Drawer schließen</string>
+    <string name="action_logout">Abmelden</string>
+    <string name="action_nfc">NFC</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="dialog_login_button_label">Anmelden</string>
+    <string name="dialog_login_hint_password">Passwort</string>
+    <string name="dialog_login_hint_username">Benutzername</string>
+    <string name="dialog_login_title">Anmelden</string>
+    <string name="title_activity_login">Projectiler</string>
+    <string name="title_activity_nfc">Projectiler NFC</string>
+    <string name="appwidget_text">Beispiel</string>
+    <string name="add_widget">Widget hinzufügen</string>
+    <string name="ncf_in_range">NFC in Reichweite</string>
+    <string name="other_project_booked">Es wurde eine Buchung für das Project %s gestartet</string>
+    <string name="time_booked_successfull">Zeit wurd erfolgreich gebucht</string>
+    <string name="no_connection_to_server">Keine Verbindung zum Server</string>
+    <string name="stop_time_tracking">Zeiterfassung beenden</string>
+    <string name="start_time_tracking">Zeiterfassung starten</string>
+    <string name="no_booking_started">Derzeit ist keine Buchung gestartet!</string>
+    <string name="do_you_really_wan_to_logout">Wenn Sie sich abmelden werden gestartete Buchungen verworfen. Wollen Sie sich wirklich abmelden?</string>
+    <string name="stopped_time_tracking">Zeiterfassung beendet</string>
+    <string name="project_booked">Projekt %s gebucht!</string>
+    <string name="error_stop_tracking">Fehler beim Buchen der Zeit</string>
+    <string name="start_tracking">Zeiterfassung gestartet</string>
+    <string name="start_tracking_project">%1$s für das Projekt %2$s</string>
+
+</resources>

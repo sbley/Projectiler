@@ -1,0 +1,133 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="de.saxsys.android.projectiler.app.MainActivity.TimeTrackingFragment">
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:id="@+id/rl_container_not_started"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_booking_started"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:id="@+id/textView"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:id="@+id/rl_container_other_project_selected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:id="@+id/tvOtherProjectSelected"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:gravity="center"
+        android:visibility="visible"
+        android:id="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/chronometer">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:text="@string/start_time_tracking"
+            android:id="@+id/btnStart"
+            android:visibility="gone"
+            style="@style/StartButton"
+            android:background="@drawable/startbutton_btn_default_holo_light"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:text="@string/stop_time_tracking"
+            android:id="@+id/btnStop"
+            style="@style/StopButton"
+            android:background="@drawable/stopbutton_btn_default_holo_light"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@+id/btnReset" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:visibility="visible"
+            android:background="@drawable/resetbutton_btn_default_holo_light"
+            android:id="@+id/btnReset"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
+
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tvProjectName"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:format="%s"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/tvProjectName"
+        android:layout_alignRight="@+id/tvProjectName"
+        android:layout_alignEnd="@+id/tvProjectName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+
+</RelativeLayout>
