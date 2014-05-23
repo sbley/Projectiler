@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.saxsys.projectiler</groupId>
 	<artifactId>projectiler</artifactId>
-	<version>1.0.0-beta-2</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -33,7 +33,6 @@
 	</build>
 	<modules>
 		<module>crawler-api</module>
-		<module>crawler-selenium</module>
 		<module>crawler-jsoup</module>
 		<module>backend</module>
 		<module>javafx</module>

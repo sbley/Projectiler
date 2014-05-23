@@ -28,5 +28,11 @@
     <string name="error_stop_tracking">Fehler beim Buchen der Zeit</string>
     <string name="start_tracking">Zeiterfassung gestartet</string>
     <string name="start_tracking_project">%1$s für das Projekt %2$s</string>
+    <string name="current_tracks">Zeiten Heute</string>
+
+    <array name="navigation_drawer_groups">
+        <item>Funktionen</item>
+        <item>Projekte</item>
+    </array>
 
 </resources>

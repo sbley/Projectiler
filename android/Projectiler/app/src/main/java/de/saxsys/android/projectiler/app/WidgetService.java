@@ -8,8 +8,8 @@ import android.widget.RemoteViewsService;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import de.saxsys.android.projectiler.app.crawler.CrawlingException;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
+import de.saxsys.projectiler.crawler.CrawlingException;
 
 /**
  * Created by stefan.heinze on 14.05.2014.

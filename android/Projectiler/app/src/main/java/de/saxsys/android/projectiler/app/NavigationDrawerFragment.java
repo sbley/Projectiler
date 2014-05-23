@@ -6,7 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,9 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+
+import org.droidparts.annotation.inject.InjectView;
+import org.droidparts.fragment.support.v4.Fragment;
 
 import java.util.List;
 
@@ -54,15 +55,18 @@ public class NavigationDrawerFragment extends Fragment {
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
-    private View mFragmentContainerView;
-
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
     private List<String> itemList;
     private BusinessProcess businessProcess;
+
+    private DrawerLayout mDrawerLayout;
+    private View mFragmentContainerView;
+
+    @InjectView(id = R.id.lvProjects)
+    private ExpandableListView mDrawerListView;
 
     public NavigationDrawerFragment() {
     }
@@ -95,25 +99,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                new String[]{
-
-                }));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+    public View onCreateView(Bundle savedInstanceState, LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
     }
 
     public boolean isDrawerOpen() {
@@ -286,12 +273,45 @@ public class NavigationDrawerFragment extends Fragment {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
-    public void setItems(List<String> itemList) {
+    public void setItems(final List<String> itemList) {
         this.itemList = itemList;
 
-        int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
+        final int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
 
         mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
+        mDrawerListView.setGroupIndicator(null);
+
+        mDrawerListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                org.droidparts.fragment.support.v4.Fragment fragment = new TimeTrackingFragment();
+
+                if(groupPosition == 0){
+
+                    Fragment currentTracksFragment = CurrentTracksFragment.newInstance();
+
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, currentTracksFragment)
+                            .commit();
+                    mDrawerLayout.closeDrawers();
+
+                }else if (groupPosition == 1){
+
+                    fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true));
+
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, fragment)
+                            .commit();
+
+                    mDrawerLayout.closeDrawers();
+                }
+
+                return false;
+            }
+        });
+
     }
 
     public String getProjectName(int position) {

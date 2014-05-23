@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.saxsys.android.projectiler.app.crawler.ConnectionException;
-import de.saxsys.android.projectiler.app.crawler.Crawler;
-import de.saxsys.android.projectiler.app.crawler.CrawlingException;
-import de.saxsys.android.projectiler.app.crawler.Credentials;
-import de.saxsys.android.projectiler.app.crawler.InvalidCredentialsException;
-import de.saxsys.android.projectiler.app.crawler.JSoupCrawler;
-import de.saxsys.android.projectiler.app.crawler.Settings;
+import de.saxsys.projectiler.crawler.Booking;
+import de.saxsys.projectiler.crawler.ConnectionException;
+import de.saxsys.projectiler.crawler.Crawler;
+import de.saxsys.projectiler.crawler.CrawlingException;
+import de.saxsys.projectiler.crawler.Credentials;
+import de.saxsys.projectiler.crawler.InvalidCredentialsException;
+import de.saxsys.projectiler.crawler.Settings;
+import de.saxsys.projectiler.crawler.jsoup.JSoupCrawler;
 
 
 /**
@@ -158,4 +159,7 @@ public class Projectiler {
         return dataStore.getCurrentActiveProjectIndex(context, itemList);
     }
 
+    public List<Booking> getDailyReports(final Context context) throws CrawlingException {
+        return crawler.getDailyReport(createCredentials(context));
+    }
 }

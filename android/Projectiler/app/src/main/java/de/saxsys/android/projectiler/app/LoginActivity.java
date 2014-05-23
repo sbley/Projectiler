@@ -1,7 +1,7 @@
 package de.saxsys.android.projectiler.app;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,9 +11,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.droidparts.concurrent.task.AsyncTask;
+
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import de.saxsys.android.projectiler.app.crawler.CrawlingException;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
@@ -43,10 +44,9 @@ public class LoginActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 setProgressBarIndeterminateVisibility(true);
-                new LoginTask(username.getText().toString(),password.getText().toString(), true).execute();
+                new LoginTask(getApplicationContext(), username.getText().toString(),password.getText().toString(), true).execute();
             }
         });
-
 
         if(businessProcess.getAutoLogin(getApplicationContext())){
 
@@ -54,8 +54,6 @@ public class LoginActivity extends ActionBarActivity {
             startActivity(intent);
 
         }
-
-
 
     }
 
@@ -81,51 +79,43 @@ public class LoginActivity extends ActionBarActivity {
 
 
 
-    private class LoginTask extends AsyncTask<Void, Void, String> {
+    private class LoginTask extends AsyncTask<Void, Void, Void> {
 
         private final String username;
         private final String password;
         private final boolean saveLogin;
 
-        LoginTask(final String username, final String password, final boolean saveLogin){
+        LoginTask(final Context context, final String username, final String password, final boolean saveLogin){
+            super(context);
             this.username = username;
             this.password = password;
             this.saveLogin = saveLogin;
         }
 
-
         @Override
-        protected String doInBackground(Void... voids) {
-
-            try {
-                businessProcess.saveCredentials(getApplicationContext(), username, password, saveLogin);
-            } catch (CrawlingException e) {
-                e.printStackTrace();
-                return e.getMessage();
-            }
-
-
+        protected Void onExecute(Void... voids) throws Exception {
+            businessProcess.saveCredentials(getApplicationContext(), username, password, saveLogin);
             return null;
         }
 
+
         @Override
-        protected void onPostExecute(String aVoid) {
-            super.onPostExecute(aVoid);
-
+        protected void onPostExecuteFailure(Exception exception) {
+            super.onPostExecuteFailure(exception);
             setProgressBarIndeterminateVisibility(false);
+            Crouton.makeText(LoginActivity.this, exception.getMessage(), Style.ALERT).show();
+        }
 
-            if(aVoid == null){
+        @Override
+        protected void onPostExecuteSuccess(Void aVoid) {
+            super.onPostExecuteSuccess(aVoid);
+            setProgressBarIndeterminateVisibility(false);
+            WidgetUtils.refreshWidget(getApplicationContext());
 
-                WidgetUtils.refreshWidget(getApplicationContext());
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-
-                finish();
-
-            }else{
-                Crouton.makeText(LoginActivity.this, aVoid, Style.ALERT).show();
-            }
+            finish();
         }
     }
 
