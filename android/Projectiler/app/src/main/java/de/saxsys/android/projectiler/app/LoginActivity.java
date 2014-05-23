@@ -13,9 +13,9 @@ import android.widget.EditText;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import de.saxsys.android.projectiler.app.crawler.CrawlingException;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
+import de.saxsys.projectiler.crawler.CrawlingException;
 
 
 public class LoginActivity extends ActionBarActivity {
