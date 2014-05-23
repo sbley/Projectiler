@@ -116,7 +116,12 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	private Document openTimeTracker(final Document startPage) throws IOException {
-		Document introPage = openIntroPage(startPage);
+		Document currentPage = startPage;
+		boolean autostart = !startPage.select("input[name$=.Field.0.Autostart]").isEmpty();
+		if (autostart) {
+			currentPage = openIntroPage(currentPage);
+		}
+		Document introPage = openStandardIntroPage(currentPage);
 
 		String today = formatToday();
 		Response response = Jsoup
@@ -144,7 +149,27 @@ public class JSoupCrawler implements Crawler {
 		return ttPage;
 	}
 
-	private Document openIntroPage(final Document startPage) throws IOException {
+	private Document openIntroPage(Document startPage) throws IOException {
+		Response response = Jsoup
+				.connect(settings.getProjectileUrl())
+				.method(Method.POST)
+				.cookies(cookies)
+				.data("taid", taid)
+				.data("CurrentFocusField", "0")
+				.data("CurrentDraggable", "0")
+				.data("CurrentDropTraget", "0")
+				.data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".x",
+						"8")
+				.data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".y",
+						"8")
+				.data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"),
+						"1").execute();
+		Document introPage = response.parse();
+		saveTaid(introPage);
+		return introPage;
+	}
+
+	private Document openStandardIntroPage(final Document startPage) throws IOException {
 		Response response = Jsoup
 				.connect(settings.getProjectileUrl())
 				.method(Method.POST)
