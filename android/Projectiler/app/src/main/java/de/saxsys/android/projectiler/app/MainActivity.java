@@ -72,7 +72,6 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        setProgressBarIndeterminateVisibility(true);
         new GetProjectsAsyncTask(getApplicationContext()).execute();
 
         FragmentManager fragmentManager = getSupportFragmentManager();

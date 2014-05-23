@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.todddavies.components.progressbar.ProgressWheel;
+
 import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
@@ -27,6 +29,8 @@ public class CurrentTracksFragment extends org.droidparts.fragment.support.v4.Fr
 
     @InjectView(id = R.id.lvCurrentTracks)
     private ListView lvBooking;
+    @InjectView(id = R.id.pw_spinner)
+    private ProgressWheel progress;
 
     public static CurrentTracksFragment newInstance() {
         CurrentTracksFragment fragment = new CurrentTracksFragment();
@@ -49,21 +53,34 @@ public class CurrentTracksFragment extends org.droidparts.fragment.support.v4.Fr
 
     @Override
     public View onCreateView(Bundle savedInstanceState, LayoutInflater inflater, ViewGroup container) {
-        getActivity().setProgressBarIndeterminateVisibility(true);
-        new GetDailyTrackAsyncTask(getActivity().getApplicationContext(), getDailyTracksListener).execute();
         return inflater.inflate(R.layout.fragment_current_tracks, container, false);
     }
 
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        progress.spin();
+        new GetDailyTrackAsyncTask(getActivity().getApplicationContext(), getDailyTracksListener).execute();
+    }
+
     private AsyncTaskResultListener<List<Booking>> getDailyTracksListener = new AsyncTaskResultListener<List<Booking>>() {
+
         @Override
         public void onAsyncTaskSuccess(List<Booking> bookings) {
             getActivity().setProgressBarIndeterminateVisibility(false);
             lvBooking.setAdapter(new CurrentTrackAdapter(getActivity().getApplicationContext(), bookings));
+
+            lvBooking.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+
         }
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
             getActivity().setProgressBarIndeterminateVisibility(false);
+            progress.setVisibility(View.GONE);
+
         }
     };
 

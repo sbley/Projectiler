@@ -2,11 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     tools:context="de.saxsys.android.projectiler.app.CurrentTracksFragment">
 
 
     <ListView
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lvCurrentTracks" />
+
+    <com.todddavies.components.progressbar.ProgressWheel
+        android:id="@+id/pw_spinner"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_centerInParent="true"
+        ProgressWheel:text="Lade Zeiten..."
+        ProgressWheel:textColor="#222"
+        ProgressWheel:textSize="14sp"
+        ProgressWheel:rimColor="@color/saxsysgreen"
+        ProgressWheel:barColor="@color/saxsysblue"
+        ProgressWheel:barLength="60dp"
+        ProgressWheel:barWidth="5dp"
+        ProgressWheel:rimWidth="2dp" />
+
 </RelativeLayout>

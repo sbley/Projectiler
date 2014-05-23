@@ -299,7 +299,7 @@ public class NavigationDrawerFragment extends Fragment {
 
                 }else if (groupPosition == 1){
 
-                    fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true));
+                    fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true, false));
 
                     fragmentManager.beginTransaction()
                             .replace(R.id.container, fragment)
