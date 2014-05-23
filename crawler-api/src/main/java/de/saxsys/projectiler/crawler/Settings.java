@@ -1,5 +1,7 @@
 package de.saxsys.projectiler.crawler;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Projectile settings.
  * 
@@ -14,5 +16,10 @@ public class Settings {
 	/** Time format used in Projectile */
 	public String getTimeFormat() {
 		return "HH:mm";
+	}
+
+	/** Connection timeout in millis */
+	public int getTimeout() {
+		return (int) TimeUnit.SECONDS.toMillis(10);
 	}
 }
