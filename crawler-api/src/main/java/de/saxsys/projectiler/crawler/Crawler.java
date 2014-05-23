@@ -53,4 +53,17 @@ public interface Crawler {
 	 */
 	void clock(Credentials credentials, String projectName, Date start, Date end)
 			throws ConnectionException, CrawlingException;
+
+	/**
+	 * Get a list of clocked times for the current day and user.
+	 * 
+	 * @return list of clocked times or empty list
+	 * @throws ConnectionException
+	 *             if connection to Projectile cannot be established
+	 * @throws CrawlingException
+	 *             in case the crawling fails
+	 */
+	List<Booking> getDailyReport(Credentials credentials) throws ConnectionException,
+			CrawlingException;
+
 }
