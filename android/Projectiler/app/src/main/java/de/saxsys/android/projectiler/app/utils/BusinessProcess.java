@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import de.saxsys.android.projectiler.app.backend.Projectiler;
-import de.saxsys.android.projectiler.app.crawler.ConnectionException;
-import de.saxsys.android.projectiler.app.crawler.CrawlingException;
-import de.saxsys.android.projectiler.app.crawler.InvalidCredentialsException;
+import de.saxsys.projectiler.crawler.ConnectionException;
+import de.saxsys.projectiler.crawler.CrawlingException;
+import de.saxsys.projectiler.crawler.InvalidCredentialsException;
 
 /**
  * Created by stefan.heinze on 19.05.2014.
