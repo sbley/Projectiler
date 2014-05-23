@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 
 import java.util.List;
 
-import de.saxsys.android.projectiler.app.ui.NavigationDrawerAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 import de.saxsys.projectiler.crawler.CrawlingException;
@@ -149,7 +148,7 @@ public class NfcActivity extends ActionBarActivity {
 
             int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getApplicationContext(), itemList);
 
-            lvPorjects.setAdapter(new NavigationDrawerAdapter(getApplicationContext(), itemList, currentActiveIndex));
+            //lvPorjects.setAdapter(new NavigationDrawerAdapter(getApplicationContext(), itemList, currentActiveIndex));
 
             progressBar.setVisibility(View.GONE);
 
