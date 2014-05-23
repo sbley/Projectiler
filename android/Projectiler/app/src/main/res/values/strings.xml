@@ -23,5 +23,10 @@
     <string name="start_time_tracking">start time tracking</string>
     <string name="no_booking_started">there is no tracking currently started</string>
     <string name="do_you_really_wan_to_logout">Current startet trackings will be dismissed by logout. Do you really want to logout?</string>
+    <string name="stopped_time_tracking">Zeiterfassung beendet</string>
+    <string name="project_booked">stop tracking project %s </string>
+    <string name="error_stop_tracking">error while stop tracking</string>
+    <string name="start_tracking">start time tracking</string>
+    <string name="start_tracking_project">%1$s for project %2$s</string>
 
 </resources>

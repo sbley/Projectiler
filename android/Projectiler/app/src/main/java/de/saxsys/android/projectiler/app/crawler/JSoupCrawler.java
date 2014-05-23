@@ -48,8 +48,7 @@ public class JSoupCrawler implements Crawler {
     public List<String> getProjectNames(final Credentials credentials) throws CrawlingException {
         try {
             Document startPage = login(credentials);
-            Document introPage = openStandardintro(startPage);
-            Document ttPage = openTimeTracker(introPage);
+            Document ttPage = openTimeTracker(startPage);
 
             List<String> projectNames = readProjectNames(ttPage);
 
@@ -63,12 +62,11 @@ public class JSoupCrawler implements Crawler {
     }
 
     @Override
-    public void clock(final Credentials credentials, final String projectName, final Date start, final Date end)
-        throws CrawlingException {
+    public void clock(final Credentials credentials, final String projectName, final Date start,
+                      final Date end) throws CrawlingException {
         try {
             Document startPage = login(credentials);
-            Document introPage = openStandardintro(startPage);
-            Document ttPage = openTimeTracker(introPage);
+            Document ttPage = openTimeTracker(startPage);
 
             clockTime(start, end, projectName, ttPage);
 
@@ -82,18 +80,20 @@ public class JSoupCrawler implements Crawler {
 
     /**
      * Login to Projectile and return the cookies containing the session ID.
-     * 
-     * @throws InvalidCredentialsException if the credentials are wrong
+     *
+     * @throws InvalidCredentialsException
+     *             if the credentials are wrong
      */
     private Document login(final Credentials cred) throws IOException, InvalidCredentialsException {
-        Response response =
-                Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).data("login", cred.getUsername())
-                        .data("password", cred.getPassword()).data("jsenabled", "0").data("external.loginOK.x", "8")
-                        .data("external.loginOK.y", "8").execute();
+        Response response = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
+                .data("login", cred.getUsername()).data("password", cred.getPassword())
+                .data("jsenabled", "0").data("external.loginOK.x", "8")
+                .data("external.loginOK.y", "8").execute();
         Document startPage = response.parse();
         if (startPage.getElementsByAttributeValue("name", "password").isEmpty()) {
             String sessionId = response.cookie(JSESSIONID);
-            LOGGER.info("User " + cred.getUsername() + " logged in with session ID " + sessionId + ".");
+            LOGGER.info("User " + cred.getUsername() + " logged in with session ID " + sessionId
+                    + ".");
             saveTaid(startPage);
             cookies = response.cookies();
             return startPage;
@@ -102,42 +102,79 @@ public class JSoupCrawler implements Crawler {
         }
     }
 
-    private Document openStandardintro(final Document startPage) throws IOException {
-        Response response =
-                Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).cookies(cookies).data("taid", taid)
-                        .data("CurrentFocusField", "0").data("CurrentDraggable", "0").data("CurrentDropTraget", "0")
-                        .data(startPage.select("input[name$=.BUTTON.SelectTab.0").first().attr("name"), "0")
-                        .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
-                        .execute();
-        Document ttPage = response.parse();
-        saveTaid(ttPage);
-        return ttPage;
-    }
-
     private Document openTimeTracker(final Document startPage) throws IOException {
+        Document currentPage = startPage;
+        boolean autostart = !startPage.select("input[name$=.Field.0.Autostart]").isEmpty();
+        if (autostart) {
+            currentPage = openIntroPage(currentPage);
+        }
+        Document introPage = openStandardIntroPage(currentPage);
+
         String today = formatToday();
-        Response response =
-                Jsoup.connect(settings.getProjectileUrl())
-                        .method(Method.POST)
-                        .cookies(cookies)
-                        .data("taid", taid)
-                        .data("CurrentFocusField", "0")
-                        .data("CurrentDraggable", "0")
-                        .data("CurrentDropTraget", "0")
-                        .data(startPage.select("input[name$=.Button=TimeTracker1").first().attr("name") + ".x", "8")
-                        .data(startPage.select("input[name$=.Button=TimeTracker1").first().attr("name") + ".y", "8")
-                        .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
-                        .data(startPage.select("select[name$=.Field.0.Field_TimeTracker").first().attr("name"), TODAY)
-                        .data(startPage.select("input[name$=.Field.0.Field_TimeTrackerDate:0").first().attr("name"),
-                                today)
-                        .data(startPage.select("input[name$=.Field.0.Field_TimeTrackerDate2:0").first().attr("name"),
-                                today).execute();
+        Response response = Jsoup
+                .connect(settings.getProjectileUrl())
+                .method(Method.POST)
+                .cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "0")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(introPage.select("input[name$=.Button=TimeTracker1").first().attr("name")
+                        + ".x", "8")
+                .data(introPage.select("input[name$=.Button=TimeTracker1").first().attr("name")
+                        + ".y", "8")
+                .data(introPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"),
+                        "1")
+                .data(introPage.select("select[name$=.Field.0.Field_TimeTracker").first()
+                        .attr("name"), TODAY)
+                .data(introPage.select("input[name$=.Field.0.Field_TimeTrackerDate:0").first()
+                        .attr("name"), today)
+                .data(introPage.select("input[name$=.Field.0.Field_TimeTrackerDate2:0").first()
+                        .attr("name"), today).execute();
         Document ttPage = response.parse();
         saveTaid(ttPage);
         return ttPage;
     }
 
-    private List<String> readProjectNames(final Document timeTrackerPage) throws IOException, CrawlingException {
+    private Document openIntroPage(Document startPage) throws IOException {
+        Response response = Jsoup
+                .connect(settings.getProjectileUrl())
+                .method(Method.POST)
+                .cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "0")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".x",
+                        "8")
+                .data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".y",
+                        "8")
+                .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"),
+                        "1").execute();
+        Document introPage = response.parse();
+        saveTaid(introPage);
+        return introPage;
+    }
+
+    private Document openStandardIntroPage(final Document startPage) throws IOException {
+        Response response = Jsoup
+                .connect(settings.getProjectileUrl())
+                .method(Method.POST)
+                .cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "0")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(startPage.select("input[name$=.BUTTON.SelectTab.0").first().attr("name"), "0")
+                .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"),
+                        "1").execute();
+        Document ttPage = response.parse();
+        saveTaid(ttPage);
+        return ttPage;
+    }
+
+    private List<String> readProjectNames(final Document timeTrackerPage) throws IOException,
+            CrawlingException {
         List<String> projectNames = new ArrayList<String>();
         Elements options = timeTrackerPage.select("select[id$=NewWhat_0_0] option");
         if (options.isEmpty()) {
@@ -153,8 +190,8 @@ public class JSoupCrawler implements Crawler {
         return projectNames;
     }
 
-    private void clockTime(final Date start, final Date end, final String projectName, final Document ttPage)
-        throws IOException, CrawlingException {
+    private void clockTime(final Date start, final Date end, final String projectName,
+                           final Document ttPage) throws IOException, CrawlingException {
         String optionValue = null;
         Elements options = ttPage.select("select[id$=NewWhat_0_0] option");
         for (Element option : options) {
@@ -163,33 +200,44 @@ public class JSoupCrawler implements Crawler {
                 break;
             }
         }
-        Response response =
-                Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).cookies(cookies).data("taid", taid)
-                        .data("CurrentFocusField", "name").data("CurrentDraggable", "0").data("CurrentDropTraget", "0")
-                        .data(ttPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
-                        .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name") + ".x", "8")
-                        .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name") + ".y", "8")
-                        .data(ttPage.select("select[id$=.Field.0.TimeTrackerConfirmationAction").first().id(), "-1")
-                        .data(ttPage.select("input[id$=Field.0.Begin:0]").first().id(), formatToday())
-                        .data(ttPage.select("input.rw[id$=NewFrom_0_0]").first().id(), formatTime(start))
-                        .data(ttPage.select("input.rw[id$=NewTo_0_0]").first().id(), formatTime(end))
-                        .data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
-                        .data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
-                        .data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), "").execute();
+        Response response = Jsoup
+                .connect(settings.getProjectileUrl())
+                .method(Method.POST)
+                .cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "name")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(ttPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"),
+                        "1")
+                .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name") + ".x",
+                        "8")
+                .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name") + ".y",
+                        "8")
+                .data(ttPage.select("select[id$=.Field.0.TimeTrackerConfirmationAction").first()
+                        .id(), "-1")
+                .data(ttPage.select("input[id$=Field.0.Begin:0]").first().id(), formatToday())
+                .data(ttPage.select("input.rw[id$=NewFrom_0_0]").first().id(), formatTime(start))
+                .data(ttPage.select("input.rw[id$=NewTo_0_0]").first().id(), formatTime(end))
+                .data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
+                .data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
+                .data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), "").execute();
         Document document = response.parse();
         saveTaid(document);
 
         // verify time has been clocked
         boolean clocked = false;
         try {
-            String inputStartId =
-                    document.select("input.rw[id*=Field_Start][value=" + formatTime(start) + "]").first().id();
+            String inputStartId = document
+                    .select("input.rw[id*=Field_Start][value=" + formatTime(start) + "]").first()
+                    .id();
             String inputEndId = inputStartId.replace("Start", "End");
-            clocked = !document.select("input.rw[id=" + inputEndId + "][value=" + formatTime(end) + "]").isEmpty();
+            clocked = !document.select(
+                    "input.rw[id=" + inputEndId + "][value=" + formatTime(end) + "]").isEmpty();
             String inputWhatId = inputStartId.replace("Start", "What");
-            clocked =
-                    !document.select("select[id=" + inputWhatId + "] option[selected][value=" + optionValue + "]")
-                            .isEmpty();
+            clocked = !document.select(
+                    "select[id=" + inputWhatId + "] option[selected][value=" + optionValue + "]")
+                    .isEmpty();
         } catch (NullPointerException e) {
             clocked = false;
         } finally {
@@ -201,10 +249,11 @@ public class JSoupCrawler implements Crawler {
     }
 
     private void logout(final Document page) throws IOException {
-        Response execute =
-                Jsoup.connect(settings.getProjectileUrl()).method(Method.POST).cookies(cookies).data("taid", taid)
-                        .data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".x", "8")
-                        .data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".y", "8").execute();
+        Response execute = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
+                .cookies(cookies).data("taid", taid)
+                .data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".x", "8")
+                .data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".y", "8")
+                .execute();
         final Elements select = execute.parse().select("td:contains(korrekt beendet)");
         if (select.isEmpty()) {
             LOGGER.severe("Error while logging out.");
