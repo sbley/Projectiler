@@ -1,5 +1,6 @@
 package de.saxsys.android.projectiler.app.crawler;
 
+import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -85,10 +86,9 @@ public class JSoupCrawler implements Crawler {
      *             if the credentials are wrong
      */
     private Document login(final Credentials cred) throws IOException, InvalidCredentialsException {
-        Response response = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
-                .data("login", cred.getUsername()).data("password", cred.getPassword())
-                .data("jsenabled", "0").data("external.loginOK.x", "8")
-                .data("external.loginOK.y", "8").execute();
+        Response response = jsoupConnection().data("login", cred.getUsername())
+                .data("password", cred.getPassword()).data("jsenabled", "0")
+                .data("external.loginOK.x", "8").data("external.loginOK.y", "8").execute();
         Document startPage = response.parse();
         if (startPage.getElementsByAttributeValue("name", "password").isEmpty()) {
             String sessionId = response.cookie(JSESSIONID);
@@ -111,9 +111,7 @@ public class JSoupCrawler implements Crawler {
         Document introPage = openStandardIntroPage(currentPage);
 
         String today = formatToday();
-        Response response = Jsoup
-                .connect(settings.getProjectileUrl())
-                .method(Method.POST)
+        Response response = jsoupConnection()
                 .cookies(cookies)
                 .data("taid", taid)
                 .data("CurrentFocusField", "0")
@@ -137,9 +135,7 @@ public class JSoupCrawler implements Crawler {
     }
 
     private Document openIntroPage(Document startPage) throws IOException {
-        Response response = Jsoup
-                .connect(settings.getProjectileUrl())
-                .method(Method.POST)
+        Response response = jsoupConnection()
                 .cookies(cookies)
                 .data("taid", taid)
                 .data("CurrentFocusField", "0")
@@ -157,9 +153,7 @@ public class JSoupCrawler implements Crawler {
     }
 
     private Document openStandardIntroPage(final Document startPage) throws IOException {
-        Response response = Jsoup
-                .connect(settings.getProjectileUrl())
-                .method(Method.POST)
+        Response response = jsoupConnection()
                 .cookies(cookies)
                 .data("taid", taid)
                 .data("CurrentFocusField", "0")
@@ -200,9 +194,7 @@ public class JSoupCrawler implements Crawler {
                 break;
             }
         }
-        Response response = Jsoup
-                .connect(settings.getProjectileUrl())
-                .method(Method.POST)
+        Response response = jsoupConnection()
                 .cookies(cookies)
                 .data("taid", taid)
                 .data("CurrentFocusField", "name")
@@ -249,8 +241,7 @@ public class JSoupCrawler implements Crawler {
     }
 
     private void logout(final Document page) throws IOException {
-        Response execute = Jsoup.connect(settings.getProjectileUrl()).method(Method.POST)
-                .cookies(cookies).data("taid", taid)
+        Response execute = jsoupConnection().cookies(cookies).data("taid", taid)
                 .data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".x", "8")
                 .data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".y", "8")
                 .execute();
@@ -260,6 +251,15 @@ public class JSoupCrawler implements Crawler {
         } else {
             LOGGER.info("User logged out.");
         }
+    }
+
+    /**
+     * Creates a JSoup connection to Projectile with method POST and given
+     * timeout
+     */
+    private Connection jsoupConnection() {
+        return Jsoup.connect(settings.getProjectileUrl()).timeout(settings.getTimeout())
+                .method(Method.POST);
     }
 
     /** Reads the transaction ID from the response and stores it to a field */
