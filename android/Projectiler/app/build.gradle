@@ -19,10 +19,6 @@ android {
 }
 repositories {
     mavenLocal();
-    maven{
-        url "http://nexus.saxsys.de/content/repositories/external/"
-    }
-
 }
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.0'
