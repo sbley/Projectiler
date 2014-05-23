@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +90,24 @@ public class JSoupCrawler implements Crawler {
 			throw new ConnectionException(e);
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while clocking time.", e);
+		}
+	}
+
+	@Override
+	public List<Booking> getDailyReport(final Credentials credentials) throws ConnectionException,
+			CrawlingException {
+		try {
+			Document startPage = login(credentials);
+			Document ttPage = openTimeTracker(startPage);
+
+			List<Booking> bookings = readDailyReport(ttPage);
+
+			logout(ttPage);
+			return bookings;
+		} catch (final UnknownHostException e) {
+			throw new ConnectionException(e);
+		} catch (final IOException e) {
+			throw new CrawlingException("Error while retrieving daily report.", e);
 		}
 	}
 
@@ -255,6 +272,26 @@ public class JSoupCrawler implements Crawler {
 		LOGGER.info("Time clocked for project '" + projectName + "'.");
 	}
 
+	private List<Booking> readDailyReport(final Document timeTrackerPage) {
+		List<Booking> bookings = new ArrayList<Booking>();
+
+		final Elements inputsStart = timeTrackerPage.select("input.rw[id*=Field_Start]");
+		for (Element inputStart : inputsStart) {
+			String inputStartId = inputStart.id();
+			String startTime = inputStart.val();
+			String inputEndId = inputStartId.replace("Start", "End");
+			String endTime = timeTrackerPage.select("input.rw[id=" + inputEndId + "]").first()
+					.val();
+			String inputWhatId = inputStartId.replace("Start", "What");
+			String projectName = timeTrackerPage
+					.select("select[id=" + inputWhatId + "] option[selected]").first().text();
+			bookings.add(new Booking(projectName, startTime, endTime));
+		}
+
+		LOGGER.info("Daily report read.");
+		return bookings;
+	}
+
 	private void logout(final Document page) throws IOException {
 		Response execute = jsoupConnection().cookies(cookies).data("taid", taid)
 				.data(page.select("input[name$=L.BUTTON.logout]").first().attr("name") + ".x", "8")
@@ -291,12 +328,5 @@ public class JSoupCrawler implements Crawler {
 	/** Current date formatted as dd.MM.yyyy */
 	private String formatToday() {
 		return new SimpleDateFormat("dd.MM.yyyy").format(new Date());
-	}
-
-	@Override
-	public List<Booking> getDailyReport(final Credentials credentials) throws ConnectionException,
-			CrawlingException {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
 	}
 }
