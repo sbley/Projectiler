@@ -17,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.CrawlingException;
@@ -89,6 +90,24 @@ public class JSoupCrawler implements Crawler {
 			throw new ConnectionException(e);
 		} catch (final IOException e) {
 			throw new CrawlingException("Error while clocking time.", e);
+		}
+	}
+
+	@Override
+	public List<Booking> getDailyReport(final Credentials credentials) throws ConnectionException,
+			CrawlingException {
+		try {
+			Document startPage = login(credentials);
+			Document ttPage = openTimeTracker(startPage);
+
+			List<Booking> bookings = readDailyReport(ttPage);
+
+			logout(ttPage);
+			return bookings;
+		} catch (final UnknownHostException e) {
+			throw new ConnectionException(e);
+		} catch (final IOException e) {
+			throw new CrawlingException("Error while retrieving daily report.", e);
 		}
 	}
 
@@ -251,6 +270,26 @@ public class JSoupCrawler implements Crawler {
 			}
 		}
 		LOGGER.info("Time clocked for project '" + projectName + "'.");
+	}
+
+	private List<Booking> readDailyReport(final Document timeTrackerPage) {
+		List<Booking> bookings = new ArrayList<Booking>();
+
+		final Elements inputsStart = timeTrackerPage.select("input.rw[id*=Field_Start]");
+		for (Element inputStart : inputsStart) {
+			String inputStartId = inputStart.id();
+			String startTime = inputStart.val();
+			String inputEndId = inputStartId.replace("Start", "End");
+			String endTime = timeTrackerPage.select("input.rw[id=" + inputEndId + "]").first()
+					.val();
+			String inputWhatId = inputStartId.replace("Start", "What");
+			String projectName = timeTrackerPage
+					.select("select[id=" + inputWhatId + "] option[selected]").first().text();
+			bookings.add(new Booking(projectName, startTime, endTime));
+		}
+
+		LOGGER.info("Daily report read.");
+		return bookings;
 	}
 
 	private void logout(final Document page) throws IOException {
