@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.Crawler;
 import de.saxsys.projectiler.crawler.CrawlingException;
@@ -289,5 +291,12 @@ public class JSoupCrawler implements Crawler {
 	/** Current date formatted as dd.MM.yyyy */
 	private String formatToday() {
 		return new SimpleDateFormat("dd.MM.yyyy").format(new Date());
+	}
+
+	@Override
+	public List<Booking> getDailyReport(final Credentials credentials) throws ConnectionException,
+			CrawlingException {
+		// TODO Auto-generated method stub
+		return Collections.emptyList();
 	}
 }
