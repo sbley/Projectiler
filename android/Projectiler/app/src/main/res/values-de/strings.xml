@@ -31,6 +31,8 @@
     <string name="current_tracks">Zeiten Heute</string>
     <string name="load_projects">Lade Projekte...</string>
     <string name="load_tracks">Lade Zeiten...</string>
+    <string name="no_tracks_found">Keine Buchungen vorhanden</string>
+    <string name="refresh">Neu Laden</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

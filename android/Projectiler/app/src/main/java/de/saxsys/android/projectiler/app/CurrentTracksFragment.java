@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.todddavies.components.progressbar.ProgressWheel;
 
@@ -31,6 +32,8 @@ public class CurrentTracksFragment extends org.droidparts.fragment.support.v4.Fr
     private ListView lvBooking;
     @InjectView(id = R.id.pw_spinner)
     private ProgressWheel progress;
+    @InjectView(id = R.id.tv_no_tracks)
+    private TextView tvNoTracks;
 
     public static CurrentTracksFragment newInstance() {
         CurrentTracksFragment fragment = new CurrentTracksFragment();
@@ -69,9 +72,17 @@ public class CurrentTracksFragment extends org.droidparts.fragment.support.v4.Fr
         @Override
         public void onAsyncTaskSuccess(List<Booking> bookings) {
             getActivity().setProgressBarIndeterminateVisibility(false);
-            lvBooking.setAdapter(new CurrentTrackAdapter(getActivity().getApplicationContext(), bookings));
-            lvBooking.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
+
+            if(bookings.size() == 0){
+                tvNoTracks.setVisibility(View.VISIBLE);
+                lvBooking.setVisibility(View.GONE);
+                progress.setVisibility(View.GONE);
+            }else{
+                tvNoTracks.setVisibility(View.GONE);
+                lvBooking.setAdapter(new CurrentTrackAdapter(getActivity().getApplicationContext(), bookings));
+                lvBooking.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
+            }
 
         }
 

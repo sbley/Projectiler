@@ -32,6 +32,8 @@
     <string name="current_tracks">Tracks today</string>
     <string name="load_projects">loading projects...</string>
     <string name="load_tracks">loading tracks...</string>
+    <string name="no_tracks_found">no tracks found</string>
+    <string name="refresh">refresh</string>
 
     <array name="navigation_drawer_groups">
         <item>Functions</item>

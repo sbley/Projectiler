@@ -18,12 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import org.droidparts.annotation.inject.InjectView;
+import org.droidparts.concurrent.task.AsyncTaskResultListener;
 import org.droidparts.fragment.support.v4.Fragment;
 
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
 import de.saxsys.android.projectiler.app.ui.NavigationDrawerAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
@@ -32,7 +38,7 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -67,6 +73,10 @@ public class NavigationDrawerFragment extends Fragment {
 
     @InjectView(id = R.id.lvProjects)
     private ExpandableListView mDrawerListView;
+    @InjectView(id = R.id.rl_refresh)
+    private RelativeLayout rlRefresh;
+    @InjectView(id = R.id.ibRefresh, click = true)
+    private ImageButton ibRefresh;
 
     public NavigationDrawerFragment() {
     }
@@ -274,43 +284,57 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public void setItems(final List<String> itemList) {
-        this.itemList = itemList;
 
-        final int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
+        if(itemList == null){
 
-        mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
-        mDrawerListView.setGroupIndicator(null);
+            mDrawerListView.setVisibility(View.GONE);
+            rlRefresh.setVisibility(View.VISIBLE);
 
-        mDrawerListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+        }else{
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                org.droidparts.fragment.support.v4.Fragment fragment = new TimeTrackingFragment();
+            mDrawerListView.setVisibility(View.VISIBLE);
+            rlRefresh.setVisibility(View.GONE);
 
-                if(groupPosition == 0){
+            this.itemList = itemList;
 
-                    Fragment currentTracksFragment = CurrentTracksFragment.newInstance();
+            final int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
 
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.container, currentTracksFragment)
-                            .commit();
-                    mDrawerLayout.closeDrawers();
+            mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
+            mDrawerListView.setGroupIndicator(null);
 
-                }else if (groupPosition == 1){
+            mDrawerListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
 
-                    fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true, false));
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    org.droidparts.fragment.support.v4.Fragment fragment = new TimeTrackingFragment();
 
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.container, fragment)
-                            .commit();
+                    if(groupPosition == 0){
 
-                    mDrawerLayout.closeDrawers();
+                        Fragment currentTracksFragment = CurrentTracksFragment.newInstance();
+
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, currentTracksFragment)
+                                .commit();
+                        mDrawerLayout.closeDrawers();
+
+                    }else if (groupPosition == 1){
+
+                        fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true, false));
+
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, fragment)
+                                .commit();
+
+                        mDrawerLayout.closeDrawers();
+                    }
+
+                    return false;
                 }
+            });
+        }
 
-                return false;
-            }
-        });
+
 
     }
 
@@ -330,6 +354,29 @@ public class NavigationDrawerFragment extends Fragment {
         }
         mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), items, currentActiveIndex));
     }
+
+    @Override
+    public void onClick(View view) {
+        if( view == ibRefresh){
+            getActivity().setProgressBarIndeterminateVisibility(true);
+            new GetProjectsAsyncTask(getActivity().getApplication(), refreshClickListener).execute();
+        }
+    }
+
+    private AsyncTaskResultListener<List<String>> refreshClickListener = new AsyncTaskResultListener<List<String>>() {
+        @Override
+        public void onAsyncTaskSuccess(List<String> items) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            setItems(items);
+        }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            Crouton.makeText(getActivity(), getString(R.string.no_connection_to_server), Style.ALERT).show();
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            setItems(null);
+        }
+    };
 
     /**
      * Callbacks interface that all activities using this fragment must implement.

@@ -18,5 +18,34 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <RelativeLayout
+        android:id="@+id/rl_refresh"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_refresh"
+            android:id="@+id/ibRefresh"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh"
+            android:id="@+id/textView"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/ibRefresh"
+            android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+
+
 </RelativeLayout>
 

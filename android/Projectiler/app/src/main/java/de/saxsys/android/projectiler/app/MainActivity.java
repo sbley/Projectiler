@@ -1,7 +1,6 @@
 package de.saxsys.android.projectiler.app;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.FormatException;
@@ -19,12 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import org.droidparts.concurrent.task.AsyncTaskResultListener;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
 import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
@@ -49,7 +51,6 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
     private Menu menu;
     private BusinessProcess businessProcess;
 
-
     @Override
     public void onPreInject() {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -72,7 +73,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        new GetProjectsAsyncTask(getApplicationContext()).execute();
+        new GetProjectsAsyncTask(getApplicationContext(), getProjectsListener).execute();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         TimeTrackingFragment fragment = new TimeTrackingFragment();
@@ -85,7 +86,6 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
-
 
         }else{
             fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true, true));
@@ -223,29 +223,9 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
         }
     }
 
-
-    private class GetProjectsAsyncTask extends org.droidparts.concurrent.task.AsyncTask<Void, Void, List<String>> {
-
-
-        public GetProjectsAsyncTask(Context ctx) {
-            super(ctx);
-        }
-
+    private AsyncTaskResultListener<List<String>> getProjectsListener = new AsyncTaskResultListener<List<String>>() {
         @Override
-        protected List<String> onExecute(Void... voids) throws Exception {
-            return businessProcess.getProjectNames(getApplicationContext());
-        }
-
-        @Override
-        protected void onPostExecuteFailure(Exception exception) {
-            super.onPostExecuteFailure(exception);
-            setProgressBarIndeterminateVisibility(false);
-            Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
-        }
-
-        @Override
-        protected void onPostExecuteSuccess(List<String> itemList) {
-            super.onPostExecuteSuccess(itemList);
+        public void onAsyncTaskSuccess(List<String> itemList) {
             setProgressBarIndeterminateVisibility(false);
             mNavigationDrawerFragment.setItems(itemList);
 
@@ -260,8 +240,24 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
                         .commit();
             }
         }
-    }
 
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            setProgressBarIndeterminateVisibility(false);
+            Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            TimeTrackingFragment fragment = new TimeTrackingFragment();
+
+            fragment.setArguments(TimeTrackingFragment.newInstance("", false, true, false));
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+
+            mNavigationDrawerFragment.setItems(null);
+
+        }
+    };
 
     public void onResume() {
         super.onResume();
