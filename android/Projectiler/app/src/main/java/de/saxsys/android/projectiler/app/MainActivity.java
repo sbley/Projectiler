@@ -27,8 +27,10 @@ import java.util.List;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
+import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
+import de.saxsys.projectiler.crawler.CrawlingException;
 
 
 public class MainActivity extends org.droidparts.activity.support.v7.ActionBarActivity
@@ -50,6 +52,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
     private IntentFilter[] writeTagFilters;
     private Menu menu;
     private BusinessProcess businessProcess;
+    private DataProvider dataProvider;
 
     @Override
     public void onPreInject() {
@@ -61,7 +64,8 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getApplicationContext());
+        dataProvider = new DataProvider(getApplicationContext());
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -166,6 +170,9 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
+            if(dataProvider.getTracks().size() > 0){
+                getMenuInflater().inflate(R.menu.upload, menu);
+            }
 
             if (businessProcess.getAutoLogin(getApplicationContext())) {
                 getMenuInflater().inflate(R.menu.main, menu);
@@ -201,7 +208,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
                     Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
                 } else {
                     // bitte NFC hinlegen
-                    Crouton.makeText(MainActivity.this, "Bitte legen Sie den NFC Tag in Reichweite", Style.CONFIRM).show();
+                    Crouton.makeText(MainActivity.this, getString(R.string.please_put_nfc_in_range), Style.CONFIRM).show();
                 }
 
             } catch (IOException e) {
@@ -209,6 +216,16 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
             } catch (FormatException e) {
                 e.printStackTrace();
             }
+        }else if (id == R.id.action_upload){
+
+            try {
+                businessProcess.checkoutAllTracks(getApplicationContext());
+            } catch (CrawlingException e) {
+                e.printStackTrace();
+                Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
+            }
+
+
         }
         return super.onOptionsItemSelected(item);
     }

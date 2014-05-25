@@ -5,7 +5,10 @@ import android.content.Context;
 import java.util.Date;
 import java.util.List;
 
+import de.saxsys.android.projectiler.app.backend.DateUtil;
 import de.saxsys.android.projectiler.app.backend.Projectiler;
+import de.saxsys.android.projectiler.app.db.DataProvider;
+import de.saxsys.android.projectiler.app.generatedmodel.Track;
 import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.CrawlingException;
@@ -18,18 +21,20 @@ public class BusinessProcess {
 
 
     private static BusinessProcess INSTANCE;
+    private DataProvider dataProvider;
 
-    public static BusinessProcess getInstance() {
+    public static BusinessProcess getInstance(final Context context) {
         if (null == INSTANCE) {
-            INSTANCE = new BusinessProcess();
+            INSTANCE = new BusinessProcess(context);
         }
         return INSTANCE;
     }
 
     private Projectiler projectiler;
 
-    private BusinessProcess() {
+    private BusinessProcess(final Context context) {
         projectiler = Projectiler.createDefaultProjectiler();
+        dataProvider = new DataProvider(context);
     }
 
 
@@ -46,7 +51,21 @@ public class BusinessProcess {
     }
 
     public Date checkout(final Context context, final String projectName) throws CrawlingException {
-        return projectiler.checkout(context, projectName);
+
+        Date checkout = null;
+
+        try {
+            checkout = projectiler.checkout(context, projectName);
+        }catch (CrawlingException e){
+            Track track = new Track();
+            track.setProjectName(getProjectName(context));
+            track.setStartdDate(getStartDateAsString(context));
+            track.setEndDate(DateUtil.formatHHmm(new Date()));
+            dataProvider.saveTrack(track);
+            throw new CrawlingException(e.getMessage(), e);
+        }
+
+        return checkout;
     }
 
     public List<String> getProjectNames(final Context context) throws ConnectionException, CrawlingException {
@@ -122,6 +141,20 @@ public class BusinessProcess {
 
     public List<Booking> getCurrentBookings(final Context context) throws CrawlingException {
         return projectiler.getDailyReports(context);
+    }
+
+
+    public void checkoutAllTracks(final Context context) throws CrawlingException {
+
+        List<Track> tracks = dataProvider.getTracks();
+
+        for(Track track : tracks){
+
+            dataProvider.deleteTrack(track);
+            projectiler.checkoutTrack(context, track);
+        }
+
+
     }
 
 }

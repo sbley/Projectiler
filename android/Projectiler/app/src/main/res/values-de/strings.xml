@@ -33,6 +33,7 @@
     <string name="load_tracks">Lade Zeiten...</string>
     <string name="no_tracks_found">Keine Buchungen vorhanden</string>
     <string name="refresh">Neu Laden</string>
+    <string name="please_put_nfc_in_range">Bitte legen Sie den NFC Tag in Reichweite</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

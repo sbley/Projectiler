@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.saxsys.android.projectiler.app.generatedmodel.Track;
 import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
 import de.saxsys.projectiler.crawler.Crawler;
@@ -161,5 +162,9 @@ public class Projectiler {
 
     public List<Booking> getDailyReports(final Context context) throws CrawlingException {
         return crawler.getDailyReport(createCredentials(context));
+    }
+
+    public void checkoutTrack(final Context context, Track track) throws CrawlingException {
+        crawler.clock(createCredentials(context), track.getProjectName(), DateUtil.formatShort(track.getStartdDate()), DateUtil.formatShort(track.getEndDate()));
     }
 }
