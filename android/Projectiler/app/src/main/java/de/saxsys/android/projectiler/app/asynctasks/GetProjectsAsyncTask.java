@@ -18,7 +18,7 @@ public class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>> {
 
     public GetProjectsAsyncTask(Context ctx, AsyncTaskResultListener<List<String>> resultListener) {
         super(ctx, resultListener);
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getContext());
     }
 
     @Override

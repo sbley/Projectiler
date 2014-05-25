@@ -17,7 +17,7 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
 
     public StopAsyncTask(Context ctx, String projectName, AsyncTaskResultListener<Void> resultListener) {
         super(ctx, resultListener);
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getContext());
         this.projectName = projectName;
     }
 

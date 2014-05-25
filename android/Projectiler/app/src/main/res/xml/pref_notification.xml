@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+    <CheckBoxPreference
+        android:key="notifications_new_message"
+        android:title="send notification"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:dependency="notifications_new_message"
+        android:key="notifications_new_message_vibrate"
+        android:title="Vibration"
+        android:defaultValue="true" />
+
+    <de.saxsys.android.projectiler.app.ui.TimePreference
+        android:dependency="notifications_new_message"
+        android:key="work_begin" android:title="Arbeitsbeginn"
+        android:defaultValue="08:00" />
+
+    <de.saxsys.android.projectiler.app.ui.TimePreference
+        android:dependency="notifications_new_message"
+        android:key="work_end" android:title="Arbeitsende"
+        android:defaultValue="18:00" />
+
+
+
+</PreferenceScreen>

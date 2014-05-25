@@ -14,7 +14,7 @@ public class LogoutDialog extends BaseDefaultDialogFragment {
     private BusinessProcess businessProcess;
 
     public LogoutDialog(){
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
     }
 
     @Override

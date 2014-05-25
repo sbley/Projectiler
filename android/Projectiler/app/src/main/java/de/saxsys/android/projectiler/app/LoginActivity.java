@@ -32,7 +32,7 @@ public class LoginActivity extends ActionBarActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_login);
 
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
         // click listener
         login = (Button) findViewById(R.id.btn_login);

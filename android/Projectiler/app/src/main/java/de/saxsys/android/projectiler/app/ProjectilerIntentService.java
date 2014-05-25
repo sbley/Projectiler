@@ -21,7 +21,7 @@ public class ProjectilerIntentService extends IntentService {
 
     public ProjectilerIntentService() {
         super("TestIntentService");
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getApplicationContext());
     }
 
     @Override

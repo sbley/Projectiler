@@ -189,44 +189,46 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_logout) {
 
-            LogoutDialog dialogFragment = new LogoutDialog();
-            dialogFragment.show(getFragmentManager(), "logoutDialog");
 
-        } else if (id == R.id.action_nfc) {
-            try {
+        switch (id) {
 
-                if (projectilerTag != null) {
+            case R.id.action_settings:
 
-                    // nfc löschen
-                    Log.d("", "write nfc");
+                Intent settingIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(settingIntent);
+                break;
+            case R.id.action_logout:
+                LogoutDialog dialogFragment = new LogoutDialog();
+                dialogFragment.show(getFragmentManager(), "logoutDialog");
+                break;
+            case R.id.action_nfc:
+                try {
+                    if (projectilerTag != null) {
+                        write(NFC_KEY_WORD, projectilerTag);
+                        Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
+                    } else {
+                        // bitte NFC hinlegen
+                        Crouton.makeText(MainActivity.this, getString(R.string.please_put_nfc_in_range), Style.CONFIRM).show();
+                    }
 
-                    write(NFC_KEY_WORD, projectilerTag);
-                    Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
-                } else {
-                    // bitte NFC hinlegen
-                    Crouton.makeText(MainActivity.this, getString(R.string.please_put_nfc_in_range), Style.CONFIRM).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (FormatException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.action_upload:
+                try {
+                    businessProcess.checkoutAllTracks(getApplicationContext());
+                } catch (CrawlingException e) {
+                    e.printStackTrace();
+                    Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (FormatException e) {
-                e.printStackTrace();
-            }
-        }else if (id == R.id.action_upload){
-
-            try {
-                businessProcess.checkoutAllTracks(getApplicationContext());
-            } catch (CrawlingException e) {
-                e.printStackTrace();
-                Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
-            }
-
-
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -19,7 +19,7 @@ public class ProjectNameIntentService extends IntentService {
 
     public ProjectNameIntentService() {
         super("ProjectNameIntentService");
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getApplicationContext());
     }
 
     @Override

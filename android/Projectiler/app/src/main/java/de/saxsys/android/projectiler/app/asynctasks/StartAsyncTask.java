@@ -16,7 +16,7 @@ public class StartAsyncTask extends AsyncTask<Void, Void, Void> {
 
     public StartAsyncTask(Context ctx, AsyncTaskResultListener<Void> resultListener) {
         super(ctx, resultListener);
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getContext());
     }
 
     @Override

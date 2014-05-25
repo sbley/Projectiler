@@ -46,7 +46,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     private boolean isLoading;
 
 
-    private final BusinessProcess businessProcess;
+    private BusinessProcess businessProcess;
 
     private View rootView;
 
@@ -85,14 +85,14 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     }
 
     public TimeTrackingFragment() {
-        businessProcess = BusinessProcess.getInstance();
+
     }
 
 
     @Override
     public View onCreateView(Bundle savedInstanceState, LayoutInflater inflater, ViewGroup container) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
         return rootView;
     }
 
