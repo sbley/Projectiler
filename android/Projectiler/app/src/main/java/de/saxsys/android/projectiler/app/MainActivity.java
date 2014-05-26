@@ -27,10 +27,10 @@ import java.util.List;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
+import de.saxsys.android.projectiler.app.asynctasks.UploadAllTracksAsyncTask;
 import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
-import de.saxsys.projectiler.crawler.CrawlingException;
 
 
 public class MainActivity extends org.droidparts.activity.support.v7.ActionBarActivity
@@ -91,7 +91,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
                     .replace(R.id.container, fragment)
                     .commit();
 
-        }else{
+        } else {
             fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true, true));
 
             fragmentManager.beginTransaction()
@@ -170,7 +170,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            if(dataProvider.getTracks().size() > 0){
+            if (dataProvider.getTracks().size() > 0) {
                 getMenuInflater().inflate(R.menu.upload, menu);
             }
 
@@ -185,52 +185,64 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
+        int id = item.getItemId();
 
         switch (id) {
 
             case R.id.action_settings:
-
-                Intent settingIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(settingIntent);
+                Intent inten = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(inten);
                 break;
+
             case R.id.action_logout:
                 LogoutDialog dialogFragment = new LogoutDialog();
                 dialogFragment.show(getFragmentManager(), "logoutDialog");
                 break;
             case R.id.action_nfc:
-                try {
-                    if (projectilerTag != null) {
-                        write(NFC_KEY_WORD, projectilerTag);
-                        Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
-                    } else {
-                        // bitte NFC hinlegen
-                        Crouton.makeText(MainActivity.this, getString(R.string.please_put_nfc_in_range), Style.CONFIRM).show();
-                    }
+                if (projectilerTag != null) {
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (FormatException e) {
-                    e.printStackTrace();
+                    // nfc löschen
+                    Log.d("", "write nfc");
+
+                    try {
+                        write(NFC_KEY_WORD, projectilerTag);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (FormatException e) {
+                        e.printStackTrace();
+                    }
+                    Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
+                } else {
+                    // bitte NFC hinlegen
+                    Crouton.makeText(MainActivity.this, getString(R.string.please_put_nfc_in_range), Style.CONFIRM).show();
                 }
                 break;
             case R.id.action_upload:
-                try {
-                    businessProcess.checkoutAllTracks(getApplicationContext());
-                } catch (CrawlingException e) {
-                    e.printStackTrace();
-                    Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
-                }
+                setActionBarLoadingIndicatorVisible(true);
+                new UploadAllTracksAsyncTask(getApplicationContext(), uploadAllTracksListener).execute();
 
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private AsyncTaskResultListener uploadAllTracksListener = new AsyncTaskResultListener() {
+        @Override
+        public void onAsyncTaskSuccess(Object o) {
+            setActionBarLoadingIndicatorVisible(false);
+            Crouton.makeText(MainActivity.this, getString(R.string.tracks_was_uploaded), Style.CONFIRM).show();
+            supportInvalidateOptionsMenu();
+        }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            setActionBarLoadingIndicatorVisible(false);
+            Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
+            supportInvalidateOptionsMenu();
+        }
+    };
 
 
     public void refreshNavigationDrawer(String projectName) {

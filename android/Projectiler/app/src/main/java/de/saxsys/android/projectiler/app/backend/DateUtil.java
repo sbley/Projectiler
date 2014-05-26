@@ -48,6 +48,7 @@ public final class DateUtil {
 
 	/** Formats a date to hours and minutes */
 	public static String formatHHmm(final Date date) {
-		return new SimpleDateFormat("HHmm").format(date);
+		return new SimpleDateFormat("HH:mm").format(date);
 	}
+
 }

@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="de.saxsys.android.projectiler.app.NavigationDrawerFragment"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:background="@android:color/darker_gray"
     android:layout_height="match_parent">
@@ -10,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/lvProjects"
+        android:visibility="visible"
         android:choiceMode="singleChoice"
         android:divider="@color/saxsysred"
         android:dividerHeight="1dp"
@@ -43,8 +45,23 @@
             android:layout_below="@+id/ibRefresh"
             android:layout_centerHorizontal="true" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
+
+    <com.todddavies.components.progressbar.ProgressWheel
+        android:id="@+id/pw_spinner"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        ProgressWheel:text="@string/load_projects"
+        ProgressWheel:textColor="#222"
+        ProgressWheel:textSize="14sp"
+        ProgressWheel:rimColor="@color/saxsysgreen"
+        ProgressWheel:barColor="@color/saxsysblue"
+        ProgressWheel:barLength="60dp"
+        ProgressWheel:barWidth="5dp"
+        ProgressWheel:rimWidth="2dp" />
 
 
 </RelativeLayout>

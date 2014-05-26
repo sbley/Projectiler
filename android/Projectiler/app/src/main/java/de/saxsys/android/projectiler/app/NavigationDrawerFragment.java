@@ -21,6 +21,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.todddavies.components.progressbar.ProgressWheel;
+
 import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 import org.droidparts.fragment.support.v4.Fragment;
@@ -77,6 +79,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private RelativeLayout rlRefresh;
     @InjectView(id = R.id.ibRefresh, click = true)
     private ImageButton ibRefresh;
+    @InjectView(id = R.id.pw_spinner)
+    private ProgressWheel progress;
 
     public NavigationDrawerFragment() {
     }
@@ -359,6 +363,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onClick(View view) {
         if( view == ibRefresh){
             getActivity().setProgressBarIndeterminateVisibility(true);
+            progress.setVisibility(View.VISIBLE);
+            progress.spin();
+            rlRefresh.setVisibility(View.GONE);
             new GetProjectsAsyncTask(getActivity().getApplication(), refreshClickListener).execute();
         }
     }
@@ -367,12 +374,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         @Override
         public void onAsyncTaskSuccess(List<String> items) {
             getActivity().setProgressBarIndeterminateVisibility(false);
+            progress.setVisibility(View.GONE);
             setItems(items);
         }
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
             Crouton.makeText(getActivity(), getString(R.string.no_connection_to_server), Style.ALERT).show();
+            progress.setVisibility(View.GONE);
             getActivity().setProgressBarIndeterminateVisibility(false);
             setItems(null);
         }

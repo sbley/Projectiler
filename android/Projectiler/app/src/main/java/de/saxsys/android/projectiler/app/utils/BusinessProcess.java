@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.Date;
 import java.util.List;
 
-import de.saxsys.android.projectiler.app.backend.DateUtil;
 import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.generatedmodel.Track;
@@ -18,7 +17,6 @@ import de.saxsys.projectiler.crawler.InvalidCredentialsException;
  * Created by stefan.heinze on 19.05.2014.
  */
 public class BusinessProcess {
-
 
     private static BusinessProcess INSTANCE;
     private DataProvider dataProvider;
@@ -33,7 +31,7 @@ public class BusinessProcess {
     private Projectiler projectiler;
 
     private BusinessProcess(final Context context) {
-        projectiler = Projectiler.createDefaultProjectiler();
+        projectiler = Projectiler.createDefaultProjectiler(context);
         dataProvider = new DataProvider(context);
     }
 
@@ -54,16 +52,7 @@ public class BusinessProcess {
 
         Date checkout = null;
 
-        try {
-            checkout = projectiler.checkout(context, projectName);
-        }catch (CrawlingException e){
-            Track track = new Track();
-            track.setProjectName(getProjectName(context));
-            track.setStartdDate(getStartDateAsString(context));
-            track.setEndDate(DateUtil.formatHHmm(new Date()));
-            dataProvider.saveTrack(track);
-            throw new CrawlingException(e.getMessage(), e);
-        }
+        checkout = projectiler.checkout(context, projectName);
 
         return checkout;
     }
@@ -148,7 +137,7 @@ public class BusinessProcess {
 
         List<Track> tracks = dataProvider.getTracks();
 
-        for(Track track : tracks){
+        for (Track track : tracks) {
 
             dataProvider.deleteTrack(track);
             projectiler.checkoutTrack(context, track);

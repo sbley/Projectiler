@@ -99,6 +99,8 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
+
         projectName = getArguments().getString(ARG_PROJECT_NAME);
         startVisible = getArguments().getBoolean(ARG_START_VISIBLE);
         stopVisible = getArguments().getBoolean(ARG_STOP_VISIBLE);
@@ -293,9 +295,22 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
         public void onAsyncTaskFailure(Exception e) {
             getActivity().setProgressBarIndeterminateVisibility(false);
 
-            Crouton.makeText(getActivity(), e.getMessage(), Style.ALERT).show();
+            businessProcess.resetStartTime(getActivity().getApplicationContext());
+            ((MainActivity) getActivity()).refreshNavigationDrawer("");
+
+            btnReset.setVisibility(View.GONE);
+            btnStart.setVisibility(View.VISIBLE);
+            btnStop.setVisibility(View.GONE);
+
+            setStartDateTextView();
+
+            WidgetUtils.refreshWidget(getActivity().getApplicationContext());
+
+            Crouton.makeText(getActivity(), getString(R.string.time_booked_not_successfull), Style.ALERT).show();
 
             btnStop.setEnabled(true);
+
+            getActivity().supportInvalidateOptionsMenu();
         }
     };
 }
