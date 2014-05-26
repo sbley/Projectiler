@@ -27,10 +27,10 @@ import java.util.List;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
+import de.saxsys.android.projectiler.app.asynctasks.UploadAllTracksAsyncTask;
 import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
-import de.saxsys.projectiler.crawler.CrawlingException;
 
 
 public class MainActivity extends org.droidparts.activity.support.v7.ActionBarActivity
@@ -53,6 +53,7 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
     private Menu menu;
     private BusinessProcess businessProcess;
     private DataProvider dataProvider;
+
 
     @Override
     public void onPreInject() {
@@ -218,17 +219,28 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
             }
         }else if (id == R.id.action_upload){
 
-            try {
-                businessProcess.checkoutAllTracks(getApplicationContext());
-            } catch (CrawlingException e) {
-                e.printStackTrace();
-                Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
-            }
-
+            setProgressBarIndeterminateVisibility(true);
+            new UploadAllTracksAsyncTask(getApplicationContext(), uploadAllTracksListener).execute();
 
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private AsyncTaskResultListener uploadAllTracksListener = new AsyncTaskResultListener() {
+        @Override
+        public void onAsyncTaskSuccess(Object o) {
+            setActionBarLoadingIndicatorVisible(false);
+            Crouton.makeText(MainActivity.this, getString(R.string.tracks_was_uploaded), Style.CONFIRM).show();
+            supportInvalidateOptionsMenu();
+        }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            setActionBarLoadingIndicatorVisible(false);
+            Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
+            supportInvalidateOptionsMenu();
+        }
+    };
 
 
     public void refreshNavigationDrawer(String projectName) {

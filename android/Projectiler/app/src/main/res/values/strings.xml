@@ -35,6 +35,8 @@
     <string name="no_tracks_found">no tracks found</string>
     <string name="refresh">refresh</string>
     <string name="please_put_nfc_in_range">please put nfc in range</string>
+    <string name="time_booked_not_successfull">no connection to the server. the track was saved.</string>
+    <string name="tracks_was_uploaded">tracks was uploaded</string>
 
     <array name="navigation_drawer_groups">
         <item>Functions</item>

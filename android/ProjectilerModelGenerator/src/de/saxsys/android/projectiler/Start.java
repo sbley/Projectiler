@@ -5,7 +5,7 @@ import de.greenrobot.daogenerator.Entity;
 import de.greenrobot.daogenerator.Schema;
 
 public class Start {
-	private static final int SCHEMA_VERSION = 1;
+	private static final int SCHEMA_VERSION = 3;
 
 	private static void addTables(final Schema schema) {
 		schema.enableKeepSectionsByDefault();
@@ -14,8 +14,9 @@ public class Start {
 		final Entity entityTrack = schema.addEntity("Track");
 		entityTrack.addIdProperty();
 		entityTrack.addStringProperty("projectName").notNull();
-		entityTrack.addStringProperty("startdDate").notNull();
-		entityTrack.addStringProperty("endDate").notNull();
+		entityTrack.addDateProperty("timestamp").notNull();
+		entityTrack.addDateProperty("startdDate").notNull();
+		entityTrack.addDateProperty("endDate").notNull();
 
 
 	}

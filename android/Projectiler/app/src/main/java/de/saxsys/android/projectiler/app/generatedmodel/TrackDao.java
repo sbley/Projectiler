@@ -25,8 +25,9 @@ public class TrackDao extends AbstractDao<Track, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property ProjectName = new Property(1, String.class, "projectName", false, "PROJECT_NAME");
-        public final static Property StartdDate = new Property(2, String.class, "startdDate", false, "STARTD_DATE");
-        public final static Property EndDate = new Property(3, String.class, "endDate", false, "END_DATE");
+        public final static Property Timestamp = new Property(2, java.util.Date.class, "timestamp", false, "TIMESTAMP");
+        public final static Property StartdDate = new Property(3, java.util.Date.class, "startdDate", false, "STARTD_DATE");
+        public final static Property EndDate = new Property(4, java.util.Date.class, "endDate", false, "END_DATE");
     };
 
 
@@ -44,8 +45,9 @@ public class TrackDao extends AbstractDao<Track, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'TRACK' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'PROJECT_NAME' TEXT NOT NULL ," + // 1: projectName
-                "'STARTD_DATE' TEXT NOT NULL ," + // 2: startdDate
-                "'END_DATE' TEXT NOT NULL );"); // 3: endDate
+                "'TIMESTAMP' INTEGER NOT NULL ," + // 2: timestamp
+                "'STARTD_DATE' INTEGER NOT NULL ," + // 3: startdDate
+                "'END_DATE' INTEGER NOT NULL );"); // 4: endDate
     }
 
     /** Drops the underlying database table. */
@@ -64,8 +66,9 @@ public class TrackDao extends AbstractDao<Track, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindString(2, entity.getProjectName());
-        stmt.bindString(3, entity.getStartdDate());
-        stmt.bindString(4, entity.getEndDate());
+        stmt.bindLong(3, entity.getTimestamp().getTime());
+        stmt.bindLong(4, entity.getStartdDate().getTime());
+        stmt.bindLong(5, entity.getEndDate().getTime());
     }
 
     /** @inheritdoc */
@@ -80,8 +83,9 @@ public class TrackDao extends AbstractDao<Track, Long> {
         Track entity = new Track( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // projectName
-            cursor.getString(offset + 2), // startdDate
-            cursor.getString(offset + 3) // endDate
+            new java.util.Date(cursor.getLong(offset + 2)), // timestamp
+            new java.util.Date(cursor.getLong(offset + 3)), // startdDate
+            new java.util.Date(cursor.getLong(offset + 4)) // endDate
         );
         return entity;
     }
@@ -91,8 +95,9 @@ public class TrackDao extends AbstractDao<Track, Long> {
     public void readEntity(Cursor cursor, Track entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setProjectName(cursor.getString(offset + 1));
-        entity.setStartdDate(cursor.getString(offset + 2));
-        entity.setEndDate(cursor.getString(offset + 3));
+        entity.setTimestamp(new java.util.Date(cursor.getLong(offset + 2)));
+        entity.setStartdDate(new java.util.Date(cursor.getLong(offset + 3)));
+        entity.setEndDate(new java.util.Date(cursor.getLong(offset + 4)));
      }
     
     /** @inheritdoc */

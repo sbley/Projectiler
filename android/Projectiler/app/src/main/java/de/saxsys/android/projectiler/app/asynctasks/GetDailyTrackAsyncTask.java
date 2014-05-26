@@ -19,7 +19,7 @@ public class GetDailyTrackAsyncTask extends AsyncTask<Void, Void, List<Booking>>
 
     public GetDailyTrackAsyncTask(Context ctx, AsyncTaskResultListener<List<Booking>> resultListener) {
         super(ctx, resultListener);
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getContext());
     }
 
     @Override

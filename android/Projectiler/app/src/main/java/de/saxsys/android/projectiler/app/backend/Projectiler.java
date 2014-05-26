@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.generatedmodel.Track;
 import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
@@ -27,13 +28,15 @@ public class Projectiler {
     private static final Logger LOGGER = Logger.getLogger(Projectiler.class.getSimpleName());
     private final UserDataStore dataStore = UserDataStore.getInstance();
     private final Crawler crawler;
+    private DataProvider dataProvider;
 
-    public static Projectiler createDefaultProjectiler() {
-        return new Projectiler(new JSoupCrawler(new Settings()));
+    public static Projectiler createDefaultProjectiler(final Context context) {
+        return new Projectiler(new JSoupCrawler(new Settings()), context);
     }
 
-    protected Projectiler(final Crawler crawler) {
+    protected Projectiler(final Crawler crawler, final Context context) {
         this.crawler = crawler;
+        dataProvider = new DataProvider(context);
     }
 
     public String getUserName(final Context context) {
@@ -65,12 +68,20 @@ public class Projectiler {
         final Date start = dataStore.getStartDate(context);
         final Date end = new Date();
         if (DateUtil.formatHHmm(start).equals(DateUtil.formatHHmm(end))) {
-            //dataStore.clearStartDate(context);
             throw new IllegalStateException("Work time must be at least 1 minute.");
         }
 
         try {
             crawler.clock(createCredentials(context), projectName, start, end);
+        } catch (CrawlingException e) {
+            Track track = new Track();
+            track.setProjectName(projectName);
+            track.setTimestamp(new Date());
+            track.setStartdDate(start);
+            track.setEndDate(end);
+            dataProvider.saveTrack(track);
+
+            throw e;
         } finally {
             dataStore.clearStartDate(context);
             dataStore.setProjectName(context, "");
@@ -165,6 +176,12 @@ public class Projectiler {
     }
 
     public void checkoutTrack(final Context context, Track track) throws CrawlingException {
-        crawler.clock(createCredentials(context), track.getProjectName(), DateUtil.formatShort(track.getStartdDate()), DateUtil.formatShort(track.getEndDate()));
+
+        try {
+            crawler.clock(createCredentials(context), track.getProjectName(), track.getStartdDate(), track.getEndDate());
+        } catch (CrawlingException e) {
+            dataProvider.saveTrack(track);
+            throw e;
+        }
     }
 }

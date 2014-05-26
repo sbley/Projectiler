@@ -33,7 +33,7 @@ public class WidgetService extends RemoteViewsService {
 
         try {
 
-            businessProcess = BusinessProcess.getInstance();
+            businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
             businessProcess.showProgressBarOnWidget(getApplicationContext());
 

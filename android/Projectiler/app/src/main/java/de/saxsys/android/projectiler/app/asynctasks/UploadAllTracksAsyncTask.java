@@ -5,24 +5,23 @@ import android.content.Context;
 import org.droidparts.concurrent.task.AsyncTask;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
-import java.util.List;
-
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
  * Created by stefan.heinze on 25.05.2014.
  */
-public class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>> {
+public class UploadAllTracksAsyncTask extends AsyncTask {
 
     private BusinessProcess businessProcess;
 
-    public GetProjectsAsyncTask(Context ctx, AsyncTaskResultListener<List<String>> resultListener) {
+    public UploadAllTracksAsyncTask(Context ctx, AsyncTaskResultListener resultListener) {
         super(ctx, resultListener);
-        businessProcess = BusinessProcess.getInstance(getContext());
+        businessProcess = BusinessProcess.getInstance(ctx);
     }
 
     @Override
-    protected List<String> onExecute(Void... voids) throws Exception {
-        return businessProcess.getProjectNames(getContext());
+    protected Object onExecute(Object[] objects) throws Exception {
+        businessProcess.checkoutAllTracks(getContext());
+        return null;
     }
 }

@@ -37,7 +37,7 @@ public class NfcActivity extends ActionBarActivity {
         lvPorjects = (ListView) findViewById(R.id.lvProjects);
 
 
-        businessProcess = BusinessProcess.getInstance();
+        businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
         if (!businessProcess.getAutoLogin(getApplicationContext())) {
             // Anzeige des Login
@@ -90,9 +90,7 @@ public class NfcActivity extends ActionBarActivity {
 
             try {
                 businessProcess.checkout(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()));
-
                 return new Object();
-
             } catch (CrawlingException e) {
                 e.printStackTrace();
             } catch (IllegalStateException e1) {

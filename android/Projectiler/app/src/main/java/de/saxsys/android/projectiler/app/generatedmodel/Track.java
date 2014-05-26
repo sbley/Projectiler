@@ -13,9 +13,11 @@ public class Track {
     /** Not-null value. */
     private String projectName;
     /** Not-null value. */
-    private String startdDate;
+    private java.util.Date timestamp;
     /** Not-null value. */
-    private String endDate;
+    private java.util.Date startdDate;
+    /** Not-null value. */
+    private java.util.Date endDate;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -27,9 +29,10 @@ public class Track {
         this.id = id;
     }
 
-    public Track(Long id, String projectName, String startdDate, String endDate) {
+    public Track(Long id, String projectName, java.util.Date timestamp, java.util.Date startdDate, java.util.Date endDate) {
         this.id = id;
         this.projectName = projectName;
+        this.timestamp = timestamp;
         this.startdDate = startdDate;
         this.endDate = endDate;
     }
@@ -53,22 +56,32 @@ public class Track {
     }
 
     /** Not-null value. */
-    public String getStartdDate() {
+    public java.util.Date getTimestamp() {
+        return timestamp;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setTimestamp(java.util.Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    /** Not-null value. */
+    public java.util.Date getStartdDate() {
         return startdDate;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setStartdDate(String startdDate) {
+    public void setStartdDate(java.util.Date startdDate) {
         this.startdDate = startdDate;
     }
 
     /** Not-null value. */
-    public String getEndDate() {
+    public java.util.Date getEndDate() {
         return endDate;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setEndDate(String endDate) {
+    public void setEndDate(java.util.Date endDate) {
         this.endDate = endDate;
     }
 

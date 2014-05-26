@@ -34,6 +34,8 @@
     <string name="no_tracks_found">Keine Buchungen vorhanden</string>
     <string name="refresh">Neu Laden</string>
     <string name="please_put_nfc_in_range">Bitte legen Sie den NFC Tag in Reichweite</string>
+    <string name="time_booked_not_successfull">Verbindung zum Server nicht möglich. Die Buchung wurde zwischengespeichert</string>
+    <string name="tracks_was_uploaded">Ausstehende Buchungen wurden hochgeladen</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>
