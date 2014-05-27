@@ -4,7 +4,7 @@
          when checked/unchecked. -->
     <CheckBoxPreference
         android:key="notifications_new_message"
-        android:title="send notification"
+        android:title="@string/send_notification"
         android:defaultValue="true" />
 
     <CheckBoxPreference
@@ -15,14 +15,22 @@
 
     <de.saxsys.android.projectiler.app.ui.TimePreference
         android:dependency="notifications_new_message"
-        android:key="work_begin" android:title="Arbeitsbeginn"
+        android:key="work_begin" android:title="@string/start_work"
         android:defaultValue="08:00" />
 
     <de.saxsys.android.projectiler.app.ui.TimePreference
         android:dependency="notifications_new_message"
-        android:key="work_end" android:title="Arbeitsende"
+        android:key="work_end" android:title="@string/end_working"
         android:defaultValue="18:00" />
 
+    <de.saxsys.android.projectiler.app.ui.TimePreference
+        android:dependency="notifications_new_message"
+        android:key="break_start" android:title="@string/start_break"
+        android:defaultValue="12:00" />
 
+    <de.saxsys.android.projectiler.app.ui.TimePreference
+        android:dependency="notifications_new_message"
+        android:key="break_end" android:title="@string/end_break"
+        android:defaultValue="13:00" />
 
 </PreferenceScreen>

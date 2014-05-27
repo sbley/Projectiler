@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -77,6 +81,25 @@
             android:name="de.saxsys.android.projectiler.app.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+
+        <service
+            android:name="de.saxsys.android.projectiler.app.NotificationService"
+            android:process=":my_process"
+            android:icon="@drawable/ic_launcher"
+            android:label="NotificationService">
+        </service>
+
+        <receiver
+            android:name="de.saxsys.android.projectiler.app.BootCompleteReceiver"
+            android:enabled="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

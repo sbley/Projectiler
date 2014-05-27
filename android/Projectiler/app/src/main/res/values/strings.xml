@@ -37,6 +37,17 @@
     <string name="please_put_nfc_in_range">please put nfc in range</string>
     <string name="time_booked_not_successfull">no connection to the server. the track was saved.</string>
     <string name="tracks_was_uploaded">tracks was uploaded</string>
+    <string name="send_notification">send reminder</string>
+    <string name="start_work">start working at</string>
+    <string name="end_working">end Working at</string>
+    <string name="start_break">start break at</string>
+    <string name="end_break">end break at</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_header_notification">Reminder</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="foreground_service_started">foreground</string>
+    <string name="local_service_label">blaaaa</string>
 
     <array name="navigation_drawer_groups">
         <item>Functions</item>

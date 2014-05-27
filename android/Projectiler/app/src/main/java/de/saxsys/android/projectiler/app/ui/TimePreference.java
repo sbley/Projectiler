@@ -159,7 +159,13 @@ public class TimePreference extends DialogPreference implements
 
     @Override
     public void onTimeChanged(TimePicker timePicker, int hours, int minutes) {
-        this.changedValueCanBeNull = hours + ":" + minutes;
+
+        if(minutes < 10){
+            this.changedValueCanBeNull = hours + ":0" + minutes;
+        }else{
+            this.changedValueCanBeNull = hours + ":" + minutes;
+        }
+
     }
 
     private static class SavedState extends BaseSavedState {
