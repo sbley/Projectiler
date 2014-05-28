@@ -1,8 +1,10 @@
 package de.saxsys.android.projectiler.app.dialog;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import de.saxsys.android.projectiler.app.LoginActivity;
 import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
@@ -14,11 +16,11 @@ public class LogoutDialog extends BaseDefaultDialogFragment {
     private BusinessProcess businessProcess;
 
     public LogoutDialog(){
-        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
     }
 
     @Override
     protected View getDialogView(LayoutInflater inflater) {
+        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
         return inflater.inflate(R.layout.dialog_logout, parentContainer, false);
     }
 
@@ -41,6 +43,10 @@ public class LogoutDialog extends BaseDefaultDialogFragment {
     protected void onClickPositiveButton() {
         super.onClickPositiveButton();
         businessProcess.logout(getActivity().getApplication());
+
+        Intent loginIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+        startActivity(loginIntent);
         getActivity().finish();
+
     }
 }
