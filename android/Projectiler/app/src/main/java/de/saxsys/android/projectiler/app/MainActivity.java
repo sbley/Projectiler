@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import org.droidparts.activity.support.v7.ActionBarActivity;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ import de.saxsys.android.projectiler.app.ui.fragment.TimeTrackingFragment;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
-public class MainActivity extends org.droidparts.activity.support.v7.ActionBarActivity
+public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String NFC_KEY_WORD = "de.saxsys.android.projectile.app";
