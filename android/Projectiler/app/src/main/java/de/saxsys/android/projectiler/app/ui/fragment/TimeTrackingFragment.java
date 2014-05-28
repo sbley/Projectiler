@@ -239,7 +239,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
 
         }else if(view == btnReset){
 
-            businessProcess.resetProject(getActivity().getApplicationContext());
+            businessProcess.resetProject(getActivity().getApplicationContext(), true);
             btnReset.setVisibility(View.GONE);
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.GONE);

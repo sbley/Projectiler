@@ -1,11 +1,14 @@
 package de.saxsys.android.projectiler.app.service;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
+import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.StartAsyncTask;
 import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
@@ -61,7 +64,7 @@ public class ProjectilerIntentService extends IntentService {
     }
 
     private void handleActionReset() {
-        businessProcess.resetProject(getApplicationContext());
+        businessProcess.resetProject(getApplicationContext(), false);
     }
 
 
@@ -85,9 +88,29 @@ public class ProjectilerIntentService extends IntentService {
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
+
+            if(e instanceof IllegalStateException){
+                // notification schicken
+                sendNotification(111, getString(R.string.error_stop_tracking), e.getMessage());
+            }
+
             businessProcess.hideProgressBarOnWidget(getApplicationContext());
         }
     };
 
+
+    private void sendNotification(int mNotificationId, String title, String text) {
+
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_projectctiler_notification)
+                        .setContentTitle(title)
+                        .setContentText(text);
+
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
 
 }

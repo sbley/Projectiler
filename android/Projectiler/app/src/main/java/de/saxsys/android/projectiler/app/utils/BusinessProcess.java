@@ -113,9 +113,11 @@ public class BusinessProcess {
         return projectiler.getCurrentActiveProjectIndex(context, itemList);
     }
 
-    public void resetProject(final Context context) {
+    public void resetProject(final Context context, final boolean resetProjectName) {
         WidgetUtils.showProgressBarOnWidget(context, projectiler);
-        saveProjectName(context, "");
+        if(resetProjectName){
+            saveProjectName(context, "");
+        }
         resetStartTime(context);
         WidgetUtils.hideProgressBarOnWidget(context, projectiler);
     }

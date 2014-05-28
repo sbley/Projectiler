@@ -188,6 +188,12 @@
                     </item>
                 </style>
 
+                <style name="TextAppearance.ShowcaseView.Title.Light" >
+                    <item name="android:shadowRadius">
+0
+                    </item>
+                </style>
+
                 <style name="ShowcaseButton" >
                     <item name="android:layout_width">
 wrap_content
@@ -206,12 +212,6 @@ bold
                     </item>
                     <item name="android:textColor">
 #FFFFFF
-                    </item>
-                </style>
-
-                <style name="TextAppearance.ShowcaseView.Title.Light" >
-                    <item name="android:shadowRadius">
-0
                     </item>
                 </style>
 
