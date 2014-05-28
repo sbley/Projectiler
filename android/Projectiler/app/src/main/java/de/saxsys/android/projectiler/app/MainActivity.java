@@ -3,6 +3,7 @@ package de.saxsys.android.projectiler.app;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Point;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -14,9 +15,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.PointTarget;
 
 import org.droidparts.activity.support.v7.ActionBarActivity;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
@@ -34,6 +39,7 @@ import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.ui.fragment.NavigationDrawerFragment;
 import de.saxsys.android.projectiler.app.ui.fragment.TimeTrackingFragment;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
+import de.saxsys.android.projectiler.app.utils.FeatureUtils;
 
 
 public class MainActivity extends ActionBarActivity
@@ -56,6 +62,8 @@ public class MainActivity extends ActionBarActivity
     private Menu menu;
     private BusinessProcess businessProcess;
     private DataProvider dataProvider;
+    private ShowcaseView.Builder helpDialog;
+    private ShowcaseView showcaseView;
 
     @Override
     public void onPreInject() {
@@ -178,6 +186,22 @@ public class MainActivity extends ActionBarActivity
             }
 
             if (businessProcess.getAutoLogin(getApplicationContext())) {
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int width = size.x;
+
+                if(!FeatureUtils.isFeatureNotificationSeen(getApplicationContext())){
+                    helpDialog = new ShowcaseView.Builder(this)
+                            .setTarget(new PointTarget(width - 50, 0))
+                            .setContentTitle(getString(R.string.new_feature_notification_title))
+                            .setContentText(getString(R.string.new_feature_notification_text));
+                    showcaseView = helpDialog.build();
+
+                    FeatureUtils.featureNotificationSeen(getApplicationContext());
+                }
+
                 getMenuInflater().inflate(R.menu.main, menu);
             }
             restoreActionBar();
@@ -196,6 +220,11 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 Intent inten = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(inten);
+
+                if(showcaseView != null){
+                    showcaseView.hide();
+                }
+
                 break;
 
             case R.id.action_logout:

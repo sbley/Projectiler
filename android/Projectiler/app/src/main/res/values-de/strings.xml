@@ -51,6 +51,9 @@
     <string name="time_for_break_message">Vergiss nicht zu Buchen!</string>
     <string name="no_track_started_title">Kein Tracking gestartet</string>
     <string name="no_track_started_message">Du Befindest dich in der Arbeitszeit und kein Tracking ist gestartet</string>
+    <string name="new_feature_notification_title">Neues Feature! Es gibt Erinnerungen!</string>
+    <string name="new_feature_notification_text">Schau doch mal in das Einstellunsgmenü! Dort kannst du deine Arbeits- und Pausenzeiten einstellen und du wirst benachrichtigt wenn du vergisst zu buchen</string>
+    <string name="launch_app">App Starten</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

@@ -1,10 +1,10 @@
 buildscript {
     repositories {
-        mavenCentral();
+        //mavenCentral();
 
-        //maven{
-           // url "http://nexus.saxsys.de/content/repositories/external/"
-        //}
+        maven{
+            url "http://nexus.saxsys.de/content/repositories/external/"
+        }
         //-Dhttp.proxyHost=aero.saxsys.de -Dhttp.proxyPort=8080
 
     }

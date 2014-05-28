@@ -75,8 +75,7 @@ public class TimePreference extends DialogPreference implements
         } else {
             boolean wasNull = this.dateString == null;
             setDate((String) def);
-            if (!wasNull)
-                persistDate(this.dateString);
+            persistDate(this.dateString);
         }
     }
 

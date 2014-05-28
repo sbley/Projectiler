@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 2
+        versionCode 3
         versionName "1.0"
     }
     buildTypes {
@@ -27,4 +27,5 @@ dependencies {
     compile 'de.saxsys.projectiler:crawler-jsoup:1.0.1-SNAPSHOT@jar'
     compile 'de.saxsys.projectiler:crawler-api:1.0.1-SNAPSHOT@jar'
     compile project(':ProgressWheel-master')
+    compile project(':library')
 }

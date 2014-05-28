@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        //mavenCentral()
+        maven{
+             url "http://nexus.saxsys.de/content/repositories/external/"
+            }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+
+apply plugin: 'android-library'
+
+dependencies {
+    repositories {
+        maven{
+            url "http://nexus.saxsys.de/content/repositories/external/"
+        }
+    }
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+}
+

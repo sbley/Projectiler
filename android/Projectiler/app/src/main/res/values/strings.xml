@@ -53,6 +53,9 @@
     <string name="time_for_break_message">dont forget to track your time!</string>
     <string name="no_track_started_title">no tracking started</string>
     <string name="no_track_started_message">it is worktime and you dont have a started track</string>
+    <string name="new_feature_notification_title">new feature! there is a reminder available!</string>
+    <string name="new_feature_notification_text">open the settings menu! there you now can enter your fixed working time and lunch time. so you get a notification if you forget to track your time.</string>
+    <string name="launch_app">launch app</string>
 
     <array name="navigation_drawer_groups">
         <item>Functions</item>
