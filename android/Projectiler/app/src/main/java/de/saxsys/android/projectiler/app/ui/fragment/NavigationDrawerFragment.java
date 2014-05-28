@@ -350,14 +350,17 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void setProjectActive(String projectName) {
         List<String> items = itemList;
 
-        int currentActiveIndex = -1;
+        if(items != null){
+            int currentActiveIndex = -1;
 
-        for(int i = 0; i < items.size(); i++){
-            if(projectName.equals(items.get(i))){
-                currentActiveIndex = i;
+            for(int i = 0; i < items.size(); i++){
+                if(projectName.equals(items.get(i))){
+                    currentActiveIndex = i;
+                }
             }
+            mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), items, currentActiveIndex));
         }
-        mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), items, currentActiveIndex));
+
     }
 
     @Override

@@ -48,7 +48,7 @@ public class BusinessProcess {
         return projectiler.checkin(context);
     }
 
-    public Date checkout(final Context context, final String projectName) throws CrawlingException {
+    public Date checkout(final Context context, final String projectName) throws CrawlingException, IllegalStateException {
 
         Date checkout = null;
 

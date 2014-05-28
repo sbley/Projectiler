@@ -234,6 +234,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
 
             getActivity().setProgressBarIndeterminateVisibility(true);
             btnStop.setEnabled(false);
+            btnReset.setEnabled(false);
             new StopAsyncTask(getActivity().getApplication(), projectName, stopTaskResultListener).execute();
 
         }else if(view == btnReset){
@@ -291,28 +292,35 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             Crouton.makeText(getActivity(), getString(R.string.time_booked_successfull), Style.INFO).show();
 
             btnStop.setEnabled(true);
+            btnReset.setEnabled(true);
         }
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
             getActivity().setProgressBarIndeterminateVisibility(false);
 
-            businessProcess.resetStartTime(getActivity().getApplicationContext());
-            ((MainActivity) getActivity()).refreshNavigationDrawer("");
+            if(e instanceof IllegalStateException){
+                Crouton.makeText(getActivity(), e.getMessage(), Style.ALERT).show();
+            }else{
+                businessProcess.resetStartTime(getActivity().getApplicationContext());
+                ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
-            btnReset.setVisibility(View.GONE);
-            btnStart.setVisibility(View.VISIBLE);
-            btnStop.setVisibility(View.GONE);
+                btnReset.setVisibility(View.GONE);
+                btnStart.setVisibility(View.VISIBLE);
+                btnStop.setVisibility(View.GONE);
 
-            setStartDateTextView();
+                setStartDateTextView();
 
-            WidgetUtils.refreshWidget(getActivity().getApplicationContext());
+                WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 
-            Crouton.makeText(getActivity(), getString(R.string.time_booked_not_successfull), Style.ALERT).show();
+                Crouton.makeText(getActivity(), getString(R.string.time_booked_not_successfull), Style.ALERT).show();
+
+
+                getActivity().supportInvalidateOptionsMenu();
+            }
 
             btnStop.setEnabled(true);
-
-            getActivity().supportInvalidateOptionsMenu();
+            btnReset.setEnabled(true);
         }
     };
 }
