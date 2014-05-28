@@ -303,11 +303,6 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
         disableForegroundMode();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
     // NFC Methods
     public void enableForegroundMode() {
         Log.d("", "enableForegroundMode");
