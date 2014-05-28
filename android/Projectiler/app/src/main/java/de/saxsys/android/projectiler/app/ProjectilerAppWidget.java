@@ -146,7 +146,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getAction().equals(SHOW_PROJECT_POPUP_DIALOG_ACTION)) {
-            
+
             Intent popUpIntent = new Intent(context, SelectProjectPopup.class);
             popUpIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(popUpIntent);
