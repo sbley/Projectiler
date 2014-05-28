@@ -5,13 +5,13 @@
     <CheckBoxPreference
         android:key="notifications_new_message"
         android:title="@string/send_notification"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
     <CheckBoxPreference
         android:dependency="notifications_new_message"
         android:key="notifications_new_message_vibrate"
         android:title="Vibration"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
     <de.saxsys.android.projectiler.app.ui.TimePreference
         android:dependency="notifications_new_message"
@@ -21,7 +21,7 @@
     <de.saxsys.android.projectiler.app.ui.TimePreference
         android:dependency="notifications_new_message"
         android:key="work_end" android:title="@string/end_working"
-        android:defaultValue="18:00" />
+        android:defaultValue="17:00" />
 
     <de.saxsys.android.projectiler.app.ui.TimePreference
         android:dependency="notifications_new_message"

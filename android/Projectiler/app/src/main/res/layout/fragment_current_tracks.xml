@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
-    tools:context="de.saxsys.android.projectiler.app.CurrentTracksFragment">
+    tools:context="de.saxsys.android.projectiler.app.ui.fragment.CurrentTracksFragment">
 
 
     <ListView

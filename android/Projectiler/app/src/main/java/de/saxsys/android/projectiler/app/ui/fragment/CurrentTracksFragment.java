@@ -1,4 +1,4 @@
-package de.saxsys.android.projectiler.app;
+package de.saxsys.android.projectiler.app.ui.fragment;
 
 
 import android.app.Activity;
@@ -16,7 +16,10 @@ import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
 import java.util.List;
 
+import de.saxsys.android.projectiler.app.MainActivity;
+import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.GetDailyTrackAsyncTask;
+import de.saxsys.android.projectiler.app.ui.adapter.CurrentTrackAdapter;
 import de.saxsys.projectiler.crawler.Booking;
 
 

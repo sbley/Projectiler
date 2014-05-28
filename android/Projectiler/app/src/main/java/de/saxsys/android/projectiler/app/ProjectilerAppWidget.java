@@ -13,6 +13,8 @@ import android.widget.RemoteViews;
 
 import java.util.Date;
 
+import de.saxsys.android.projectiler.app.service.ProjectNameIntentService;
+import de.saxsys.android.projectiler.app.service.ProjectilerIntentService;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 

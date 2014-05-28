@@ -47,7 +47,12 @@
     <string name="pref_header_notification">Reminder</string>
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="foreground_service_started">foreground</string>
-    <string name="local_service_label">blaaaa</string>
+    <string name="work_is_over_title">work is over!</string>
+    <string name="work_is_over_message">dont forget to track your time!</string>
+    <string name="time_for_break_title">it is time for a break</string>
+    <string name="time_for_break_message">dont forget to track your time!</string>
+    <string name="no_track_started_title">no tracking started</string>
+    <string name="no_track_started_message">it is worktime and you dont have a started track</string>
 
     <array name="navigation_drawer_groups">
         <item>Functions</item>

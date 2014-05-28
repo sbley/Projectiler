@@ -1,4 +1,4 @@
-package de.saxsys.android.projectiler.app;
+package de.saxsys.android.projectiler.app.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+
+import de.saxsys.android.projectiler.app.R;
 
 /**
  * Created by stefan.heinze on 26.05.2014.

@@ -30,6 +30,8 @@ import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
 import de.saxsys.android.projectiler.app.asynctasks.UploadAllTracksAsyncTask;
 import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
+import de.saxsys.android.projectiler.app.ui.fragment.NavigationDrawerFragment;
+import de.saxsys.android.projectiler.app.ui.fragment.TimeTrackingFragment;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
@@ -301,6 +303,10 @@ public class MainActivity extends org.droidparts.activity.support.v7.ActionBarAc
         disableForegroundMode();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     // NFC Methods
     public void enableForegroundMode() {

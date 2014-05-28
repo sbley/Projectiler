@@ -1,4 +1,4 @@
-package de.saxsys.android.projectiler.app;
+package de.saxsys.android.projectiler.app.ui.fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -31,6 +31,7 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
 import de.saxsys.android.projectiler.app.ui.NavigationDrawerAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;

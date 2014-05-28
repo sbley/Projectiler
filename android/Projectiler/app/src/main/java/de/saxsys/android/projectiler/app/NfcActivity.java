@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 
 import java.util.List;
 
+import de.saxsys.android.projectiler.app.ui.adapter.ProjectListAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 import de.saxsys.projectiler.crawler.CrawlingException;

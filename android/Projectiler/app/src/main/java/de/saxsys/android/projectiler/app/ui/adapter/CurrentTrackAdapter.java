@@ -1,4 +1,4 @@
-package de.saxsys.android.projectiler.app;
+package de.saxsys.android.projectiler.app.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import de.saxsys.android.projectiler.app.R;
 import de.saxsys.projectiler.crawler.Booking;
 
 /**

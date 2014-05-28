@@ -45,6 +45,12 @@
     <string name="pref_header_general">Allgemein</string>
     <string name="pref_header_notification">Erinnerung</string>
     <string name="pref_title_vibrate">vibrieren</string>
+    <string name="work_is_over_title">Arbeit ist Vorbei!</string>
+    <string name="work_is_over_message">Vergiss nicht zu Buchen!</string>
+    <string name="time_for_break_title">Es ist Zeit für Pause</string>
+    <string name="time_for_break_message">Vergiss nicht zu Buchen!</string>
+    <string name="no_track_started_title">Kein Tracking gestartet</string>
+    <string name="no_track_started_message">Du Befindest dich in der Arbeitszeit und kein Tracking ist gestartet</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

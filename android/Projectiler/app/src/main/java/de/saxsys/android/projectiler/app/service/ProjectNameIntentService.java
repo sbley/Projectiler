@@ -1,9 +1,10 @@
-package de.saxsys.android.projectiler.app;
+package de.saxsys.android.projectiler.app.service;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import de.saxsys.android.projectiler.app.ProjectilerAppWidget;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
@@ -19,13 +20,12 @@ public class ProjectNameIntentService extends IntentService {
 
     public ProjectNameIntentService() {
         super("ProjectNameIntentService");
-        businessProcess = BusinessProcess.getInstance(getApplicationContext());
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-
+            businessProcess = BusinessProcess.getInstance(getApplicationContext());
             String selectedProject = intent.getStringExtra(ProjectilerAppWidget.EXTRA_PROJECT_NAME);
 
             Log.i("ProjectNameIntentService", "selected Project " + selectedProject);

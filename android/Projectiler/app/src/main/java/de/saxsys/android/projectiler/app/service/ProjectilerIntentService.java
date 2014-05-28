@@ -1,4 +1,4 @@
-package de.saxsys.android.projectiler.app;
+package de.saxsys.android.projectiler.app.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -17,16 +17,16 @@ public class ProjectilerIntentService extends IntentService {
     public static final String ACTION_STOP = "de.saxsys.android.businessProcess.app.action.STOP";
     public static final String ACTION_RESET = "de.saxsys.android.businessProcess.app.action.RESET";
 
-    private final BusinessProcess businessProcess;
+    private BusinessProcess businessProcess;
 
     public ProjectilerIntentService() {
         super("TestIntentService");
-        businessProcess = BusinessProcess.getInstance(getApplicationContext());
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.i("TestIntentService", "");
+        businessProcess = BusinessProcess.getInstance(getApplicationContext());
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_START.equals(action)) {

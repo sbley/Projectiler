@@ -1,5 +1,7 @@
 package de.saxsys.android.projectiler.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +15,11 @@ import android.widget.EditText;
 
 import org.droidparts.concurrent.task.AsyncTask;
 
+import java.util.Calendar;
+
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import de.saxsys.android.projectiler.app.receiver.NotificationReceiver;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
@@ -31,6 +36,8 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_login);
+
+        startNotificationService();
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
@@ -57,6 +64,19 @@ public class LoginActivity extends ActionBarActivity {
 
     }
 
+    private void startNotificationService() {
+        Intent notification = new Intent(getApplicationContext(), NotificationReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notification, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        AlarmManager alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                1000 * 60, pendingIntent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -76,8 +96,6 @@ public class LoginActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
     private class LoginTask extends AsyncTask<Void, Void, Void> {
 
