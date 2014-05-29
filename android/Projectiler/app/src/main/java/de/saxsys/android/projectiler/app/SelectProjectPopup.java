@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import com.todddavies.components.progressbar.ProgressWheel;
 
+import org.droidparts.activity.Activity;
 import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
@@ -19,7 +20,7 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
-public class SelectProjectPopup extends org.droidparts.activity.Activity {
+public class SelectProjectPopup extends Activity {
 
     @InjectView(id = R.id.progressBar)
     private ProgressWheel progressBar;
@@ -41,6 +42,10 @@ public class SelectProjectPopup extends org.droidparts.activity.Activity {
         super.onCreate(savedInstanceState);
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
+
+        if(businessProcess.getStartDate(getApplicationContext()) != null){
+            finish();
+        }
 
         progressBar.setVisibility(View.VISIBLE);
         progressBar.spin();

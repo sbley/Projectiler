@@ -148,4 +148,7 @@ public class BusinessProcess {
 
     }
 
+    public void saveComment(final Context context, String comment) {
+        projectiler.saveComment(context, comment);
+    }
 }

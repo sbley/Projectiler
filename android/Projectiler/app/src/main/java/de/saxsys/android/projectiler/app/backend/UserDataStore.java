@@ -20,6 +20,7 @@ public class UserDataStore implements Serializable {
     private static final String AUTO_LOGIN = "auto_login";
     private static final String START_DATE = "start_date";
     private static final String WIDGET_LOADING = "widget_loading";
+    private static final String COMMENT = "comment";
 
 	private static UserDataStore INSTANCE;
 
@@ -175,5 +176,28 @@ public class UserDataStore implements Serializable {
         final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
 
         return mySharedPreferences.getBoolean(WIDGET_LOADING, false);
+    }
+
+    public void saveComment(Context context, String comment) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(COMMENT, comment);
+        editor.commit();
+
+    }
+
+    public void deleteComment(Context context){
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(COMMENT, "");
+        editor.commit();
+    }
+
+    public String getComment(Context context) {
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+
+        return mySharedPreferences.getString(COMMENT, "");
     }
 }

@@ -24,6 +24,8 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
     private static final String CLICK_ACTION = "de.saxsys.android.projectiler.app.widget.CLICK";
     public static final String EXTRA_PROJECT_NAME = "de.saxsys.android.projectiler.app.widget.PROJECT_NAME";
     private static final String SHOW_PROJECT_POPUP_DIALOG_ACTION = "de.saxsys.android.projectiler.app.widget.showprojectpopup";
+    private static final String SHOW_COMMENT_DIALOG_ACTION = "de.saxsys.android.projectiler.app.widget.showcommentpopup";
+
 
 
     private static BusinessProcess businessProcess;
@@ -60,11 +62,16 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
 
         Intent popupIntent = new Intent(context, ProjectilerAppWidget.class);
         popupIntent.setAction(SHOW_PROJECT_POPUP_DIALOG_ACTION);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+        PendingIntent popupPendingIntent = PendingIntent.getBroadcast(context,
                 0, popupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.tv_current_project, popupPendingIntent);
 
-        views.setOnClickPendingIntent(R.id.tv_current_project, pendingIntent);
+        Intent commentIntent = new Intent(context, ProjectilerAppWidget.class);
+        commentIntent.setAction(SHOW_COMMENT_DIALOG_ACTION);
+
+        PendingIntent commentPendingIntent = PendingIntent.getBroadcast(context,
+                0, commentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.buttonStop, commentPendingIntent);
 
         String projectName = businessProcess.getProjectName(context);
 
@@ -103,13 +110,10 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
                 Intent intent = new Intent(context, ProjectilerIntentService.class);
                 intent.setAction(ProjectilerIntentService.ACTION_START);
                 PendingIntent startPendingIntent = PendingIntent.getService(context, 0, intent, 0);
-                intent.setAction(ProjectilerIntentService.ACTION_STOP);
-                PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, intent, 0);
                 intent.setAction(ProjectilerIntentService.ACTION_RESET);
                 PendingIntent resetPendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
                 views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
-                views.setOnClickPendingIntent(R.id.buttonStop, stopPendingIntent);
                 views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
 
                 Date startDate = businessProcess.getStartDate(context);
@@ -151,6 +155,12 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
             Intent popUpIntent = new Intent(context, SelectProjectPopup.class);
             popUpIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(popUpIntent);
+
+        }else if(intent.getAction().equals(SHOW_COMMENT_DIALOG_ACTION)){
+
+            Intent commentIntent = new Intent(context, CommentActivity.class);
+            commentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(commentIntent);
 
         }
 

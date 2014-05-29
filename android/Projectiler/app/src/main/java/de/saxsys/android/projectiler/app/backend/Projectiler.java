@@ -1,6 +1,7 @@
 package de.saxsys.android.projectiler.app.backend;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.List;
@@ -72,6 +73,7 @@ public class Projectiler {
         }
 
         try {
+            Log.i("Projectiler", "clock with comment " + dataStore.getComment(context));
             crawler.clock(createCredentials(context), projectName, start, end);
         } catch (CrawlingException e) {
             Track track = new Track();
@@ -85,6 +87,7 @@ public class Projectiler {
         } finally {
             dataStore.clearStartDate(context);
             dataStore.setProjectName(context, "");
+            dataStore.deleteComment(context);
         }
         LOGGER.info("Checked out at " + DateUtil.formatShort(end));
         return end;
@@ -183,5 +186,9 @@ public class Projectiler {
             dataProvider.saveTrack(track);
             throw e;
         }
+    }
+
+    public void saveComment(Context context, String comment) {
+        dataStore.saveComment(context, comment);
     }
 }
