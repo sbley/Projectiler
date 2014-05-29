@@ -23,7 +23,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import de.saxsys.android.projectiler.app.MainActivity;
 import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.StartAsyncTask;
-import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
+import de.saxsys.android.projectiler.app.dialog.CommentDialog;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
@@ -219,7 +219,8 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             getActivity().setProgressBarIndeterminateVisibility(true);
             btnStop.setEnabled(false);
             btnReset.setEnabled(false);
-            new StopAsyncTask(getActivity().getApplication(), projectName, stopTaskResultListener).execute();
+            CommentDialog dialog = new CommentDialog(stopTaskResultListener, projectName);
+            dialog.show(getActivity().getFragmentManager(), "CommentDialog");
 
         } else if (view == btnReset) {
 
@@ -258,6 +259,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     };
 
     private AsyncTaskResultListener<Void> stopTaskResultListener = new AsyncTaskResultListener<Void>() {
+        
         @Override
         public void onAsyncTaskSuccess(Void aVoid) {
             getActivity().setProgressBarIndeterminateVisibility(false);

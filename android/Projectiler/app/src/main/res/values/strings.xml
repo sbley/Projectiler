@@ -67,5 +67,6 @@
     <string name="login">login</string>
     <string name="title_activity_comment">CommentActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="comment_title">set comment</string>
 
 </resources>
