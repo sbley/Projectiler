@@ -70,10 +70,13 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
 
         holder.tvProjectName.setText(children);
 
-        if(childPosition == activeElement){
-            holder.ivActive.setImageResource(R.drawable.online_icon);
-        }else{
-            holder.ivActive.setImageBitmap(null);
+
+        if(groupPosition == 1){
+            if(childPosition == activeElement){
+                holder.ivActive.setImageResource(R.drawable.online_icon);
+            }else{
+                holder.ivActive.setImageBitmap(null);
+            }
         }
 
 

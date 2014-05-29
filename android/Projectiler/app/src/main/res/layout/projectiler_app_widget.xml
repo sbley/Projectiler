@@ -50,6 +50,16 @@
             android:gravity="center"
             />
 
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/saxsysgreen"
+            android:layout_gravity="center_vertical" />
+
+
         <ImageButton
             android:layout_width="56dp"
             android:visibility="gone"

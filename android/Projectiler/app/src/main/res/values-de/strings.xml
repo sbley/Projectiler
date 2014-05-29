@@ -54,7 +54,7 @@
     <string name="new_feature_notification_title">Neues Feature! Es gibt Erinnerungen!</string>
     <string name="new_feature_notification_text">Schau doch mal in das Einstellunsgmenü! Dort kannst du deine Arbeits- und Pausenzeiten einstellen und du wirst benachrichtigt wenn du vergisst zu buchen</string>
     <string name="launch_app">App Starten</string>
-    <string name="please_choose_a_project">Bitte wählen Sie ein Projekt</string>
+    <string name="please_choose_a_project">Klicken um ein Projekt zu wählen</string>
     <string name="login">Anmelden</string>
 
     <array name="navigation_drawer_groups">

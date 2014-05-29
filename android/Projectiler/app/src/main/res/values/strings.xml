@@ -63,7 +63,7 @@
     </array>
 
     <string name="title_activity_select_project_popup">SelectProjectPopup</string>
-    <string name="please_choose_a_project">please choose a project</string>
+    <string name="please_choose_a_project">click to choose a project</string>
     <string name="login">login</string>
 
 </resources>

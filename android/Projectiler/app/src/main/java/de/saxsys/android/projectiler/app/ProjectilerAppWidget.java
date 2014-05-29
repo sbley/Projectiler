@@ -88,7 +88,6 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
             // ist der nutzer eingelogged?
             if (!businessProcess.getAutoLogin(context)) {
 
-
                 Intent loginIntent = new Intent(context, LoginActivity.class);
                 PendingIntent loginPendingIntent = PendingIntent.getActivity(context, 0, loginIntent, 0);
                 views.setOnClickPendingIntent(R.id.buttonLogin, loginPendingIntent);
@@ -125,12 +124,14 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
                     views.setViewVisibility(R.id.buttonStart, View.GONE);
                     views.setViewVisibility(R.id.buttonStop, View.VISIBLE);
                     views.setViewVisibility(R.id.buttonReset, View.VISIBLE);
+                    views.setViewVisibility(R.id.chronometer, View.VISIBLE);
 
                 } else {
 
                     views.setViewVisibility(R.id.buttonStart, View.VISIBLE);
                     views.setViewVisibility(R.id.buttonStop, View.GONE);
                     views.setViewVisibility(R.id.buttonReset, View.GONE);
+                    views.setViewVisibility(R.id.chronometer, View.GONE);
 
                 }
 
