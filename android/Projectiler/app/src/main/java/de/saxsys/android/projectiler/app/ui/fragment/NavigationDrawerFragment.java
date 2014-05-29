@@ -86,9 +86,44 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public NavigationDrawerFragment() {
     }
 
+    private AsyncTaskResultListener<List<String>> getProjectsListener = new AsyncTaskResultListener<List<String>>() {
+        @Override
+        public void onAsyncTaskSuccess(List<String> itemList) {
+            progress.setVisibility(View.GONE);
+            setItems(itemList);
+
+            if (businessProcess.getProjectName(getActivity().getApplicationContext()).equals("")) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                TimeTrackingFragment fragment = new TimeTrackingFragment();
+
+                fragment.setArguments(TimeTrackingFragment.newInstance("", false, true));
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .commit();
+            }
+        }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            progress.setVisibility(View.GONE);
+            Crouton.makeText(getActivity(), getString(R.string.no_connection_to_server), Style.ALERT).show();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            TimeTrackingFragment fragment = new TimeTrackingFragment();
+
+            fragment.setArguments(TimeTrackingFragment.newInstance("", false, true));
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+
+            setItems(null);
+        }
+    };
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated (Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Indicate that this fragment would like to influence the set of actions in the action bar.
+        setHasOptionsMenu(true);
 
         businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
 
@@ -100,17 +135,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
+        }else{
+            progress.setVisibility(View.VISIBLE);
+            progress.spin();
+            new GetProjectsAsyncTask(getActivity().getApplicationContext(), getProjectsListener).execute();
         }
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
-    }
-
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -325,7 +357,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
                     }else if (groupPosition == 1){
 
-                        fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true, false));
+                        fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true));
 
                         fragmentManager.beginTransaction()
                                 .replace(R.id.container, fragment)
@@ -344,6 +376,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     public String getProjectName(int position) {
+        if(itemList == null){
+            return null;
+        }
         return itemList.get(position);
     }
 

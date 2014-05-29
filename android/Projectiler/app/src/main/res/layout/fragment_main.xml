@@ -127,20 +127,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <com.todddavies.components.progressbar.ProgressWheel
-        android:id="@+id/pw_spinner"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:layout_centerInParent="true"
-        ProgressWheel:text="@string/load_projects"
-        ProgressWheel:textColor="#222"
-        ProgressWheel:textSize="14sp"
-        ProgressWheel:rimColor="@color/saxsysgreen"
-        ProgressWheel:barColor="@color/saxsysblue"
-        ProgressWheel:barLength="60dp"
-        ProgressWheel:barWidth="5dp"
-        ProgressWheel:rimWidth="2dp" />
-
-
-
 </RelativeLayout>

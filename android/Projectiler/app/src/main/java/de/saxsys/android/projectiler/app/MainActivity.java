@@ -28,11 +28,9 @@ import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
 import de.saxsys.android.projectiler.app.asynctasks.UploadAllTracksAsyncTask;
 import de.saxsys.android.projectiler.app.db.DataProvider;
 import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
@@ -88,27 +86,12 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        new GetProjectsAsyncTask(getApplicationContext(), getProjectsListener).execute();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         TimeTrackingFragment fragment = new TimeTrackingFragment();
-
-        // gibt es bereits ein laufendes Projekt?
-        if (businessProcess.getStartDate(getApplicationContext()) != null) {
-
-            fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true, false));
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .commit();
-
-        } else {
-            fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true, true));
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .commit();
-        }
+        fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true));
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         nfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -126,30 +109,32 @@ public class MainActivity extends ActionBarActivity
 
         if (mNavigationDrawerFragment != null) {
             projectName = mNavigationDrawerFragment.getProjectName(position);
-            // update the main content by replacing fragments
-            FragmentManager fragmentManager = getSupportFragmentManager();
 
-            TimeTrackingFragment fragment = new TimeTrackingFragment();
+            // der navigation drawer ist noch nicht geladen
+            if (projectName != null) {
+                // update the main content by replacing fragments
+                FragmentManager fragmentManager = getSupportFragmentManager();
 
-            String currentProjectName = businessProcess.getProjectName(getApplicationContext());
+                TimeTrackingFragment fragment = new TimeTrackingFragment();
 
-            Log.i("Projekt", "gestartetes Projekt: " + currentProjectName + " selectes Project: " + projectName);
+                String currentProjectName = businessProcess.getProjectName(getApplicationContext());
 
-            // beide Buttons sichtbar, weil kein aktives projekt
-            if (currentProjectName.equals("")) {
-                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false, false));
+                Log.i("Projekt", "gestartetes Projekt: " + currentProjectName + " selectes Project: " + projectName);
 
-            } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getApplicationContext()) != null) {
-                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, false, true, false));
-            } else {
-                fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false, false));
+                // beide Buttons sichtbar, weil kein aktives projekt
+                if (currentProjectName.equals("")) {
+                    fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
+
+                } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getApplicationContext()) != null) {
+                    fragment.setArguments(TimeTrackingFragment.newInstance(projectName, false, true));
+                } else {
+                    fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
+                }
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .commit();
             }
-
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .commit();
-
         }
     }
 
@@ -192,7 +177,7 @@ public class MainActivity extends ActionBarActivity
                 display.getSize(size);
                 int width = size.x;
 
-                if(!FeatureUtils.isFeatureNotificationSeen(getApplicationContext())){
+                if (!FeatureUtils.isFeatureNotificationSeen(getApplicationContext())) {
                     helpDialog = new ShowcaseView.Builder(this)
                             .setTarget(new PointTarget(width - 50, 0))
                             .setContentTitle(getString(R.string.new_feature_notification_title))
@@ -221,7 +206,7 @@ public class MainActivity extends ActionBarActivity
                 Intent inten = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(inten);
 
-                if(showcaseView != null){
+                if (showcaseView != null) {
                     showcaseView.hide();
                 }
 
@@ -286,52 +271,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    private AsyncTaskResultListener<List<String>> getProjectsListener = new AsyncTaskResultListener<List<String>>() {
-        @Override
-        public void onAsyncTaskSuccess(List<String> itemList) {
-            setProgressBarIndeterminateVisibility(false);
-            mNavigationDrawerFragment.setItems(itemList);
-
-            if (businessProcess.getProjectName(getApplicationContext()).equals("")) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                TimeTrackingFragment fragment = new TimeTrackingFragment();
-
-                fragment.setArguments(TimeTrackingFragment.newInstance("", false, true, false));
-
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, fragment)
-                        .commit();
-            }
-        }
-
-        @Override
-        public void onAsyncTaskFailure(Exception e) {
-            setProgressBarIndeterminateVisibility(false);
-            Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            TimeTrackingFragment fragment = new TimeTrackingFragment();
-
-            fragment.setArguments(TimeTrackingFragment.newInstance("", false, true, false));
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .commit();
-
-            mNavigationDrawerFragment.setItems(null);
-
-        }
-    };
-
-    public void onResume() {
-        super.onResume();
-        enableForegroundMode();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        disableForegroundMode();
-    }
 
     // NFC Methods
     public void enableForegroundMode() {
@@ -343,6 +282,17 @@ public class MainActivity extends ActionBarActivity
             nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
         }
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        enableForegroundMode();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        disableForegroundMode();
     }
 
     public void disableForegroundMode() {
