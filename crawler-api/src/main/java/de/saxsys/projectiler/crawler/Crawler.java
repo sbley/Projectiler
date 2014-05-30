@@ -46,12 +46,18 @@ public interface Crawler {
 	 * method.
 	 * </p>
 	 * 
+	 * @param start
+	 *            start time (required)
+	 * @param end
+	 *            end time (required, must be after start time)
+	 * @param comment
+	 *            (optional)
 	 * @throws ConnectionException
 	 *             if connection to Projectile cannot be established
 	 * @throws CrawlingException
 	 *             in case the crawling fails
 	 */
-	void clock(Credentials credentials, String projectName, Date start, Date end)
+	void clock(Credentials credentials, String projectName, Date start, Date end, String comment)
 			throws ConnectionException, CrawlingException;
 
 	/**

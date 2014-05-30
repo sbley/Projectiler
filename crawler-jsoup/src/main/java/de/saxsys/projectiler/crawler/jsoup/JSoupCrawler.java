@@ -78,12 +78,12 @@ public class JSoupCrawler implements Crawler {
 
 	@Override
 	public void clock(final Credentials credentials, final String projectName, final Date start,
-			final Date end) throws CrawlingException {
+			final Date end, final String comment) throws CrawlingException {
 		try {
 			Document startPage = login(credentials);
 			Document ttPage = openTimeTracker(startPage);
 
-			clockTime(start, end, projectName, ttPage);
+			clockTime(start, end, projectName, comment, ttPage);
 
 			logout(ttPage);
 		} catch (final UnknownHostException e) {
@@ -217,7 +217,7 @@ public class JSoupCrawler implements Crawler {
 	}
 
 	private void clockTime(final Date start, final Date end, final String projectName,
-			final Document ttPage) throws IOException, CrawlingException {
+			final String comment, final Document ttPage) throws IOException, CrawlingException {
 		String optionValue = null;
 		Elements options = ttPage.select("select[id$=NewWhat_0_0] option");
 		for (Element option : options) {
@@ -226,7 +226,8 @@ public class JSoupCrawler implements Crawler {
 				break;
 			}
 		}
-		Response response = jsoupConnection()
+		String nullSafeComment = (null == comment) ? "" : comment;
+		final Response response = jsoupConnection()
 				.cookies(cookies)
 				.data("taid", taid)
 				.data("CurrentFocusField", "name")
@@ -245,7 +246,8 @@ public class JSoupCrawler implements Crawler {
 				.data(ttPage.select("input.rw[id$=NewTo_0_0]").first().id(), formatTime(end))
 				.data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
 				.data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
-				.data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), "").execute();
+				.data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), nullSafeComment)
+				.execute();
 		Document document = response.parse();
 		saveTaid(document);
 

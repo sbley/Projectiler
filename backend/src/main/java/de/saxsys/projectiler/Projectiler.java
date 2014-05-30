@@ -45,7 +45,6 @@ public class Projectiler {
 	 * @return checkin date
 	 */
 	public Date checkin() {
-		// TODO #2 round start date to HH:mm:00 [SB]
 		final Date start = DateUtil.resetSeconds(new Date());
 		dataStore.setStartDate(start);
 		dataStore.save();
@@ -58,6 +57,8 @@ public class Projectiler {
 	 * 
 	 * @param projectName
 	 *            project to clock your time to
+	 * @param comment
+	 *            optional comment
 	 * @throws CrawlingException
 	 * @throws ConnectionException
 	 *             if connection to Projectile fails
@@ -67,7 +68,7 @@ public class Projectiler {
 	 *             if invoked while not being checked in or if work time is less
 	 *             than one minute
 	 */
-	public Date checkout(final String projectName) throws CrawlingException {
+	public Date checkout(final String projectName, final String comment) throws CrawlingException {
 		if (!isCheckedIn()) {
 			throw new IllegalStateException("Must be checked in before checking out.");
 		}
@@ -81,7 +82,7 @@ public class Projectiler {
 		}
 
 		try {
-			crawler.clock(createCredentials(), projectName, start, end);
+			crawler.clock(createCredentials(), projectName, start, end, comment);
 		} finally {
 			dataStore.clearStartDate();
 			dataStore.save();

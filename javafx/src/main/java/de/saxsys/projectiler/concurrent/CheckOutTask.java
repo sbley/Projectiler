@@ -26,7 +26,8 @@ public class CheckOutTask extends Task<Date> {
         Date checkout = null;
         try {
             LOGGER.info("Perform Checkout from GUI");
-            checkout = projectiler.checkout(projectKey);
+			String comment = null; // TODO not yet implemented [SB]
+            checkout = projectiler.checkout(projectKey, comment);
             Notification.Notifier.INSTANCE.notifySuccess("Buchung erfolgreich", "Buchung im Projectile durchgeführt.");
 
         } catch (final IllegalStateException e) {
