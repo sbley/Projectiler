@@ -79,7 +79,7 @@ public class Projectiler {
 
         try {
             Log.i("Projectiler", "clock with comment " + dataStore.getComment(context));
-            crawler.clock(createCredentials(context), projectName, startDate, endDate);
+            crawler.clock(createCredentials(context), projectName, startDate, endDate, dataStore.getComment(context));
         } catch (CrawlingException e) {
             Track track = new Track();
             track.setProjectName(projectName);
@@ -186,7 +186,7 @@ public class Projectiler {
     public void checkoutTrack(final Context context, Track track) throws CrawlingException {
 
         try {
-            crawler.clock(createCredentials(context), track.getProjectName(), track.getStartdDate(), track.getEndDate());
+            crawler.clock(createCredentials(context), track.getProjectName(), track.getStartdDate(), track.getEndDate(), dataStore.getComment(context));
         } catch (CrawlingException e) {
             dataProvider.saveTrack(track);
             throw e;
