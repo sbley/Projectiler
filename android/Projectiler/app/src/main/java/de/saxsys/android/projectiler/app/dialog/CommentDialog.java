@@ -17,12 +17,14 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
 
 
     private AsyncTaskResultListener<Void> stopTaskResultListener;
+    private OnBackPressListener backPressListener;
     private String projectName;
 
     @SuppressLint("ValidFragment")
-    public CommentDialog(final AsyncTaskResultListener<Void> stopTaskResultListener, final String projectName){
+    public CommentDialog(final AsyncTaskResultListener<Void> stopTaskResultListener, OnBackPressListener backPressListener, final String projectName){
         this.stopTaskResultListener = stopTaskResultListener;
         this.projectName = projectName;
+        this.backPressListener = backPressListener;
     }
 
     @Override
@@ -45,10 +47,23 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
         return true;
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        backPressListener.onBackPress();
+    }
+
     @Override
     protected void onClickPositiveButton() {
         super.onClickPositiveButton();
+        getActivity().setProgressBarIndeterminateVisibility(true);
         new StopAsyncTask(getActivity().getApplication(), projectName, stopTaskResultListener).execute();
 
     }
+
+    public interface OnBackPressListener{
+        public void onBackPress();
+    }
+
 }

@@ -68,7 +68,6 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     @InjectView(id = R.id.btnReset, click = true)
     private Button btnReset;
 
-
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -216,10 +215,9 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
 
         } else if (view == btnStop) {
 
-            getActivity().setProgressBarIndeterminateVisibility(true);
             btnStop.setEnabled(false);
             btnReset.setEnabled(false);
-            CommentDialog dialog = new CommentDialog(stopTaskResultListener, projectName);
+            CommentDialog dialog = new CommentDialog(stopTaskResultListener, backPressListener, projectName);
             dialog.show(getActivity().getFragmentManager(), "CommentDialog");
 
         } else if (view == btnReset) {
@@ -234,6 +232,14 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
         }
 
     }
+
+    private CommentDialog.OnBackPressListener backPressListener = new CommentDialog.OnBackPressListener() {
+        @Override
+        public void onBackPress() {
+            btnStop.setEnabled(true);
+            btnReset.setEnabled(true);
+        }
+    };
 
     private AsyncTaskResultListener<Void> startTaskResultListener = new AsyncTaskResultListener<Void>() {
         @Override
@@ -259,7 +265,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     };
 
     private AsyncTaskResultListener<Void> stopTaskResultListener = new AsyncTaskResultListener<Void>() {
-        
+
         @Override
         public void onAsyncTaskSuccess(Void aVoid) {
             getActivity().setProgressBarIndeterminateVisibility(false);
