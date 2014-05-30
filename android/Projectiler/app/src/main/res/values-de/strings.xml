@@ -58,6 +58,7 @@
     <string name="login">Anmelden</string>
     <string name="comment_title">Kommentar hinzufügen</string>
     <string name="insert_comment">Kommentar eingeben</string>
+    <string name="to">bis</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

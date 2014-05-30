@@ -8,11 +8,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/et_comment"
-        android:hint="Kommentar eingeben"
-        android:layout_centerVertical="true"
+        android:hint="@string/insert_comment"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bis"
+        android:id="@+id/tvTo"
+        android:paddingTop="16dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tpStart"
+        android:paddingTop="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tvTo" />
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tpStop"
+        android:paddingTop="16dp"
+        android:layout_alignTop="@+id/tpStart"
+        android:layout_toRightOf="@+id/tvTo" />
 
 </RelativeLayout>

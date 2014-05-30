@@ -62,25 +62,30 @@ public class Projectiler {
     }
 
     public Date checkout(final Context context, final String projectName) throws CrawlingException {
+        final Date start = dataStore.getStartDate(context);
+        final Date end = new Date();
+
+        return checkout(context, projectName, start, end);
+    }
+
+    public Date checkout(Context context, String projectName, Date startDate, Date endDate) throws CrawlingException  {
         if (!isCheckedIn(context)) {
             throw new IllegalStateException("Must be checked in before checking out.");
         }
 
-        final Date start = dataStore.getStartDate(context);
-        final Date end = new Date();
-        if (DateUtil.formatHHmm(start).equals(DateUtil.formatHHmm(end))) {
+        if (DateUtil.formatHHmm(startDate).equals(DateUtil.formatHHmm(endDate))) {
             throw new IllegalStateException("Work time must be at least 1 minute.");
         }
 
         try {
             Log.i("Projectiler", "clock with comment " + dataStore.getComment(context));
-            crawler.clock(createCredentials(context), projectName, start, end);
+            crawler.clock(createCredentials(context), projectName, startDate, endDate);
         } catch (CrawlingException e) {
             Track track = new Track();
             track.setProjectName(projectName);
             track.setTimestamp(new Date());
-            track.setStartdDate(start);
-            track.setEndDate(end);
+            track.setStartdDate(startDate);
+            track.setEndDate(endDate);
             dataProvider.saveTrack(track);
 
             throw e;
@@ -89,8 +94,8 @@ public class Projectiler {
             dataStore.setProjectName(context, "");
             dataStore.deleteComment(context);
         }
-        LOGGER.info("Checked out at " + DateUtil.formatShort(end));
-        return end;
+        LOGGER.info("Checked out at " + DateUtil.formatShort(endDate));
+        return endDate;
     }
 
     /**
@@ -191,4 +196,5 @@ public class Projectiler {
     public void saveComment(Context context, String comment) {
         dataStore.saveComment(context, comment);
     }
+
 }

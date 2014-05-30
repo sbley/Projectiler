@@ -57,6 +57,16 @@ public class BusinessProcess {
         return checkout;
     }
 
+    public Date checkout(final Context context, final String projectName, final Date startDate, final Date endDate) throws CrawlingException, IllegalStateException {
+
+        Date checkout = null;
+
+        checkout = projectiler.checkout(context, projectName, startDate, endDate);
+
+        return checkout;
+    }
+
+
     public List<String> getProjectNames(final Context context) throws ConnectionException, CrawlingException {
         return projectiler.getProjectNames(context);
     }
@@ -144,7 +154,6 @@ public class BusinessProcess {
             dataProvider.deleteTrack(track);
             projectiler.checkoutTrack(context, track);
         }
-
 
     }
 

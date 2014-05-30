@@ -1,5 +1,7 @@
 package de.saxsys.android.projectiler.app.backend;
 
+import android.widget.TimePicker;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,5 +52,29 @@ public final class DateUtil {
 	public static String formatHHmm(final Date date) {
 		return new SimpleDateFormat("HH:mm").format(date);
 	}
+
+    public static Date getDate(TimePicker timePicker) {
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(new Date());
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        cal.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+        cal.set(Calendar.HOUR, timePicker.getCurrentHour());
+
+
+        return cal.getTime();
+    }
+
+    public static void setDatePicker(final TimePicker timePicker, Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        timePicker.setCurrentHour(cal.get(Calendar.HOUR));
+        timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
+
+    }
 
 }

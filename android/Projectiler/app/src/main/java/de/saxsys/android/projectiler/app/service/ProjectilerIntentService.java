@@ -8,6 +8,8 @@ import android.util.Log;
 
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
+import java.util.Date;
+
 import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.StartAsyncTask;
 import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
@@ -19,6 +21,9 @@ public class ProjectilerIntentService extends IntentService {
     public static final String ACTION_START = "de.saxsys.android.businessProcess.app.action.START";
     public static final String ACTION_STOP = "de.saxsys.android.businessProcess.app.action.STOP";
     public static final String ACTION_RESET = "de.saxsys.android.businessProcess.app.action.RESET";
+
+    public static final String EXTRAS_START_DATE = "de.saxsys.android.businessProcess.app.extras.START_DATE";
+    public static final String EXTRAS_END_DATE = "de.saxsys.android.businessProcess.app.extras.END_DATE";
 
     private BusinessProcess businessProcess;
 
@@ -35,7 +40,20 @@ public class ProjectilerIntentService extends IntentService {
             if (ACTION_START.equals(action)) {
                 handleActionStart();
             } else if (ACTION_STOP.equals(action)) {
-                handleActionStop();
+                Date startDate = null;
+                Date endDate = null;
+
+                long startLong = intent.getLongExtra(EXTRAS_START_DATE, 0);
+                long endLong = intent.getLongExtra(EXTRAS_END_DATE, 0);
+
+                if(startLong != 0){
+                    startDate = new Date(startLong);
+                }
+                if(endLong != 0){
+                    endDate = new Date(endLong);
+                }
+
+                handleActionStop(startDate, endDate);
             }else if (ACTION_RESET.equals(action)) {
                 handleActionReset();
             }
@@ -57,10 +75,12 @@ public class ProjectilerIntentService extends IntentService {
     /**
      * Handle action Baz in the provided background thread with the provided
      * parameters.
+     * @param startDate
+     * @param endDate
      */
-    private void handleActionStop() {
+    private void handleActionStop(Date startDate, Date endDate) {
         businessProcess.showProgressBarOnWidget(getApplicationContext());
-        new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()), stopTaskResultListener).execute();
+        new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()), startDate, endDate, stopTaskResultListener).execute();
     }
 
     private void handleActionReset() {

@@ -3,11 +3,16 @@ package de.saxsys.android.projectiler.app.dialog;
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TimePicker;
 
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
+import java.util.Date;
+
 import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
+import de.saxsys.android.projectiler.app.backend.DateUtil;
+import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
  * Created by stefan.heinze on 29.05.2014.
@@ -15,10 +20,14 @@ import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
 @SuppressLint("ValidFragment")
 public class CommentDialog extends BaseDefaultDialogFragment  {
 
+    private TimePicker tpStart;
+    private TimePicker tpStop;
 
     private AsyncTaskResultListener<Void> stopTaskResultListener;
     private OnBackPressListener backPressListener;
     private String projectName;
+    private BusinessProcess businessProcess;
+    private boolean okClicked = false;
 
     @SuppressLint("ValidFragment")
     public CommentDialog(final AsyncTaskResultListener<Void> stopTaskResultListener, OnBackPressListener backPressListener, final String projectName){
@@ -29,8 +38,28 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
 
     @Override
     protected View getDialogView(LayoutInflater inflater) {
-        return inflater.inflate(R.layout.dialog_comment, parentContainer, false);
+        View view = inflater.inflate(R.layout.dialog_comment, parentContainer, false);
+
+        tpStart = (TimePicker) view.findViewById(R.id.tpStart);
+        tpStop = (TimePicker) view.findViewById(R.id.tpStop);
+
+        tpStart.setIs24HourView(true);
+        tpStop.setIs24HourView(true);
+
+        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
+
+        Date startDate = businessProcess.getStartDate(getActivity().getApplicationContext());
+
+        Date endDate = new Date(System.currentTimeMillis());
+
+        DateUtil.setDatePicker(tpStart, startDate);
+        DateUtil.setDatePicker(tpStop, endDate);
+
+        return view;
     }
+
+
+
 
     @Override
     protected int getTitleId() {
@@ -51,14 +80,19 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        backPressListener.onBackPress();
+        if(!okClicked){
+            backPressListener.onBackPress();
+        }
     }
 
     @Override
     protected void onClickPositiveButton() {
         super.onClickPositiveButton();
         getActivity().setProgressBarIndeterminateVisibility(true);
-        new StopAsyncTask(getActivity().getApplication(), projectName, stopTaskResultListener).execute();
+
+        new StopAsyncTask(getActivity().getApplicationContext(), projectName, DateUtil.getDate(tpStart), DateUtil.getDate(tpStop), stopTaskResultListener).execute();
+
+        okClicked = true;
 
     }
 
