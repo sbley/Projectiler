@@ -88,9 +88,9 @@ public class ProjectilerIntentService extends IntentService {
     }
 
 
-    private AsyncTaskResultListener<Void> startTaskResultListener = new AsyncTaskResultListener<Void>() {
+    private AsyncTaskResultListener<Date> startTaskResultListener = new AsyncTaskResultListener<Date>() {
         @Override
-        public void onAsyncTaskSuccess(Void aVoid) {
+        public void onAsyncTaskSuccess(Date aDate) {
             businessProcess.hideProgressBarOnWidget(getApplicationContext());
         }
 

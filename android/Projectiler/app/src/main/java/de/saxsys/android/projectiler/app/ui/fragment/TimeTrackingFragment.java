@@ -105,17 +105,15 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
 
     }
 
-    private void setStartDateTextView() {
-        Date startDate = businessProcess.getStartDate(getActivity().getApplicationContext());
+    private void setStartDateTextView(Date date) {
 
-        if (startDate == null) {
+        if (date == null) {
             chronometer.setVisibility(View.INVISIBLE);
         } else {
-
             if (businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
                 chronometer.setVisibility(View.VISIBLE);
                 long currentDatetime = System.currentTimeMillis();
-                chronometer.setBase(SystemClock.elapsedRealtime() - (currentDatetime - startDate.getTime()));
+                chronometer.setBase(SystemClock.elapsedRealtime() - (currentDatetime - date.getTime()));
                 chronometer.start();
 
             } else {
@@ -192,7 +190,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             }
 
             // ist ein startDate gesetzt?
-            setStartDateTextView();
+            setStartDateTextView(businessProcess.getStartDate(getActivity().getApplicationContext()));
         }
 
 
@@ -226,7 +224,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             btnReset.setVisibility(View.GONE);
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.GONE);
-            setStartDateTextView();
+            setStartDateTextView(null);
             ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
         }
@@ -241,9 +239,9 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
         }
     };
 
-    private AsyncTaskResultListener<Void> startTaskResultListener = new AsyncTaskResultListener<Void>() {
+    private AsyncTaskResultListener<Date> startTaskResultListener = new AsyncTaskResultListener<Date>() {
         @Override
-        public void onAsyncTaskSuccess(Void aVoid) {
+        public void onAsyncTaskSuccess(Date aDate) {
             getActivity().setProgressBarIndeterminateVisibility(false);
 
             // navigation Drawer aktualisieren
@@ -253,7 +251,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             btnStart.setVisibility(View.GONE);
             btnStop.setVisibility(View.VISIBLE);
 
-            setStartDateTextView();
+            setStartDateTextView(aDate);
 
             WidgetUtils.refreshWidget(getActivity().getApplicationContext());
         }
@@ -277,7 +275,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.GONE);
 
-            setStartDateTextView();
+            setStartDateTextView(null);
 
             WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 
@@ -301,7 +299,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
                 btnStart.setVisibility(View.VISIBLE);
                 btnStop.setVisibility(View.GONE);
 
-                setStartDateTextView();
+                setStartDateTextView(null);
 
                 WidgetUtils.refreshWidget(getActivity().getApplicationContext());
 

@@ -62,7 +62,7 @@ public final class DateUtil {
         cal.set(Calendar.MILLISECOND, 0);
 
         cal.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-        cal.set(Calendar.HOUR, timePicker.getCurrentHour());
+        cal.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
 
 
         return cal.getTime();

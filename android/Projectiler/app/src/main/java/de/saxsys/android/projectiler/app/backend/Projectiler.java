@@ -54,8 +54,7 @@ public class Projectiler {
      * @return checkin date
      */
     public Date checkin(final Context context) {
-        // TODO #2 round start date to HH:mm:00 [SB]
-        final Date start = DateUtil.resetSeconds(new Date());
+        final Date start = new Date();
         dataStore.setStartDate(context, start);
         LOGGER.info("Checked in at " + DateUtil.formatShort(start));
         return start;
@@ -69,6 +68,10 @@ public class Projectiler {
     }
 
     public Date checkout(Context context, String projectName, Date startDate, Date endDate) throws CrawlingException  {
+
+        startDate = DateUtil.resetSeconds(startDate);
+        endDate = DateUtil.resetSeconds(endDate);
+
         if (!isCheckedIn(context)) {
             throw new IllegalStateException("Must be checked in before checking out.");
         }
