@@ -54,7 +54,6 @@ public class CommentActivity extends Activity implements View.OnClickListener {
         DateUtil.setDatePicker(tpStart, startDate);
         DateUtil.setDatePicker(tpStop, endDate);
 
-
     }
 
     @Override

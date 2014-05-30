@@ -72,9 +72,10 @@ public final class DateUtil {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
-        timePicker.setCurrentHour(cal.get(Calendar.HOUR));
+        timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
 
     }
+
 
 }

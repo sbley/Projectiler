@@ -19,12 +19,6 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
     private Date startDate;
     private Date endDate;
 
-    public StopAsyncTask(Context ctx, String projectName, AsyncTaskResultListener<Void> resultListener) {
-        super(ctx, resultListener);
-        businessProcess = BusinessProcess.getInstance(getContext());
-        this.projectName = projectName;
-    }
-
     public StopAsyncTask(Context context, String projectName, Date startDate, Date endDate, AsyncTaskResultListener<Void> stopTaskResultListener) {
         super(context, stopTaskResultListener);
         businessProcess = BusinessProcess.getInstance(getContext());

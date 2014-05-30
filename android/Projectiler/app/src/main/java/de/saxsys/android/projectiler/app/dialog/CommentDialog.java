@@ -3,6 +3,7 @@ package de.saxsys.android.projectiler.app.dialog;
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TimePicker;
 
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
@@ -28,6 +29,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
     private String projectName;
     private BusinessProcess businessProcess;
     private boolean okClicked = false;
+    private EditText etComment;
 
     @SuppressLint("ValidFragment")
     public CommentDialog(final AsyncTaskResultListener<Void> stopTaskResultListener, OnBackPressListener backPressListener, final String projectName){
@@ -42,6 +44,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
 
         tpStart = (TimePicker) view.findViewById(R.id.tpStart);
         tpStop = (TimePicker) view.findViewById(R.id.tpStop);
+        etComment = (EditText) view.findViewById(R.id.et_comment);
 
         tpStart.setIs24HourView(true);
         tpStop.setIs24HourView(true);
@@ -89,6 +92,8 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
     protected void onClickPositiveButton() {
         super.onClickPositiveButton();
         getActivity().setProgressBarIndeterminateVisibility(true);
+
+        businessProcess.saveComment(getActivity().getApplicationContext(), etComment.getText().toString());
 
         new StopAsyncTask(getActivity().getApplicationContext(), projectName, DateUtil.getDate(tpStart), DateUtil.getDate(tpStop), stopTaskResultListener).execute();
 
