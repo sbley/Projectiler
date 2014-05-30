@@ -69,5 +69,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="comment_title">set comment</string>
     <string name="insert_comment">insert comment</string>
+    <string name="to">to</string>
 
 </resources>

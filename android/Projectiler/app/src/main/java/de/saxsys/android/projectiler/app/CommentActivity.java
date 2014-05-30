@@ -7,10 +7,14 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import org.droidparts.activity.Activity;
 import org.droidparts.annotation.inject.InjectView;
 
+import java.util.Date;
+
+import de.saxsys.android.projectiler.app.backend.DateUtil;
 import de.saxsys.android.projectiler.app.service.ProjectilerIntentService;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
@@ -21,6 +25,10 @@ public class CommentActivity extends Activity implements View.OnClickListener {
     private Button okButton;
     @InjectView(id = R.id.et_comment)
     private EditText etComment;
+    @InjectView(id = R.id.tpStart)
+    private TimePicker tpStart;
+    @InjectView(id = R.id.tpStop)
+    private TimePicker tpStop;
 
     private BusinessProcess businessProcess;
 
@@ -33,7 +41,19 @@ public class CommentActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tpStart.setIs24HourView(true);
+        tpStop.setIs24HourView(true);
+
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
+
+        Date startDate = businessProcess.getStartDate(getApplicationContext());
+
+        Date endDate = new Date(System.currentTimeMillis());
+
+        DateUtil.setDatePicker(tpStart, startDate);
+        DateUtil.setDatePicker(tpStop, endDate);
+
 
     }
 
@@ -45,6 +65,8 @@ public class CommentActivity extends Activity implements View.OnClickListener {
 
             Intent intent = new Intent(getApplicationContext(), ProjectilerIntentService.class);
             intent.setAction(ProjectilerIntentService.ACTION_STOP);
+            intent.putExtra(ProjectilerIntentService.EXTRAS_START_DATE, DateUtil.getDate(tpStart).getTime());
+            intent.putExtra(ProjectilerIntentService.EXTRAS_END_DATE, DateUtil.getDate(tpStop).getTime());
             PendingIntent stopPendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
 
             try {
