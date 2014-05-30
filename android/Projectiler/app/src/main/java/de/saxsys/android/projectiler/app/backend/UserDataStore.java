@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import de.saxsys.android.projectiler.app.db.DataProvider;
+import de.saxsys.android.projectiler.app.generatedmodel.Track;
+
 public class UserDataStore implements Serializable {
 
 	private static final Logger LOGGER = Logger.getLogger(UserDataStore.class.getSimpleName());
@@ -24,26 +27,31 @@ public class UserDataStore implements Serializable {
 
 	private static UserDataStore INSTANCE;
 
-	public static UserDataStore getInstance() {
+    private DataProvider dataProvider;
+    private Context context;
+
+	public static UserDataStore getInstance(final Context context) {
 		if (null == INSTANCE) {
-			INSTANCE = new UserDataStore();
+			INSTANCE = new UserDataStore(context);
 		}
 		return INSTANCE;
 	}
 
-	private UserDataStore() {
+	private UserDataStore(final Context context) {
+        dataProvider = new DataProvider(context);
+        this.context = context;
 	}
 
-	public void setUserName(final Context context, final String name) {
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+	public void setUserName(final String name) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USER_NAME, name);
         editor.commit();
 	}
 
-	public void setStartDate(final Context context, final Date date) {
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+	public void setStartDate(final Date date) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -55,50 +63,50 @@ public class UserDataStore implements Serializable {
         editor.commit();
 	}
 
-	public String getUserName(final Context context) {
+	public String getUserName() {
 
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getString(USER_NAME, "");
 	}
 
-	public Date getStartDate(final Context context) {
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+	public Date getStartDate() {
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return DateUtil.formatShort(mySharedPreferences.getString(START_DATE, ""));
 	}
 
-    public String getStartDateAsString(final Context context) {
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+    public String getStartDateAsString() {
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getString(START_DATE, "");
     }
 
 
-	public String getPassword(final Context context) {
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+	public String getPassword() {
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getString(PASSWORD, "");
 	}
 
-	public void setPassword(final Context context, final String password) {
+	public void setPassword(final String password) {
 
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PASSWORD, password);
         editor.commit();
 	}
 
-	public String getProjectName(final Context context) {
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+	public String getProjectName() {
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getString(PROJECT_NAME, "");
 	}
 
-	public void setProjectName(final Context context, final String projectName) {
+	public void setProjectName(final String projectName) {
 
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PROJECT_NAME, projectName);
@@ -106,16 +114,16 @@ public class UserDataStore implements Serializable {
 
 	}
 
-    public void setAutoLogin(final Context context, final boolean autoLogin){
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+    public void setAutoLogin(final boolean autoLogin){
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(AUTO_LOGIN, autoLogin);
         editor.commit();
     }
 
-    public boolean getAutoLogin(final Context context){
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+    public boolean getAutoLogin(){
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getBoolean(AUTO_LOGIN, false);
     }
@@ -123,20 +131,20 @@ public class UserDataStore implements Serializable {
 	/*
 	 * Helper
 	 */
-	public void setCredentials(final Context context, final String userName, final String password) {
-		this.setUserName(context, userName);
-		this.setPassword(context, password);
+	public void setCredentials(final String userName, final String password) {
+		this.setUserName(userName);
+		this.setPassword(password);
 	}
 
-    public int getCurrentActiveProjectIndex(final Context context, final List<String> items){
+    public int getCurrentActiveProjectIndex(final List<String> items){
 
         int ret = -1;
 
-        if(getStartDate(context) == null){
+        if(getStartDate() == null){
             return -1;
         }
 
-        String selectedProject = getProjectName(context);
+        String selectedProject = getProjectName();
 
         if(selectedProject.equals("")){
             return ret;
@@ -151,20 +159,20 @@ public class UserDataStore implements Serializable {
         return ret;
     }
 
-	public void clearStartDate(final Context context) {
-		setStartDate(context, null);
+	public void clearStartDate() {
+		setStartDate(null);
 	}
 
-	public boolean isCheckedIn(final Context context) {
-		return null != getStartDate(context);
+	public boolean isCheckedIn() {
+		return null != getStartDate();
 	}
 
-    private static SharedPreferences getDefaultSharedPreferences(final Context context) {
+    private SharedPreferences getDefaultSharedPreferences() {
         return context.getSharedPreferences("projectiler", Context.MODE_PRIVATE);
     }
 
-    public void setWidgetLoading(Context context, boolean loading) {
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+    public void setWidgetLoading(boolean loading) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(WIDGET_LOADING, loading);
@@ -172,14 +180,14 @@ public class UserDataStore implements Serializable {
         editor.commit();
     }
 
-    public boolean isWidgetLoading(final Context context){
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+    public boolean isWidgetLoading(){
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getBoolean(WIDGET_LOADING, false);
     }
 
-    public void saveComment(Context context, String comment) {
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+    public void saveComment(String comment) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(COMMENT, comment);
@@ -187,17 +195,29 @@ public class UserDataStore implements Serializable {
 
     }
 
-    public void deleteComment(Context context){
-        final SharedPreferences sharedPreferences = getDefaultSharedPreferences(context);
+    public void deleteComment(){
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(COMMENT, "");
         editor.commit();
     }
 
-    public String getComment(Context context) {
-        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences(context);
+    public String getComment() {
+        final SharedPreferences mySharedPreferences = getDefaultSharedPreferences();
 
         return mySharedPreferences.getString(COMMENT, "");
+    }
+
+    public void saveTrack(Track track) {
+        dataProvider.saveTrack(track);
+    }
+
+    public List<Track> getTracks() {
+        return dataProvider.getTracks();
+    }
+
+    public void deleteTrack(Track track) {
+        dataProvider.deleteTrack(track);
     }
 }

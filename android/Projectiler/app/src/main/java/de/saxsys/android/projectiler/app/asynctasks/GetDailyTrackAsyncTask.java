@@ -24,6 +24,6 @@ public class GetDailyTrackAsyncTask extends AsyncTask<Void, Void, List<Booking>>
 
     @Override
     protected List<Booking> onExecute(Void... voids) throws Exception {
-        return businessProcess.getCurrentBookings(getContext());
+        return businessProcess.getCurrentBookings();
     }
 }

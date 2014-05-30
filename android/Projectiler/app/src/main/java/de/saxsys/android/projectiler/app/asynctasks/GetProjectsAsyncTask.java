@@ -23,6 +23,6 @@ public class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>> {
 
     @Override
     protected List<String> onExecute(Void... voids) throws Exception {
-        return businessProcess.getProjectNames(getContext());
+        return businessProcess.getProjectNames();
     }
 }

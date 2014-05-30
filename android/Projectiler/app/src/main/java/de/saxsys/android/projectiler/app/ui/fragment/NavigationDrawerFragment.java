@@ -92,7 +92,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             progress.setVisibility(View.GONE);
             setItems(itemList);
 
-            if (businessProcess.getProjectName(getActivity().getApplicationContext()).equals("")) {
+            if (businessProcess.getProjectName().equals("")) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 TimeTrackingFragment fragment = new TimeTrackingFragment();
 
@@ -298,7 +298,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onResume() {
         super.onResume();
         if(itemList != null){
-            int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
+            int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(itemList);
 
             mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
         }
@@ -334,7 +334,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
             this.itemList = itemList;
 
-            final int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(getActivity().getApplicationContext(), itemList);
+            final int currentActiveIndex = businessProcess.getCurrentActiveProjectIndex(itemList);
 
             mDrawerListView.setAdapter(new NavigationDrawerAdapter(getActivity().getApplicationContext(), itemList, currentActiveIndex));
             mDrawerListView.setGroupIndicator(null);

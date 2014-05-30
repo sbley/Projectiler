@@ -66,7 +66,7 @@ public class ProjectilerIntentService extends IntentService {
      */
     private void handleActionStart() {
 
-        if(!businessProcess.getProjectName(getApplicationContext()).equals("")) {
+        if(!businessProcess.getProjectName().equals("")) {
             businessProcess.showProgressBarOnWidget(getApplicationContext());
             new StartAsyncTask(getApplicationContext(), startTaskResultListener).execute();
         }
@@ -80,7 +80,7 @@ public class ProjectilerIntentService extends IntentService {
      */
     private void handleActionStop(Date startDate, Date endDate) {
         businessProcess.showProgressBarOnWidget(getApplicationContext());
-        new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()), startDate, endDate, stopTaskResultListener).execute();
+        new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(), startDate, endDate, stopTaskResultListener).execute();
     }
 
     private void handleActionReset() {

@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         TimeTrackingFragment fragment = new TimeTrackingFragment();
-        fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(getApplicationContext()), false, true));
+        fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(), false, true));
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity
 
                 TimeTrackingFragment fragment = new TimeTrackingFragment();
 
-                String currentProjectName = businessProcess.getProjectName(getApplicationContext());
+                String currentProjectName = businessProcess.getProjectName();
 
                 Log.i("Projekt", "gestartetes Projekt: " + currentProjectName + " selectes Project: " + projectName);
 
@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity
                 if (currentProjectName.equals("")) {
                     fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
 
-                } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getApplicationContext()) != null) {
+                } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate() != null) {
                     fragment.setArguments(TimeTrackingFragment.newInstance(projectName, false, true));
                 } else {
                     fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
@@ -170,7 +170,7 @@ public class MainActivity extends ActionBarActivity
                 getMenuInflater().inflate(R.menu.upload, menu);
             }
 
-            if (businessProcess.getAutoLogin(getApplicationContext())) {
+            if (businessProcess.getAutoLogin()) {
 
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
@@ -264,7 +264,7 @@ public class MainActivity extends ActionBarActivity
 
     public void refreshNavigationDrawer(String projectName) {
 
-        if (businessProcess.getStartDate(getApplicationContext()) != null) {
+        if (businessProcess.getStartDate() != null) {
             mNavigationDrawerFragment.setProjectActive(projectName);
         } else {
             mNavigationDrawerFragment.setProjectActive("");

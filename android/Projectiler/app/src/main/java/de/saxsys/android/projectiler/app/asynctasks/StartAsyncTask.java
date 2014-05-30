@@ -23,7 +23,7 @@ public class StartAsyncTask extends AsyncTask<Void, Void, Date> {
 
     @Override
     protected Date onExecute(Void... voids) throws Exception {
-        return businessProcess.checkin(getContext());
+        return businessProcess.checkin();
     }
 
 }

@@ -43,7 +43,7 @@ public class SelectProjectPopup extends Activity {
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
-        if(businessProcess.getStartDate(getApplicationContext()) != null){
+        if(businessProcess.getStartDate() != null){
             finish();
         }
 

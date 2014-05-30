@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.saxsys.android.projectiler.app.backend.Projectiler;
-import de.saxsys.android.projectiler.app.db.DataProvider;
+import de.saxsys.android.projectiler.app.backend.UserDataStore;
 import de.saxsys.android.projectiler.app.generatedmodel.Track;
 import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
@@ -19,7 +19,8 @@ import de.saxsys.projectiler.crawler.InvalidCredentialsException;
 public class BusinessProcess {
 
     private static BusinessProcess INSTANCE;
-    private DataProvider dataProvider;
+    private UserDataStore dataStorage;
+    private Projectiler projectiler;
 
     public static BusinessProcess getInstance(final Context context) {
         if (null == INSTANCE) {
@@ -28,136 +29,134 @@ public class BusinessProcess {
         return INSTANCE;
     }
 
-    private Projectiler projectiler;
-
     private BusinessProcess(final Context context) {
         projectiler = Projectiler.createDefaultProjectiler(context);
-        dataProvider = new DataProvider(context);
+        dataStorage = UserDataStore.getInstance(context);
     }
 
 
-    public String getUserName(final Context context) {
-        return projectiler.getUserName(context);
+    public String getUserName() {
+        return projectiler.getUserName();
     }
 
-    public boolean isCheckedIn(final Context context) {
-        return projectiler.isCheckedIn(context);
+    public boolean isCheckedIn() {
+        return projectiler.isCheckedIn();
     }
 
-    public Date checkin(final Context context) {
-        return projectiler.checkin(context);
+    public Date checkin() {
+        return projectiler.checkin();
     }
 
-    public Date checkout(final Context context, final String projectName) throws CrawlingException, IllegalStateException {
+    public Date checkout(final String projectName) throws CrawlingException, IllegalStateException {
 
         Date checkout = null;
 
-        checkout = projectiler.checkout(context, projectName);
+        checkout = projectiler.checkout(projectName);
 
         return checkout;
     }
 
-    public Date checkout(final Context context, final String projectName, final Date startDate, final Date endDate) throws CrawlingException, IllegalStateException {
+    public Date checkout(final String projectName, final Date startDate, final Date endDate) throws CrawlingException, IllegalStateException {
 
         Date checkout = null;
 
-        checkout = projectiler.checkout(context, projectName, startDate, endDate);
+        checkout = projectiler.checkout(projectName, startDate, endDate);
 
         return checkout;
     }
 
 
-    public List<String> getProjectNames(final Context context) throws ConnectionException, CrawlingException {
-        return projectiler.getProjectNames(context);
+    public List<String> getProjectNames() throws ConnectionException, CrawlingException {
+        return projectiler.getProjectNames();
     }
 
-    public void saveCredentials(final Context context, final String username, final String password, final boolean saveLogin)
+    public void saveCredentials(final String username, final String password, final boolean saveLogin)
             throws InvalidCredentialsException, ConnectionException, CrawlingException {
-        projectiler.saveCredentials(context, username, password, saveLogin);
+        projectiler.saveCredentials(username, password, saveLogin);
     }
 
     public void saveProjectName(final Context context, final String projectKey) {
-        WidgetUtils.showProgressBarOnWidget(context, projectiler);
-        projectiler.saveProjectName(context, projectKey);
-        WidgetUtils.hideProgressBarOnWidget(context, projectiler);
+        WidgetUtils.showProgressBarOnWidget(context, dataStorage);
+        projectiler.saveProjectName(projectKey);
+        WidgetUtils.hideProgressBarOnWidget(context, dataStorage);
     }
 
-    public void resetStartTime(Context context) {
-        projectiler.resetStartTime(context);
+    public void resetStartTime() {
+        dataStorage.setStartDate(null);
     }
 
-    public String getStartDateAsString(final Context context) {
-        return projectiler.getStartDateAsString(context);
+    public String getStartDateAsString() {
+        return dataStorage.getStartDateAsString();
     }
 
-    public Date getStartDate(Context context) {
-        return projectiler.getStartDate(context);
+    public Date getStartDate() {
+        return dataStorage.getStartDate();
     }
 
-    public String getProjectName(Context context) {
-        return projectiler.getProjectName(context);
+    public String getProjectName() {
+        return dataStorage.getProjectName();
     }
 
-    public boolean getAutoLogin(Context context) {
-        return projectiler.getAutoLogin(context);
+    public boolean getAutoLogin() {
+        return dataStorage.getAutoLogin();
     }
 
-    public void setAutoLogin(final Context context, boolean autoLogin) {
-        projectiler.setAutoLogin(context, autoLogin);
+    public void setAutoLogin(boolean autoLogin) {
+        dataStorage.setAutoLogin(autoLogin);
     }
 
-    public void setWidgetLoading(final Context context, boolean loading) {
-        projectiler.setWidgetLoading(context, loading);
+    public void setWidgetLoading(boolean loading) {
+        dataStorage.setWidgetLoading(loading);
     }
 
-    public boolean isWidgetLoading(Context context) {
-        return projectiler.isWidgetLoading(context);
+    public boolean isWidgetLoading() {
+        return dataStorage.isWidgetLoading();
     }
 
     public void logout(final Context context) {
-        projectiler.logout(context);
+        projectiler.logout();
         WidgetUtils.refreshWidget(context);
     }
 
-    public int getCurrentActiveProjectIndex(Context context, List<String> itemList) {
-        return projectiler.getCurrentActiveProjectIndex(context, itemList);
+    public int getCurrentActiveProjectIndex(List<String> itemList) {
+        return dataStorage.getCurrentActiveProjectIndex(itemList);
     }
 
     public void resetProject(final Context context, final boolean resetProjectName) {
-        WidgetUtils.showProgressBarOnWidget(context, projectiler);
+        WidgetUtils.showProgressBarOnWidget(context, dataStorage);
         if(resetProjectName){
             saveProjectName(context, "");
         }
-        resetStartTime(context);
-        WidgetUtils.hideProgressBarOnWidget(context, projectiler);
+        resetStartTime();
+        WidgetUtils.hideProgressBarOnWidget(context, dataStorage);
     }
 
     public void showProgressBarOnWidget(Context context) {
-        WidgetUtils.showProgressBarOnWidget(context, projectiler);
+        WidgetUtils.showProgressBarOnWidget(context, dataStorage);
     }
 
     public void hideProgressBarOnWidget(Context context) {
-        WidgetUtils.hideProgressBarOnWidget(context, projectiler);
+        WidgetUtils.hideProgressBarOnWidget(context, dataStorage);
     }
 
-    public List<Booking> getCurrentBookings(final Context context) throws CrawlingException {
-        return projectiler.getDailyReports(context);
+    public List<Booking> getCurrentBookings() throws CrawlingException {
+        return projectiler.getDailyReports();
     }
 
 
-    public void checkoutAllTracks(final Context context) throws CrawlingException {
+    public void checkoutAllTracks() throws CrawlingException {
 
-        List<Track> tracks = dataProvider.getTracks();
+        List<Track> tracks = dataStorage.getTracks();
 
         for (Track track : tracks) {
 
-            dataProvider.deleteTrack(track);
-            projectiler.checkoutTrack(context, track);
+            dataStorage.deleteTrack(track);
+            projectiler.checkoutTrack(track);
         }
 
     }
 
-    public void saveComment(final Context context, String comment) {
-        projectiler.saveComment(context, comment);
+    public void saveComment(String comment) {
+        dataStorage.saveComment(comment);
     }
 }

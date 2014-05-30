@@ -21,7 +21,7 @@ public class UploadAllTracksAsyncTask extends AsyncTask {
 
     @Override
     protected Object onExecute(Object[] objects) throws Exception {
-        businessProcess.checkoutAllTracks(getContext());
+        businessProcess.checkoutAllTracks();
         return null;
     }
 }

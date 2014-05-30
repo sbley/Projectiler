@@ -56,7 +56,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
                 Date currentTime = new Date(System.currentTimeMillis());
 
-                boolean isProjectStarted = isProjectStarted(context);
+                boolean isProjectStarted = isProjectStarted();
 
                 if(isProjectStarted){
                     //Log.i(TAG, "Projekt gestartet");
@@ -100,8 +100,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         return calendar.getTime();
     }
 
-    private boolean isProjectStarted(final Context context) {
-        Date startDate = businessProcess.getStartDate(context);
+    private boolean isProjectStarted() {
+        Date startDate = businessProcess.getStartDate();
 
         if(startDate == null){
             return false;

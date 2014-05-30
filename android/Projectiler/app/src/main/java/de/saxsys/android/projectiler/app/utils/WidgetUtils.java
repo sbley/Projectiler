@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import de.saxsys.android.projectiler.app.ProjectilerAppWidget;
-import de.saxsys.android.projectiler.app.backend.Projectiler;
+import de.saxsys.android.projectiler.app.backend.UserDataStore;
 
 /**
  * Created by stefan.heinze on 15.05.2014.
@@ -20,13 +20,13 @@ public class WidgetUtils {
     }
 
 
-    public static void showProgressBarOnWidget(final Context context, final Projectiler projectiler){
-        projectiler.setWidgetLoading(context, true);
+    public static void showProgressBarOnWidget(final Context context, final UserDataStore dataStore){
+        dataStore.setWidgetLoading(true);
         refreshWidget(context);
     }
 
-    public static void hideProgressBarOnWidget(final Context context, final Projectiler projectiler){
-        projectiler.setWidgetLoading(context, false);
+    public static void hideProgressBarOnWidget(final Context context, final UserDataStore dataStore){
+        dataStore.setWidgetLoading(false);
         refreshWidget(context);
     }
 

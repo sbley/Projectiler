@@ -110,7 +110,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
         if (date == null) {
             chronometer.setVisibility(View.INVISIBLE);
         } else {
-            if (businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
+            if (businessProcess.getProjectName().equals(projectName)) {
                 chronometer.setVisibility(View.VISIBLE);
                 long currentDatetime = System.currentTimeMillis();
                 chronometer.setBase(SystemClock.elapsedRealtime() - (currentDatetime - date.getTime()));
@@ -129,12 +129,12 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
 
         if (rootView != null) {
 
-            String currentProjectName = businessProcess.getProjectName(getActivity().getApplicationContext());
+            String currentProjectName = businessProcess.getProjectName();
 
             if (currentProjectName.equals("")) {
                 startVisible = true;
                 stopVisible = false;
-            } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate(getActivity().getApplicationContext()) != null) {
+            } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate() != null) {
                 startVisible = false;
                 stopVisible = true;
             } else {
@@ -155,7 +155,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             rlContainerNotStarted.setVisibility(View.VISIBLE);
             rlOtherProject.setVisibility(View.GONE);
             chronometer.setVisibility(View.INVISIBLE);
-        } else if (businessProcess.getStartDate(getActivity().getApplicationContext()) != null && !businessProcess.getProjectName(getActivity().getApplicationContext()).equals(projectName)) {
+        } else if (businessProcess.getStartDate() != null && !businessProcess.getProjectName().equals(projectName)) {
             // ein anderes Projekt wurde schon gestartet
             rlContainer.setVisibility(View.GONE);
             rlContainerNotStarted.setVisibility(View.GONE);
@@ -163,7 +163,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             chronometer.setVisibility(View.INVISIBLE);
             tvOtherProjectSelected = (TextView) rootView.findViewById(R.id.tvOtherProjectSelected);
 
-            String text = String.format(getString(R.string.other_project_booked), businessProcess.getProjectName(getActivity().getApplicationContext()));
+            String text = String.format(getString(R.string.other_project_booked), businessProcess.getProjectName());
 
             tvOtherProjectSelected.setText(text);
 
@@ -190,7 +190,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             }
 
             // ist ein startDate gesetzt?
-            setStartDateTextView(businessProcess.getStartDate(getActivity().getApplicationContext()));
+            setStartDateTextView(businessProcess.getStartDate());
         }
 
 
@@ -268,7 +268,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
         public void onAsyncTaskSuccess(Void aVoid) {
             getActivity().setProgressBarIndeterminateVisibility(false);
 
-            businessProcess.resetStartTime(getActivity().getApplicationContext());
+            businessProcess.resetStartTime();
             ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
             btnReset.setVisibility(View.GONE);
@@ -292,7 +292,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             if (e instanceof IllegalStateException) {
                 Crouton.makeText(getActivity(), e.getMessage(), Style.ALERT).show();
             } else {
-                businessProcess.resetStartTime(getActivity().getApplicationContext());
+                businessProcess.resetStartTime();
                 ((MainActivity) getActivity()).refreshNavigationDrawer("");
 
                 btnReset.setVisibility(View.GONE);

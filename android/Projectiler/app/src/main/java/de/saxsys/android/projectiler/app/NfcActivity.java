@@ -40,12 +40,12 @@ public class NfcActivity extends ActionBarActivity {
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
-        if (!businessProcess.getAutoLogin(getApplicationContext())) {
+        if (!businessProcess.getAutoLogin()) {
             // Anzeige des Login
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
 
-        } else if (businessProcess.getStartDate(getApplicationContext()) == null) {
+        } else if (businessProcess.getStartDate() == null) {
             // Projekteauswahl anzeigen
             progressBar.setVisibility(View.VISIBLE);
             new GetProjectsAsyncTask().execute();
@@ -87,10 +87,10 @@ public class NfcActivity extends ActionBarActivity {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            projectName = businessProcess.getProjectName(getApplicationContext());
+            projectName = businessProcess.getProjectName();
 
             try {
-                businessProcess.checkout(getApplicationContext(), businessProcess.getProjectName(getApplicationContext()));
+                businessProcess.checkout(businessProcess.getProjectName());
                 return new Object();
             } catch (CrawlingException e) {
                 e.printStackTrace();
@@ -128,7 +128,7 @@ public class NfcActivity extends ActionBarActivity {
 
             try {
 
-                List<String> projectNames = businessProcess.getProjectNames(getApplicationContext());
+                List<String> projectNames = businessProcess.getProjectNames();
                 for (String projectName : projectNames) {
                     Log.i("Projects: ", "" + projectName);
                 }
@@ -171,7 +171,7 @@ public class NfcActivity extends ActionBarActivity {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            businessProcess.checkin(getApplicationContext());
+            businessProcess.checkin();
 
             return null;
         }
@@ -182,9 +182,9 @@ public class NfcActivity extends ActionBarActivity {
 
             progressBar.setVisibility(View.GONE);
 
-            String startTime = businessProcess.getStartDateAsString(getApplicationContext());
+            String startTime = businessProcess.getStartDateAsString();
 
-            String projectName = businessProcess.getProjectName(getApplicationContext());
+            String projectName = businessProcess.getProjectName();
 
             sendNotification(001, getString(R.string.start_tracking), getString(R.string.start_tracking_project, startTime, projectName));
 

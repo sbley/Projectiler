@@ -73,7 +73,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
                 0, commentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.buttonStop, commentPendingIntent);
 
-        String projectName = businessProcess.getProjectName(context);
+        String projectName = businessProcess.getProjectName();
 
         if (projectName.equals("")) {
             views.setTextViewText(R.id.tv_current_project, context.getString(R.string.please_choose_a_project));
@@ -81,7 +81,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.tv_current_project, projectName);
         }
 
-        boolean isLoading = businessProcess.isWidgetLoading(context);
+        boolean isLoading = businessProcess.isWidgetLoading();
 
         if (isLoading) {
             views.setViewVisibility(R.id.progressBar, View.VISIBLE);
@@ -93,7 +93,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
         } else {
             views.setViewVisibility(R.id.progressBar, View.GONE);
             // ist der nutzer eingelogged?
-            if (!businessProcess.getAutoLogin(context)) {
+            if (!businessProcess.getAutoLogin()) {
 
                 Intent loginIntent = new Intent(context, LoginActivity.class);
                 PendingIntent loginPendingIntent = PendingIntent.getActivity(context, 0, loginIntent, 0);
@@ -116,7 +116,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
                 views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
                 views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
 
-                Date startDate = businessProcess.getStartDate(context);
+                Date startDate = businessProcess.getStartDate();
                 // ist gestartet
                 if (startDate != null) {
 

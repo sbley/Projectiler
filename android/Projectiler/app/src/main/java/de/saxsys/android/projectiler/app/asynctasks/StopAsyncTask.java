@@ -31,9 +31,9 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
     protected Void onExecute(Void... voids) throws Exception {
 
         if(startDate == null){
-            businessProcess.checkout(getContext(), projectName);
+            businessProcess.checkout(projectName);
         }else{
-            businessProcess.checkout(getContext(), projectName, startDate, endDate);
+            businessProcess.checkout(projectName, startDate, endDate);
         }
 
         return null;

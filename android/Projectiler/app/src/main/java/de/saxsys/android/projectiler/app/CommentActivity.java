@@ -47,7 +47,7 @@ public class CommentActivity extends Activity implements View.OnClickListener {
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
-        Date startDate = businessProcess.getStartDate(getApplicationContext());
+        Date startDate = businessProcess.getStartDate();
 
         Date endDate = new Date(System.currentTimeMillis());
 
@@ -60,7 +60,7 @@ public class CommentActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         if(view == okButton){
 
-            businessProcess.saveComment(getApplicationContext(), etComment.getText().toString());
+            businessProcess.saveComment(etComment.getText().toString());
 
             Intent intent = new Intent(getApplicationContext(), ProjectilerIntentService.class);
             intent.setAction(ProjectilerIntentService.ACTION_STOP);

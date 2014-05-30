@@ -57,7 +57,7 @@ public class WidgetService extends RemoteViewsService {
 
             try {
 
-                projectNames = businessProcess.getProjectNames(getApplicationContext());
+                projectNames = businessProcess.getProjectNames();
 
                 return (new ListProvider(getApplicationContext(), intent, projectNames));
             } catch (CrawlingException e) {

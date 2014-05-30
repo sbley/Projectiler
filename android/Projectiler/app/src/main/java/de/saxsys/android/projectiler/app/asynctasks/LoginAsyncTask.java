@@ -27,7 +27,7 @@ public class LoginAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void onExecute(Void... voids) throws Exception {
-        businessProcess.saveCredentials(getContext(), username, password, saveLogin);
+        businessProcess.saveCredentials(username, password, saveLogin);
         return null;
     }
 }

@@ -51,7 +51,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
 
         businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
 
-        Date startDate = businessProcess.getStartDate(getActivity().getApplicationContext());
+        Date startDate = businessProcess.getStartDate();
 
         Date endDate = new Date(System.currentTimeMillis());
 
@@ -93,7 +93,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
         super.onClickPositiveButton();
         getActivity().setProgressBarIndeterminateVisibility(true);
 
-        businessProcess.saveComment(getActivity().getApplicationContext(), etComment.getText().toString());
+        businessProcess.saveComment(etComment.getText().toString());
 
         new StopAsyncTask(getActivity().getApplicationContext(), projectName, DateUtil.getDate(tpStart), DateUtil.getDate(tpStop), stopTaskResultListener).execute();
 

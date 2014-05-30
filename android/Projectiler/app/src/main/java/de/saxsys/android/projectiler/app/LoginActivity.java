@@ -53,7 +53,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
-        if(businessProcess.getAutoLogin(getApplicationContext())){
+        if(businessProcess.getAutoLogin()){
 
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
