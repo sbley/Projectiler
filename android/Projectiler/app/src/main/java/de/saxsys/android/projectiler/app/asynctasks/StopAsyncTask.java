@@ -5,6 +5,8 @@ import android.content.Context;
 import org.droidparts.concurrent.task.AsyncTask;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
+import java.util.Date;
+
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
@@ -14,6 +16,8 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private BusinessProcess businessProcess;
     private String projectName;
+    private Date startDate;
+    private Date endDate;
 
     public StopAsyncTask(Context ctx, String projectName, AsyncTaskResultListener<Void> resultListener) {
         super(ctx, resultListener);
@@ -21,9 +25,23 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
         this.projectName = projectName;
     }
 
+    public StopAsyncTask(Context context, String projectName, Date startDate, Date endDate, AsyncTaskResultListener<Void> stopTaskResultListener) {
+        super(context, stopTaskResultListener);
+        businessProcess = BusinessProcess.getInstance(getContext());
+        this.projectName = projectName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     @Override
     protected Void onExecute(Void... voids) throws Exception {
-        businessProcess.checkout(getContext(), projectName);
+
+        if(startDate == null){
+            businessProcess.checkout(getContext(), projectName);
+        }else{
+            businessProcess.checkout(getContext(), projectName, startDate, endDate);
+        }
+
         return null;
     }
 
