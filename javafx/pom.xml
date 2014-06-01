@@ -34,11 +34,6 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
 		</dependency>
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>2.2.51</version>
-		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -107,7 +102,17 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles>
-
-
+    <profile>
+        <id>java7</id>
+        <activation>
+            <jdk>1.7</jdk>
+        </activation>
+        <dependencies>
+            <dependency>
+              <groupId>com.oracle</groupId>
+              <artifactId>javafx</artifactId>
+              <version>2.2.51</version>
+            </dependency>
+        </dependencies>
+    </profile>
 </project>
