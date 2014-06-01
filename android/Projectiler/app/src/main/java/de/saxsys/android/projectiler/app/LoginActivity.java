@@ -72,7 +72,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                1000 * 60, pendingIntent);
+                1000 * 60 * 3, pendingIntent);
     }
 
     @Override

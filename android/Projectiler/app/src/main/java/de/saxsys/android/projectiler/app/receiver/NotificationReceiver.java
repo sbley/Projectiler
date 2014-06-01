@@ -46,36 +46,38 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             if(sendNotification){
                 //Log.i(TAG, "send notification");
-
-                Date startWorkDate = getDate(startWork);
-                Date endWorkDate = getDate(endWork);
-                Date startBreakDate = getDate(startBreak);
-                Date endBreakDate = getDate(endBreak);
-
-                businessProcess = BusinessProcess.getInstance(context);
-
                 Date currentTime = new Date(System.currentTimeMillis());
+                // samstag und sonntag fallen raus
+                if(!isWeekend(currentTime)){
 
-                boolean isProjectStarted = isProjectStarted();
+                    Date startWorkDate = getDate(startWork);
+                    Date endWorkDate = getDate(endWork);
+                    Date startBreakDate = getDate(startBreak);
+                    Date endBreakDate = getDate(endBreak);
 
-                if(isProjectStarted){
-                    //Log.i(TAG, "Projekt gestartet");
-                    //Log.i(TAG, "startWork: " + getDate(startWork).toString());
-                    // projekt ist gestartet und endWork ist vorbei
-                    if(currentTime.after(endWorkDate)){
-                        sendNotification(context, 101, context.getString(R.string.work_is_over_title), context.getString(R.string.work_is_over_message), vibration);
-                    }
+                    businessProcess = BusinessProcess.getInstance(context);
 
-                    // Projekt gestartet und startBreak ist vorbei
-                    if(currentTime.after(startBreakDate) && currentTime.before(endBreakDate)){
-                        sendNotification(context, 102, context.getString(R.string.time_for_break_title), context.getString(R.string.time_for_break_message), vibration);
-                    }
+                    boolean isProjectStarted = isProjectStarted();
 
-                }else{
-                    //Log.i(TAG, "kein Projekt gestartet");
-                    // projekt ist nicht gestartet und es ist arbeitszeit
-                    if((currentTime.after(startWorkDate) && currentTime.before(startBreakDate) || (currentTime.after(endBreakDate) && currentTime.before(endWorkDate)))){
-                        sendNotification(context, 103, context.getString(R.string.no_track_started_title), context.getString(R.string.no_track_started_message), vibration);
+                    if(isProjectStarted){
+                        //Log.i(TAG, "Projekt gestartet");
+                        //Log.i(TAG, "startWork: " + getDate(startWork).toString());
+                        // projekt ist gestartet und endWork ist vorbei
+                        if(currentTime.after(endWorkDate)){
+                            sendNotification(context, 101, context.getString(R.string.work_is_over_title), context.getString(R.string.work_is_over_message), vibration);
+                        }
+
+                        // Projekt gestartet und startBreak ist vorbei
+                        if(currentTime.after(startBreakDate) && currentTime.before(endBreakDate)){
+                            sendNotification(context, 102, context.getString(R.string.time_for_break_title), context.getString(R.string.time_for_break_message), vibration);
+                        }
+
+                    }else{
+                        //Log.i(TAG, "kein Projekt gestartet");
+                        // projekt ist nicht gestartet und es ist arbeitszeit
+                        if((currentTime.after(startWorkDate) && currentTime.before(startBreakDate) || (currentTime.after(endBreakDate) && currentTime.before(endWorkDate)))){
+                            sendNotification(context, 103, context.getString(R.string.no_track_started_title), context.getString(R.string.no_track_started_message), vibration);
+                        }
                     }
                 }
             }
@@ -98,6 +100,20 @@ public class NotificationReceiver extends BroadcastReceiver {
         calendar.set(Calendar.MILLISECOND, 0);
 
         return calendar.getTime();
+    }
+
+    private boolean isWeekend(final Date date){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        if(day == Calendar.SATURDAY || day == Calendar.SUNDAY){
+            return true;
+        }
+
+        return false;
     }
 
     private boolean isProjectStarted() {

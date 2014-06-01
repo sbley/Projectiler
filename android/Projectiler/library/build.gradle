@@ -1,9 +1,9 @@
 buildscript {
     repositories {
-        //mavenCentral()
-        maven{
-             url "http://nexus.saxsys.de/content/repositories/external/"
-            }
+        mavenCentral()
+        //maven {
+        //    url "http://nexus.saxsys.de/content/repositories/external/"
+        //}
     }
 
     dependencies {
@@ -15,10 +15,10 @@ apply plugin: 'android-library'
 
 dependencies {
     repositories {
-        //mavenCentral();
-        maven{
-            url "http://nexus.saxsys.de/content/repositories/external/"
-        }
+        mavenCentral();
+        //maven {
+        //    url "http://nexus.saxsys.de/content/repositories/external/"
+        //}
     }
 }
 

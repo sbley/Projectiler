@@ -34,7 +34,7 @@ public class BootAndInstallCompleteReceiver extends BroadcastReceiver {
 
                 AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                        1000 * 60, pendingIntent);
+                        1000 * 60 * 3, pendingIntent);
 
             }
 
