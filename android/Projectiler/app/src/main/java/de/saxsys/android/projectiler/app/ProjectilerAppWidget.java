@@ -12,7 +12,7 @@ import android.widget.RemoteViews;
 
 import java.util.Date;
 
-import de.saxsys.android.projectiler.app.service.ProjectilerIntentService;
+import de.saxsys.android.projectiler.app.service.ProjectilerBroadcastReceiver;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
@@ -59,7 +59,6 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.projectiler_app_widget);
 
-
         Intent popupIntent = new Intent(context, ProjectilerAppWidget.class);
         popupIntent.setAction(SHOW_PROJECT_POPUP_DIALOG_ACTION);
         PendingIntent popupPendingIntent = PendingIntent.getBroadcast(context,
@@ -67,11 +66,21 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.tv_current_project, popupPendingIntent);
 
         Intent commentIntent = new Intent(context, ProjectilerAppWidget.class);
-        commentIntent.setAction(SHOW_COMMENT_DIALOG_ACTION);
+        Intent startIntent = new Intent(context, ProjectilerBroadcastReceiver.class);
+        Intent resetIntent = new Intent(context, ProjectilerBroadcastReceiver.class);
 
-        PendingIntent commentPendingIntent = PendingIntent.getBroadcast(context,
-                0, commentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        commentIntent.setAction(SHOW_COMMENT_DIALOG_ACTION);
+        startIntent.setAction(ProjectilerBroadcastReceiver.ACTION_START);
+        resetIntent.setAction(ProjectilerBroadcastReceiver.ACTION_RESET);
+
+        PendingIntent commentPendingIntent = PendingIntent.getBroadcast(context, 0, commentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent startPendingIntent = PendingIntent.getBroadcast(context, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 0, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
         views.setOnClickPendingIntent(R.id.buttonStop, commentPendingIntent);
+        views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
+        views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
 
         String projectName = businessProcess.getProjectName();
 
@@ -106,15 +115,6 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
 
                 views.setViewVisibility(R.id.rl_widget_login, View.GONE);
                 views.setViewVisibility(R.id.ll_widget_content, View.VISIBLE);
-
-                Intent intent = new Intent(context, ProjectilerIntentService.class);
-                intent.setAction(ProjectilerIntentService.ACTION_START);
-                PendingIntent startPendingIntent = PendingIntent.getService(context, 0, intent, 0);
-                intent.setAction(ProjectilerIntentService.ACTION_RESET);
-                PendingIntent resetPendingIntent = PendingIntent.getService(context, 0, intent, 0);
-
-                views.setOnClickPendingIntent(R.id.buttonReset, resetPendingIntent);
-                views.setOnClickPendingIntent(R.id.buttonStart, startPendingIntent);
 
                 Date startDate = businessProcess.getStartDate();
                 // ist gestartet

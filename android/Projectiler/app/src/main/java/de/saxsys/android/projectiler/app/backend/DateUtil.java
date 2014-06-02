@@ -28,7 +28,7 @@ public final class DateUtil {
 
 	/** Formats a date to a short readable format */
 	public static String formatShort(final Date date) {
-		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
+		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.DEFAULT).format(date);
 	}
 
     public static Date formatShort(final String date) {
@@ -37,7 +37,7 @@ public final class DateUtil {
             return null;
         }
 
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.DEFAULT);
 
         try {
             return df.parse(date);

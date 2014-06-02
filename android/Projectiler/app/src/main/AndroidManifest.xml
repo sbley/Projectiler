@@ -54,7 +54,7 @@
                 android:resource="@xml/nfc_tech_list" />
         </activity>
 
-        <receiver android:name="de.saxsys.android.projectiler.app.ProjectilerAppWidget" >
+        <receiver android:name=".ProjectilerAppWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -65,16 +65,16 @@
         </receiver>
 
         <service
-            android:name="de.saxsys.android.projectiler.app.WidgetService"
+            android:name=".WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
-            android:name="de.saxsys.android.projectiler.app.service.ProjectNameIntentService"
+            android:name=".service.ProjectNameIntentService"
             android:exported="false" >
         </service>
-        <service
-            android:name="de.saxsys.android.projectiler.app.service.ProjectilerIntentService"
-            android:exported="false" >
-        </service>
+        <receiver
+            android:name=".service.ProjectilerBroadcastReceiver"
+            android:enabled="true" >
+        </receiver>
 
         <activity
             android:name="de.saxsys.android.projectiler.app.SettingsActivity"
@@ -82,31 +82,30 @@
         </activity>
 
         <receiver
-            android:name="de.saxsys.android.projectiler.app.receiver.BootAndInstallCompleteReceiver"
+            android:name=".receiver.BootAndInstallCompleteReceiver"
             android:enabled="true" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.PACKAGE_FIRST_LAUNCH" />
-                <action android:name="android.intent.action.PACKAGE_CHANGEDhahah" />
+                <action android:name="android.intent.action.PACKAGE_CHANGED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="de.saxsys.android.projectiler.app.receiver.NotificationReceiver"
-            android:enabled="true"
-            android:exported="true" >
+            android:name=".receiver.NotificationReceiver"
+            android:enabled="true" >
         </receiver>
 
         <activity
-            android:name="de.saxsys.android.projectiler.app.SelectProjectPopup"
+            android:name=".SelectProjectPopup"
             android:label="@string/title_activity_select_project_popup"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
         <activity
-            android:name="de.saxsys.android.projectiler.app.CommentActivity"
+            android:name=".CommentActivity"
             android:label="@string/title_activity_comment"
             android:theme="@android:style/Theme.Holo.Light.Dialog">
         </activity>

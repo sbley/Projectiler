@@ -15,7 +15,7 @@ import org.droidparts.annotation.inject.InjectView;
 import java.util.Date;
 
 import de.saxsys.android.projectiler.app.backend.DateUtil;
-import de.saxsys.android.projectiler.app.service.ProjectilerIntentService;
+import de.saxsys.android.projectiler.app.service.ProjectilerBroadcastReceiver;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
@@ -62,11 +62,11 @@ public class CommentActivity extends Activity implements View.OnClickListener {
 
             businessProcess.saveComment(etComment.getText().toString());
 
-            Intent intent = new Intent(getApplicationContext(), ProjectilerIntentService.class);
-            intent.setAction(ProjectilerIntentService.ACTION_STOP);
-            intent.putExtra(ProjectilerIntentService.EXTRAS_START_DATE, DateUtil.getDate(tpStart).getTime());
-            intent.putExtra(ProjectilerIntentService.EXTRAS_END_DATE, DateUtil.getDate(tpStop).getTime());
-            PendingIntent stopPendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+            Intent intent = new Intent(getApplicationContext(), ProjectilerBroadcastReceiver.class);
+            intent.setAction(ProjectilerBroadcastReceiver.ACTION_STOP);
+            intent.putExtra(ProjectilerBroadcastReceiver.EXTRAS_START_DATE, DateUtil.getDate(tpStart).getTime());
+            intent.putExtra(ProjectilerBroadcastReceiver.EXTRAS_END_DATE, DateUtil.getDate(tpStop).getTime());
+            PendingIntent stopPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
 
             try {
                 stopPendingIntent.send(getApplicationContext(), 0, intent);

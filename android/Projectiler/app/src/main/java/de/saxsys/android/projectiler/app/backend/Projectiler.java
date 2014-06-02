@@ -54,7 +54,7 @@ public class Projectiler {
     public Date checkin() {
         final Date start = new Date();
         dataStore.setStartDate(start);
-        LOGGER.info("Checked in at " + DateUtil.formatShort(start));
+        LOGGER.info("Checked in at " + start);
         return start;
     }
 
