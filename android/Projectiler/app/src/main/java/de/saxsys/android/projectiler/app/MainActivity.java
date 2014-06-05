@@ -3,7 +3,6 @@ package de.saxsys.android.projectiler.app;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Point;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -15,19 +14,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.PointTarget;
 
 import org.droidparts.activity.support.v7.ActionBarActivity;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
+import org.droidparts.fragment.support.v4.Fragment;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -37,11 +36,12 @@ import de.saxsys.android.projectiler.app.dialog.LogoutDialog;
 import de.saxsys.android.projectiler.app.ui.fragment.NavigationDrawerFragment;
 import de.saxsys.android.projectiler.app.ui.fragment.TimeTrackingFragment;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
-import de.saxsys.android.projectiler.app.utils.FeatureUtils;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+    private final String TAG = MainActivity.class.getSimpleName();
 
     public static final String NFC_KEY_WORD = "de.saxsys.android.projectile.app";
     /**
@@ -80,25 +80,25 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-
+        Log.d(TAG, "setup Navigation Drawer");
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        Log.d(TAG, "show TimeTrackingFragment");
         FragmentManager fragmentManager = getSupportFragmentManager();
-        TimeTrackingFragment fragment = new TimeTrackingFragment();
-        fragment.setArguments(TimeTrackingFragment.newInstance(businessProcess.getProjectName(), false, true));
+        Fragment fragment = TimeTrackingFragment.newInstance(businessProcess.getProjectName(), false, true);
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
 
+        Log.d(TAG, "setup NFC");
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         nfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writeTagFilters = new IntentFilter[]{tagDetected};
-
 
     }
 
@@ -115,21 +115,28 @@ public class MainActivity extends ActionBarActivity
                 // update the main content by replacing fragments
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
-                TimeTrackingFragment fragment = new TimeTrackingFragment();
-
                 String currentProjectName = businessProcess.getProjectName();
+                Date startDate = businessProcess.getStartDate();
 
-                Log.i("Projekt", "gestartetes Projekt: " + currentProjectName + " selectes Project: " + projectName);
+                Log.d(TAG, "onNavigationDrawerItemSelected " + currentProjectName + " startDate: " + startDate);
+                Log.d(TAG, "clicked on item " + projectName);
+
+                boolean startVisible;
+                boolean stopVisible;
 
                 // beide Buttons sichtbar, weil kein aktives projekt
                 if (currentProjectName.equals("")) {
-                    fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
-
-                } else if (currentProjectName.equals(projectName) && businessProcess.getStartDate() != null) {
-                    fragment.setArguments(TimeTrackingFragment.newInstance(projectName, false, true));
+                    startVisible = true;
+                    stopVisible = false;
+                } else if (currentProjectName.equals(projectName) && startDate != null) {
+                    startVisible = false;
+                    stopVisible = true;
                 } else {
-                    fragment.setArguments(TimeTrackingFragment.newInstance(projectName, true, false));
+                    startVisible = true;
+                    stopVisible = false;
                 }
+
+                Fragment fragment = TimeTrackingFragment.newInstance(projectName, startVisible, stopVisible);
 
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, fragment)
@@ -139,9 +146,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void onSectionAttached(String number) {
-
         mTitle = number;
-
     }
 
     public void restoreActionBar() {
@@ -163,30 +168,12 @@ public class MainActivity extends ActionBarActivity
         this.menu = menu;
 
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
+
             if (dataProvider.getTracks().size() > 0) {
                 getMenuInflater().inflate(R.menu.upload, menu);
             }
 
             if (businessProcess.getAutoLogin()) {
-
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-
-                if (!FeatureUtils.isFeatureNotificationSeen(getApplicationContext())) {
-                    helpDialog = new ShowcaseView.Builder(this)
-                            .setTarget(new PointTarget(width - 50, 0))
-                            .setContentTitle(getString(R.string.new_feature_notification_title))
-                            .setContentText(getString(R.string.new_feature_notification_text));
-                    showcaseView = helpDialog.build();
-
-                    FeatureUtils.featureNotificationSeen(getApplicationContext());
-                }
-
                 getMenuInflater().inflate(R.menu.main, menu);
             }
             restoreActionBar();
@@ -205,11 +192,6 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 Intent inten = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(inten);
-
-                if (showcaseView != null) {
-                    showcaseView.hide();
-                }
-
                 break;
 
             case R.id.action_logout:
@@ -220,7 +202,7 @@ public class MainActivity extends ActionBarActivity
                 if (projectilerTag != null) {
 
                     // nfc löschen
-                    Log.d("", "write nfc");
+                    Log.d(TAG, "write nfc");
 
                     try {
                         write(NFC_KEY_WORD, projectilerTag);
@@ -248,6 +230,7 @@ public class MainActivity extends ActionBarActivity
     private AsyncTaskResultListener uploadAllTracksListener = new AsyncTaskResultListener() {
         @Override
         public void onAsyncTaskSuccess(Object o) {
+            Log.i(TAG, "upload track successfull");
             setActionBarLoadingIndicatorVisible(false);
             Crouton.makeText(MainActivity.this, getString(R.string.tracks_was_uploaded), Style.CONFIRM).show();
             supportInvalidateOptionsMenu();
@@ -255,6 +238,7 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
+            Log.e(TAG, e.getMessage());
             setActionBarLoadingIndicatorVisible(false);
             Crouton.makeText(MainActivity.this, getString(R.string.no_connection_to_server), Style.ALERT).show();
             supportInvalidateOptionsMenu();
@@ -263,7 +247,7 @@ public class MainActivity extends ActionBarActivity
 
 
     public void refreshNavigationDrawer(String projectName) {
-
+        Log.d(TAG, "refresh NavigationDrawer");
         if (businessProcess.getStartDate() != null) {
             mNavigationDrawerFragment.setProjectActive(projectName);
         } else {
@@ -280,6 +264,8 @@ public class MainActivity extends ActionBarActivity
             IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED); // filter for tags
             IntentFilter[] writeTagFilters = new IntentFilter[]{tagDetected};
             nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
+        }else{
+            Log.w(TAG, "NFC not possible");
         }
 
     }
@@ -296,7 +282,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void disableForegroundMode() {
-        Log.d("", "disableForegroundMode");
+        Log.d(TAG, "disableForegroundMode");
         if (nfcAdapter != null) {
             nfcAdapter.disableForegroundDispatch(this);
         }
@@ -335,21 +321,18 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("", "onNewIntent");
+        Log.d(TAG, "onNewIntent");
 
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             projectilerTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-            Log.d("", "projectilerTag gesetzt");
+            Log.d(TAG, "projectilerTag in range");
             Crouton.makeText(MainActivity.this, getString(R.string.ncf_in_range), Style.CONFIRM).show();
 
             MenuItem item = menu.findItem(R.id.action_nfc);
             if (item == null) {
                 getMenuInflater().inflate(R.menu.nfcitem, menu);
             }
-
         }
-
     }
-
 }

@@ -21,12 +21,11 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
  */
 public class ProjectilerAppWidget extends AppWidgetProvider {
 
-    private static final String CLICK_ACTION = "de.saxsys.android.projectiler.app.widget.CLICK";
+    private static final String TAG = ProjectilerAppWidget.class.getSimpleName();
+
     public static final String EXTRA_PROJECT_NAME = "de.saxsys.android.projectiler.app.widget.PROJECT_NAME";
     private static final String SHOW_PROJECT_POPUP_DIALOG_ACTION = "de.saxsys.android.projectiler.app.widget.showprojectpopup";
     private static final String SHOW_COMMENT_DIALOG_ACTION = "de.saxsys.android.projectiler.app.widget.showcommentpopup";
-
-
 
     private static BusinessProcess businessProcess;
 
@@ -54,7 +53,7 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        Log.i("ProjectilerAppWidget", "updateAppWidget");
+        Log.d(TAG, "updateAppWidget");
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.projectiler_app_widget);

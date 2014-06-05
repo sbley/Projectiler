@@ -72,12 +72,15 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static Bundle newInstance(String projectName, boolean startVisible, boolean stopVisible) {
+    public static Fragment newInstance(String projectName, boolean startVisible, boolean stopVisible) {
+        TimeTrackingFragment fragment = new TimeTrackingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PROJECT_NAME, projectName);
         args.putBoolean(ARG_START_VISIBLE, startVisible);
         args.putBoolean(ARG_STOP_VISIBLE, stopVisible);
-        return args;
+
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public TimeTrackingFragment() {
@@ -262,10 +265,10 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
         }
     };
 
-    private AsyncTaskResultListener<Void> stopTaskResultListener = new AsyncTaskResultListener<Void>() {
+    private AsyncTaskResultListener<String> stopTaskResultListener = new AsyncTaskResultListener<String>() {
 
         @Override
-        public void onAsyncTaskSuccess(Void aVoid) {
+        public void onAsyncTaskSuccess(String projectName) {
             getActivity().setProgressBarIndeterminateVisibility(false);
 
             businessProcess.resetStartTime();

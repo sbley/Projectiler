@@ -24,7 +24,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
     private TimePicker tpStart;
     private TimePicker tpStop;
 
-    private AsyncTaskResultListener<Void> stopTaskResultListener;
+    private AsyncTaskResultListener<String> stopTaskResultListener;
     private OnBackPressListener backPressListener;
     private String projectName;
     private BusinessProcess businessProcess;
@@ -32,7 +32,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
     private EditText etComment;
 
     @SuppressLint("ValidFragment")
-    public CommentDialog(final AsyncTaskResultListener<Void> stopTaskResultListener, OnBackPressListener backPressListener, final String projectName){
+    public CommentDialog(final AsyncTaskResultListener<String> stopTaskResultListener, OnBackPressListener backPressListener, final String projectName){
         this.stopTaskResultListener = stopTaskResultListener;
         this.projectName = projectName;
         this.backPressListener = backPressListener;

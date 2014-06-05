@@ -100,9 +100,9 @@ public class ProjectilerBroadcastReceiver extends BroadcastReceiver {
         }
     };
 
-    private AsyncTaskResultListener<Void> stopTaskResultListener = new AsyncTaskResultListener<Void>() {
+    private AsyncTaskResultListener<String> stopTaskResultListener = new AsyncTaskResultListener<String>() {
         @Override
-        public void onAsyncTaskSuccess(Void aVoid) {
+        public void onAsyncTaskSuccess(String projectName) {
             businessProcess.hideProgressBarOnWidget(context);
         }
 

@@ -12,14 +12,14 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 /**
  * Created by stefan.heinze on 21.05.2014.
  */
-public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
+public class StopAsyncTask extends AsyncTask<Void, Void, String> {
 
     private BusinessProcess businessProcess;
     private String projectName;
     private Date startDate;
     private Date endDate;
 
-    public StopAsyncTask(Context context, String projectName, Date startDate, Date endDate, AsyncTaskResultListener<Void> stopTaskResultListener) {
+    public StopAsyncTask(Context context, String projectName, Date startDate, Date endDate, AsyncTaskResultListener<String> stopTaskResultListener) {
         super(context, stopTaskResultListener);
         businessProcess = BusinessProcess.getInstance(getContext());
         this.projectName = projectName;
@@ -28,7 +28,7 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void onExecute(Void... voids) throws Exception {
+    protected String onExecute(Void... voids) throws Exception {
 
         if(startDate == null){
             businessProcess.checkout(projectName);
@@ -36,7 +36,7 @@ public class StopAsyncTask extends AsyncTask<Void, Void, Void> {
             businessProcess.checkout(projectName, startDate, endDate);
         }
 
-        return null;
+        return projectName;
     }
 
 

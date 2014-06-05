@@ -1,11 +1,7 @@
 package de.saxsys.android.projectiler.app;
 
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,29 +10,41 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import org.droidparts.activity.support.v7.ActionBarActivity;
+import org.droidparts.annotation.inject.InjectView;
+import org.droidparts.concurrent.task.AsyncTaskResultListener;
+
+import java.util.Date;
 import java.util.List;
 
+import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
+import de.saxsys.android.projectiler.app.asynctasks.StartAsyncTask;
+import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
 import de.saxsys.android.projectiler.app.ui.adapter.ProjectListAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
+import de.saxsys.android.projectiler.app.utils.NotificationUtils;
 import de.saxsys.android.projectiler.app.utils.WidgetUtils;
-import de.saxsys.projectiler.crawler.CrawlingException;
 
 
 public class NfcActivity extends ActionBarActivity {
 
+    private final String TAG = NfcActivity.class.getSimpleName();
+
+    @InjectView(id = R.id.progressBar)
     private ProgressBar progressBar;
+    @InjectView(id = R.id.lvProjects)
     private ListView lvPorjects;
+
     private BusinessProcess businessProcess;
+
+    @Override
+    public void onPreInject() {
+        setContentView(R.layout.activity_nfc);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nfc);
-
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        lvPorjects = (ListView) findViewById(R.id.lvProjects);
-
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
@@ -48,103 +56,40 @@ public class NfcActivity extends ActionBarActivity {
         } else if (businessProcess.getStartDate() == null) {
             // Projekteauswahl anzeigen
             progressBar.setVisibility(View.VISIBLE);
-            new GetProjectsAsyncTask().execute();
+            new GetProjectsAsyncTask(getApplicationContext(), getProjectsListener).execute();
 
         } else {
             progressBar.setVisibility(View.VISIBLE);
-            new CheckoutTask().execute();
+            new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(), null, null, stopTaskListener).execute();
 
         }
-
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.nfc, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    private class CheckoutTask extends AsyncTask {
-
-        private String projectName;
-
+    private AsyncTaskResultListener<Date> startListener = new AsyncTaskResultListener<Date>() {
         @Override
-        protected Object doInBackground(Object[] objects) {
-            projectName = businessProcess.getProjectName();
+        public void onAsyncTaskSuccess(Date date) {
 
-            try {
-                businessProcess.checkout(businessProcess.getProjectName());
-                return new Object();
-            } catch (CrawlingException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException e1) {
-                e1.printStackTrace();
-                sendNotification(003, getString(R.string.error_stop_tracking), e1.getMessage());
+            progressBar.setVisibility(View.GONE);
 
-                finish();
-            }
+            String startTime = businessProcess.getStartDateAsString();
 
-            return null;
+            String projectName = businessProcess.getProjectName();
+
+            NotificationUtils.sendNotification(getApplicationContext(), 001, getString(R.string.start_tracking), getString(R.string.start_tracking_project, startTime, projectName));
+
+            WidgetUtils.refreshWidget(getApplicationContext());
+            finish();
         }
 
         @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-
-            if (o != null) {
-                progressBar.setVisibility(View.GONE);
-
-                sendNotification(002, getString(R.string.stopped_time_tracking), getString(R.string.project_booked, projectName));
-
-                WidgetUtils.refreshWidget(getApplicationContext());
-
-                NfcActivity.this.finish();
-            }
-
+        public void onAsyncTaskFailure(Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         }
-    }
-
-    private class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>> {
-
+    };
+    private AsyncTaskResultListener<List<String>> getProjectsListener = new AsyncTaskResultListener<List<String>>() {
         @Override
-        protected List<String> doInBackground(Void... voids) {
-
-            try {
-
-                List<String> projectNames = businessProcess.getProjectNames();
-                for (String projectName : projectNames) {
-                    Log.i("Projects: ", "" + projectName);
-                }
-
-                return projectNames;
-            } catch (CrawlingException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<String> itemList) {
-            super.onPostExecute(itemList);
-
+        public void onAsyncTaskSuccess(List<String> itemList) {
             lvPorjects.setAdapter(new ProjectListAdapter(getApplicationContext(), itemList));
 
             progressBar.setVisibility(View.GONE);
@@ -159,56 +104,52 @@ public class NfcActivity extends ActionBarActivity {
 
                     businessProcess.saveProjectName(getApplicationContext(), projectName);
 
-                    new StartAsyncTask().execute();
+                    new StartAsyncTask(getApplicationContext(), startListener).execute();
                 }
             });
 
         }
-    }
-
-    private class StartAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
-
-            businessProcess.checkin();
-
-            return null;
+        public void onAsyncTaskFailure(Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            finish();
         }
+    };
 
+    private AsyncTaskResultListener<String> stopTaskListener = new AsyncTaskResultListener<String>() {
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
+        public void onAsyncTaskSuccess(String projectName) {
             progressBar.setVisibility(View.GONE);
 
-            String startTime = businessProcess.getStartDateAsString();
-
-            String projectName = businessProcess.getProjectName();
-
-            sendNotification(001, getString(R.string.start_tracking), getString(R.string.start_tracking_project, startTime, projectName));
-
+            NotificationUtils.sendNotification(getApplicationContext(), 002, getString(R.string.stopped_time_tracking), getString(R.string.project_booked, projectName));
             WidgetUtils.refreshWidget(getApplicationContext());
-
-
-            finish();
-
+            NfcActivity.this.finish();
         }
+
+        @Override
+        public void onAsyncTaskFailure(Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            NotificationUtils.sendNotification(getApplicationContext(), 003, getString(R.string.error_stop_tracking), e.getMessage());
+            finish();
+        }
+    };
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.nfc, menu);
+        return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-    private void sendNotification(int mNotificationId, String title, String text) {
-
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_projectctiler_notification)
-                        .setContentTitle(title)
-                        .setContentText(text);
-
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
 }

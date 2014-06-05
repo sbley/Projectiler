@@ -1,6 +1,7 @@
 package de.saxsys.android.projectiler.app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -22,6 +23,8 @@ import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 public class SelectProjectPopup extends Activity {
 
+    private final String TAG = SelectProjectPopup.class.getSimpleName();
+
     @InjectView(id = R.id.progressBar)
     private ProgressWheel progressBar;
     @InjectView(id = R.id.lvProjects)
@@ -29,13 +32,11 @@ public class SelectProjectPopup extends Activity {
 
     private BusinessProcess businessProcess;
 
-
     @Override
     public void onPreInject() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_select_project_popup);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class SelectProjectPopup extends Activity {
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
+            Log.e(TAG, e.getMessage(), e);
             finish();
         }
     };

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +27,8 @@ import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 
 
 public class LoginActivity extends ActionBarActivity implements View.OnClickListener{
+
+    private final String TAG = LoginActivity.class.getSimpleName();
 
     @InjectView(id = R.id.btn_login, click = true)
     private Button btnLogin;
@@ -54,6 +57,7 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
         if(businessProcess.getAutoLogin()){
+            Log.i(TAG, "Login is saved");
 
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -64,6 +68,8 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     }
 
     private void startNotificationService() {
+        Log.d(TAG, "start notification Service");
+
         Intent notification = new Intent(getApplicationContext(), NotificationReceiver.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notification, 0);
@@ -77,8 +83,6 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.login, menu);
         return true;
     }
@@ -86,6 +90,8 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if(view == btnLogin){
+            Log.i(TAG, "click Login Button");
+
             setProgressBarIndeterminateVisibility(true);
             new LoginAsyncTask(getApplicationContext(), username.getText().toString(),password.getText().toString(), true, loginTaskListener).execute();
         }
@@ -94,6 +100,8 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
     private AsyncTaskResultListener<Void> loginTaskListener = new AsyncTaskResultListener<Void>() {
         @Override
         public void onAsyncTaskSuccess(Void aVoid) {
+            Log.i(TAG, "Login was successfull");
+
             setProgressBarIndeterminateVisibility(false);
             WidgetUtils.refreshWidget(getApplicationContext());
 
@@ -105,6 +113,8 @@ public class LoginActivity extends ActionBarActivity implements View.OnClickList
 
         @Override
         public void onAsyncTaskFailure(Exception e) {
+            Log.e(TAG, e.getMessage());
+
             setProgressBarIndeterminateVisibility(false);
             Crouton.makeText(LoginActivity.this, e.getMessage(), Style.ALERT).show();
         }

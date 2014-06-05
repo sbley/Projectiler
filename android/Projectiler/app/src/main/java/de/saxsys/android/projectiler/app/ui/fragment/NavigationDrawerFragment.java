@@ -94,9 +94,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
             if (businessProcess.getProjectName().equals("")) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                TimeTrackingFragment fragment = new TimeTrackingFragment();
+                Fragment fragment = TimeTrackingFragment.newInstance("", false, true);
 
-                fragment.setArguments(TimeTrackingFragment.newInstance("", false, true));
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, fragment)
                         .commit();
@@ -108,9 +107,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             progress.setVisibility(View.GONE);
             Crouton.makeText(getActivity(), getString(R.string.no_connection_to_server), Style.ALERT).show();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            TimeTrackingFragment fragment = new TimeTrackingFragment();
+            Fragment fragment = TimeTrackingFragment.newInstance("", false, true);
 
-            fragment.setArguments(TimeTrackingFragment.newInstance("", false, true));
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
@@ -344,7 +342,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
 
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    org.droidparts.fragment.support.v4.Fragment fragment = new TimeTrackingFragment();
 
                     if(groupPosition == 0){
 
@@ -357,7 +354,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
                     }else if (groupPosition == 1){
 
-                        fragment.setArguments(TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true));
+                        Fragment fragment = TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true);
 
                         fragmentManager.beginTransaction()
                                 .replace(R.id.container, fragment)

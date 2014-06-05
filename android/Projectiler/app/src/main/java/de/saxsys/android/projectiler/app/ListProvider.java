@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -14,30 +15,21 @@ import java.util.List;
  * Created by stefan.heinze on 14.05.2014.
  */
 public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
+
+    private final String TAG = ListProvider.class.getSimpleName();
+
     public static final String EXTRA_LIST_VIEW_ROW_NUMBER = "List_Row_Number";
-    private ArrayList listItemList = new ArrayList();
+    private ArrayList<String> listItemList = new ArrayList<String>();
     private Context context = null;
     private int appWidgetId;
-    private List<String> projectNames;
 
     public ListProvider(Context context, Intent intent, List<String> projects) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
-        populateListItem(projects);
-    }
-
-    private void populateListItem(List<String> projects) {
-        this.projectNames = projects;
-        for (int i = 0; i < projectNames.size(); i++) {
-            List<String> listItem = new ArrayList<String>();
-
-            listItem.add(projectNames.get(i));
-
-            listItemList.add(listItem);
-        }
-
+        Log.d(TAG, "show " + projects.size() + " Projects");
+        listItemList.addAll(projects);
     }
 
     @Override
@@ -70,23 +62,17 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         return false;
     }
 
-    /*
-    *Similar to getView of Adapter where instead of View
-    *we return RemoteViews
-    *
-    */
+
     @Override
     public RemoteViews getViewAt(int position) {
 
-        //Log.i("Listprovider", "getViewAt " + position);
-
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.adapter_navigation_drawer);
-        remoteView.setTextViewText(R.id.tv_project_name, projectNames.get(position));
+        remoteView.setTextViewText(R.id.tv_project_name, listItemList.get(position));
 
         final Intent fillInIntent = new Intent();
         final Bundle extras = new Bundle();
-        extras.putString(ProjectilerAppWidget.EXTRA_PROJECT_NAME, projectNames.get(position));
+        extras.putString(ProjectilerAppWidget.EXTRA_PROJECT_NAME, listItemList.get(position));
         fillInIntent.putExtras(extras);
         remoteView.setOnClickFillInIntent(R.id.rl_widget, fillInIntent);
 
