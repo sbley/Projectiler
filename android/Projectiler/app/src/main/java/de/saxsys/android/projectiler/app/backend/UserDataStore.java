@@ -146,10 +146,6 @@ public class UserDataStore implements Serializable {
 
         String selectedProject = getProjectName();
 
-        if(selectedProject.equals("")){
-            return ret;
-        }
-
         for(int i = 0; i < items.size(); i++){
             if(items.get(i).equals(selectedProject)){
                 return i;

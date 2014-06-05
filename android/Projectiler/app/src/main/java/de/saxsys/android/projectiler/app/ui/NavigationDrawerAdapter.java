@@ -1,12 +1,12 @@
 package de.saxsys.android.projectiler.app.ui;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -73,9 +73,9 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
 
         if(groupPosition == 1){
             if(childPosition == activeElement){
-                holder.ivActive.setImageResource(R.drawable.online_icon);
+                holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
             }else{
-                holder.ivActive.setImageBitmap(null);
+                holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             }
         }
 
@@ -85,9 +85,8 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
 
     private void lookup(final View view) {
         final TextView tvProjectName = (TextView) view.findViewById(R.id.tv_project_name);
-        final ImageView ivActive = (ImageView) view.findViewById(R.id.iv_active);
 
-        final ViewHolder holder = new ViewHolder(tvProjectName, ivActive);
+        final ViewHolder holder = new ViewHolder(tvProjectName);
         view.setTag(holder);
     }
 
@@ -141,11 +140,9 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
 
     private static class ViewHolder {
         TextView tvProjectName;
-        ImageView ivActive;
 
-        private ViewHolder(final TextView tvProjectName, final ImageView ivActive) {
+        private ViewHolder(final TextView tvProjectName) {
             this.tvProjectName = tvProjectName;
-            this.ivActive = ivActive;
         }
 
     }

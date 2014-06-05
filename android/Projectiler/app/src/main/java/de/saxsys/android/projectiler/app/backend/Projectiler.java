@@ -91,7 +91,6 @@ public class Projectiler {
             throw e;
         } finally {
             dataStore.clearStartDate();
-            dataStore.setProjectName("");
             dataStore.deleteComment();
         }
         LOGGER.info("Checked out at " + DateUtil.formatShort(endDate));
