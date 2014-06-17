@@ -1,4 +1,0 @@
-<!-- From: file:/D:/private_git_repository/Projectiler/android/Projectiler/library/src/main/AndroidManifest.xml --><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.github.amlcurran.showcaseview">
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19"/>
-
-</manifest>

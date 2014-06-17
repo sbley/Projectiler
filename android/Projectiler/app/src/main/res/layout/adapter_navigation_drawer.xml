@@ -10,7 +10,6 @@
         android:textColor="@android:color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:textIsSelectable="false"
         android:id="@+id/tv_project_name"
         android:layout_centerVertical="true" />

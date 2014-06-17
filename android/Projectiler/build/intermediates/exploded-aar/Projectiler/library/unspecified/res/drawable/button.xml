@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/button_normal" />
+</selector><!-- From: file:/D:/private_git_repository/Projectiler/android/Projectiler/library/src/main/res/drawable/button.xml -->

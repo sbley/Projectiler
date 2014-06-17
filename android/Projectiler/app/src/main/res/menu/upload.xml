@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_upload"
-        android:title="upload"
+        android:title="@string/upload"
         app:showAsAction="always" />
 
 </menu>

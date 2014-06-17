@@ -86,7 +86,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset"
+            android:text="@string/reset"
             android:visibility="visible"
             android:background="@drawable/resetbutton_btn_default_holo_light"
             android:id="@+id/btnReset"

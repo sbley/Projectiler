@@ -30,8 +30,8 @@
     <string name="start_tracking_project">%1$s for project %2$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="current_tracks">Tracks today</string>
-    <string name="load_projects">loading projects...</string>
-    <string name="load_tracks">loading tracks...</string>
+    <string name="load_projects">loading projects&#8230;</string>
+    <string name="load_tracks">loading tracks&#8230;</string>
     <string name="no_tracks_found">no tracks found</string>
     <string name="refresh">refresh</string>
     <string name="please_put_nfc_in_range">please put nfc in range</string>
@@ -70,5 +70,9 @@
     <string name="comment_title">set comment</string>
     <string name="insert_comment">insert comment</string>
     <string name="to">to</string>
+    <string name="upload">upload</string>
+    <string name="current_track_seperator">-</string>
+    <string name="ok">OK</string>
+    <string name="reset">Reset</string>
 
 </resources>

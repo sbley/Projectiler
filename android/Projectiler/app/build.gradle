@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -18,11 +18,11 @@ android {
     }
 }
 repositories {
-    //maven{
-    //    url "http://nexus.saxsys.de/content/repositories/external/"
-    //}
+    maven{
+        url "http://nexus.saxsys.de/content/repositories/external/"
+    }
     mavenLocal()
-    mavenCentral()
+    //mavenCentral()
 }
 dependencies {
     compile 'com.android.support:appcompat-v7:19.1.0'

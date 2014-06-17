@@ -29,8 +29,8 @@
     <string name="start_tracking">Zeiterfassung gestartet</string>
     <string name="start_tracking_project">%1$s für das Projekt %2$s</string>
     <string name="current_tracks">Zeiten Heute</string>
-    <string name="load_projects">Lade Projekte...</string>
-    <string name="load_tracks">Lade Zeiten...</string>
+    <string name="load_projects">Lade Projekte&#8230;</string>
+    <string name="load_tracks">Lade Zeiten&#8230;</string>
     <string name="no_tracks_found">Keine Buchungen vorhanden</string>
     <string name="refresh">Neu Laden</string>
     <string name="please_put_nfc_in_range">Bitte legen Sie den NFC Tag in Reichweite</string>
@@ -59,6 +59,10 @@
     <string name="comment_title">Kommentar hinzufügen</string>
     <string name="insert_comment">Kommentar eingeben</string>
     <string name="to">bis</string>
+    <string name="upload">upload</string>
+    <string name="current_track_seperator">-</string>
+    <string name="ok">OK</string>
+    <string name="reset">Reset</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

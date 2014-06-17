@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bis"
+        android:text="@string/to"
         android:id="@+id/tvTo"
         android:paddingTop="16dp"
         android:layout_centerVertical="true"

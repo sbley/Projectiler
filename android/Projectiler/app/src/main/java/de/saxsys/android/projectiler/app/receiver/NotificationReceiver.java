@@ -1,20 +1,17 @@
 package de.saxsys.android.projectiler.app.receiver;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import de.saxsys.android.projectiler.app.LoginActivity;
 import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
+import de.saxsys.android.projectiler.app.utils.NotificationUtils;
 import de.saxsys.android.projectiler.app.utils.SettingsUtils;
 
 public class NotificationReceiver extends BroadcastReceiver {
@@ -128,19 +125,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     private void sendNotification(Context context, int mNotificationId, String title, String text, boolean vibrate) {
 
-        NotificationManager mNotifyMgr =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Intent intent = new Intent(context, LoginActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_projectctiler_notification)
-                        .setContentTitle(title)
-                        .setContentText(text).addAction(R.drawable.ic_launcher, context.getString(R.string.launch_app), pIntent);
-
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        NotificationUtils.sendNotification(context, mNotificationId, title, text);
 
         if(vibrate){
             Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);

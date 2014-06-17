@@ -12,7 +12,7 @@ import android.widget.RemoteViews;
 
 import java.util.Date;
 
-import de.saxsys.android.projectiler.app.service.ProjectilerBroadcastReceiver;
+import de.saxsys.android.projectiler.app.receiver.ProjectilerBroadcastReceiver;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
