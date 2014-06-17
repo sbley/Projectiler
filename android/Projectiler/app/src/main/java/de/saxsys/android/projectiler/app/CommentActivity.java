@@ -6,17 +6,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TimePicker;
 
 import org.droidparts.activity.Activity;
 import org.droidparts.annotation.inject.InjectView;
 
 import java.util.Date;
+import java.util.List;
 
 import de.saxsys.android.projectiler.app.backend.DateUtil;
 import de.saxsys.android.projectiler.app.receiver.ProjectilerBroadcastReceiver;
+import de.saxsys.android.projectiler.app.ui.adapter.CommentCompleteAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 
@@ -27,7 +29,7 @@ public class CommentActivity extends Activity implements View.OnClickListener {
     @InjectView(id = R.id.btn_ok, click = true)
     private Button okButton;
     @InjectView(id = R.id.et_comment)
-    private EditText etComment;
+    private AutoCompleteTextView etComment;
     @InjectView(id = R.id.tpStart)
     private TimePicker tpStart;
     @InjectView(id = R.id.tpStop)
@@ -56,6 +58,10 @@ public class CommentActivity extends Activity implements View.OnClickListener {
 
         DateUtil.setDatePicker(tpStart, startDate);
         DateUtil.setDatePicker(tpStop, endDate);
+
+        List<String> comments = businessProcess.searchComments("");
+        etComment.setAdapter(new CommentCompleteAdapter(this, comments));
+
 
     }
 
@@ -88,4 +94,5 @@ public class CommentActivity extends Activity implements View.OnClickListener {
             finish();
         }
     }
+
 }

@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.saxsys.android.projectiler.app.generatedmodel.Comment;
+import de.saxsys.android.projectiler.app.generatedmodel.CommentDao;
 import de.saxsys.android.projectiler.app.generatedmodel.DaoMaster;
 import de.saxsys.android.projectiler.app.generatedmodel.DaoSession;
 import de.saxsys.android.projectiler.app.generatedmodel.Track;
@@ -23,6 +25,7 @@ public class DataProvider {
     private final Context context;
     private SQLiteDatabase db;
     private TrackDao trackDao;
+    private CommentDao commentDao;
 
 
     public DataProvider(final Context context) {
@@ -38,6 +41,7 @@ public class DataProvider {
         DaoSession daoSession = daoMaster.newSession();
 
         trackDao = daoSession.getTrackDao();
+        commentDao = daoSession.getCommentDao();
 
     }
 
@@ -61,6 +65,19 @@ public class DataProvider {
         }
         return ret;
     }
+
+    public void saveComment(final Comment comment){
+
+        if(commentDao.queryBuilder().where(CommentDao.Properties.Value.eq(comment.getValue())).list().size() == 0){
+            commentDao.insertOrReplace(comment);
+        }
+
+    }
+
+    public List<Comment> searchComments(final String searchTerm){
+        return commentDao.queryBuilder().where(CommentDao.Properties.Value.like("%" + searchTerm + "%")).orderDesc(CommentDao.Properties.Timestamp).list();
+    }
+
 
     private boolean isToday(Date timestamp) {
 

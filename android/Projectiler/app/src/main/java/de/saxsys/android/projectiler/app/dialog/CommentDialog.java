@@ -3,24 +3,27 @@ package de.saxsys.android.projectiler.app.dialog;
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AutoCompleteTextView;
 import android.widget.TimePicker;
 
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 
 import java.util.Date;
+import java.util.List;
 
 import de.saxsys.android.projectiler.app.R;
 import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
 import de.saxsys.android.projectiler.app.backend.DateUtil;
+import de.saxsys.android.projectiler.app.ui.adapter.CommentCompleteAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 
 /**
  * Created by stefan.heinze on 29.05.2014.
  */
 @SuppressLint("ValidFragment")
-public class CommentDialog extends BaseDefaultDialogFragment  {
+public class CommentDialog extends BaseDefaultDialogFragment {
 
+    private static final String TAG = CommentDialog.class.getSimpleName();
     private TimePicker tpStart;
     private TimePicker tpStop;
 
@@ -29,7 +32,7 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
     private String projectName;
     private BusinessProcess businessProcess;
     private boolean okClicked = false;
-    private EditText etComment;
+    private AutoCompleteTextView etComment;
 
     @SuppressLint("ValidFragment")
     public CommentDialog(final AsyncTaskResultListener<String> stopTaskResultListener, OnBackPressListener backPressListener, final String projectName){
@@ -44,12 +47,16 @@ public class CommentDialog extends BaseDefaultDialogFragment  {
 
         tpStart = (TimePicker) view.findViewById(R.id.tpStart);
         tpStop = (TimePicker) view.findViewById(R.id.tpStop);
-        etComment = (EditText) view.findViewById(R.id.et_comment);
+        etComment = (AutoCompleteTextView) view.findViewById(R.id.et_comment);
+
+        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
+        List<String> comments = businessProcess.searchComments("");
+
+        etComment.setAdapter(new CommentCompleteAdapter(getActivity(), comments));
 
         tpStart.setIs24HourView(true);
         tpStop.setIs24HourView(true);
 
-        businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
 
         Date startDate = businessProcess.getStartDate();
 

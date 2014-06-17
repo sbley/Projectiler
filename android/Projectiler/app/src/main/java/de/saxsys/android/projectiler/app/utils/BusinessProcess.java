@@ -2,11 +2,13 @@ package de.saxsys.android.projectiler.app.utils;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import de.saxsys.android.projectiler.app.backend.Projectiler;
 import de.saxsys.android.projectiler.app.backend.UserDataStore;
+import de.saxsys.android.projectiler.app.generatedmodel.Comment;
 import de.saxsys.android.projectiler.app.generatedmodel.Track;
 import de.saxsys.projectiler.crawler.Booking;
 import de.saxsys.projectiler.crawler.ConnectionException;
@@ -52,7 +54,6 @@ public class BusinessProcess {
         Date checkout = null;
 
         checkout = projectiler.checkout(projectName);
-
         return checkout;
     }
 
@@ -158,5 +159,16 @@ public class BusinessProcess {
 
     public void saveComment(String comment) {
         dataStorage.saveComment(comment);
+    }
+
+    public List<String> searchComments(String charSequence) {
+        List<Comment> comments = dataStorage.searchComments(charSequence);
+        List<String> ret = new ArrayList<String>();
+
+        for(Comment comment : comments){
+            ret.add(comment.getValue());
+        }
+
+        return ret;
     }
 }

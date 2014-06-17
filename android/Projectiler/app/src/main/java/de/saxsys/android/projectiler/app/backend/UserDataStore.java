@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import de.saxsys.android.projectiler.app.db.DataProvider;
+import de.saxsys.android.projectiler.app.generatedmodel.Comment;
 import de.saxsys.android.projectiler.app.generatedmodel.Track;
 
 public class UserDataStore implements Serializable {
@@ -192,6 +193,7 @@ public class UserDataStore implements Serializable {
     }
 
     public void deleteComment(){
+        persistComment();
         final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
 
         final SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -215,5 +217,20 @@ public class UserDataStore implements Serializable {
 
     public void deleteTrack(Track track) {
         dataProvider.deleteTrack(track);
+    }
+
+    public void persistComment(){
+
+        if(!getComment().equals("")){
+            Comment comment = new Comment();
+            comment.setTimestamp(new Date());
+            comment.setValue(getComment());
+
+            dataProvider.saveComment(comment);
+        }
+    }
+
+    public List<Comment> searchComments(String charSequence) {
+        return dataProvider.searchComments(charSequence);
     }
 }
