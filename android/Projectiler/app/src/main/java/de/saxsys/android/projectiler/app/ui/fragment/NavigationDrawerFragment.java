@@ -136,7 +136,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         }else{
             progress.setVisibility(View.VISIBLE);
             progress.spin();
-            new GetProjectsAsyncTask(getActivity().getApplicationContext(), getProjectsListener).execute();
+            new GetProjectsAsyncTask(getActivity().getApplicationContext(), false, getProjectsListener).execute();
         }
 
         // Select either the default item (0) or the last selected item.
@@ -287,6 +287,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         if (item.getItemId() == R.id.action_logout) {
             return true;
+        }else if(item.getItemId() == R.id.action_refresh_Projects){
+            getActivity().setProgressBarIndeterminateVisibility(true);
+            progress.setVisibility(View.VISIBLE);
+            progress.spin();
+            rlRefresh.setVisibility(View.GONE);
+            mDrawerListView.setVisibility(View.GONE);
+
+            new GetProjectsAsyncTask(getActivity().getApplication(),true, refreshClickListener).execute();
         }
 
         return super.onOptionsItemSelected(item);
@@ -402,7 +410,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             progress.setVisibility(View.VISIBLE);
             progress.spin();
             rlRefresh.setVisibility(View.GONE);
-            new GetProjectsAsyncTask(getActivity().getApplication(), refreshClickListener).execute();
+            new GetProjectsAsyncTask(getActivity().getApplication(), false, refreshClickListener).execute();
         }
     }
 

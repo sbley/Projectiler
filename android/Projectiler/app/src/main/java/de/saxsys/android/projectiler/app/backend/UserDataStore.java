@@ -2,8 +2,11 @@ package de.saxsys.android.projectiler.app.backend;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,6 +28,7 @@ public class UserDataStore implements Serializable {
     private static final String START_DATE = "start_date";
     private static final String WIDGET_LOADING = "widget_loading";
     private static final String COMMENT = "comment";
+    private static final String PROJECT_NAMES = "project_names";
 
 	private static UserDataStore INSTANCE;
 
@@ -232,5 +236,21 @@ public class UserDataStore implements Serializable {
 
     public List<Comment> searchComments(String charSequence) {
         return dataProvider.searchComments(charSequence);
+    }
+
+    public List<String> getProjectNames() {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
+        String[] mylist = TextUtils.split(sharedPreferences.getString(PROJECT_NAMES, ""), "‚‗‚");
+        ArrayList<String> gottenlist = new ArrayList<String>(Arrays.asList(mylist));
+        return gottenlist;
+    }
+
+    public void savePorjectNames(List<String> projectNames) {
+        final SharedPreferences sharedPreferences = getDefaultSharedPreferences();
+        String[] projectNamesStringArray = projectNames.toArray(new String[projectNames.size()]);
+
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(PROJECT_NAMES, TextUtils.join("‚‗‚", projectNamesStringArray));
+        editor.commit();
     }
 }

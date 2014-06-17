@@ -67,8 +67,25 @@ public class BusinessProcess {
     }
 
 
-    public List<String> getProjectNames() throws ConnectionException, CrawlingException {
-        return projectiler.getProjectNames();
+    public List<String> getProjectNames(boolean loadFromServer) throws ConnectionException, CrawlingException {
+
+        if(loadFromServer){
+            return loadProjectsFromServer();
+        }else{
+            List<String> projectNames = dataStorage.getProjectNames();
+            if(projectNames.size() == 0){
+                return loadProjectsFromServer();
+            }else{
+                return projectNames;
+            }
+
+        }
+    }
+
+    private List<String> loadProjectsFromServer() throws CrawlingException {
+        List<String> projectNames = projectiler.getProjectNames();
+        dataStorage.savePorjectNames(projectNames);
+        return projectNames;
     }
 
     public void saveCredentials(final String username, final String password, final boolean saveLogin)

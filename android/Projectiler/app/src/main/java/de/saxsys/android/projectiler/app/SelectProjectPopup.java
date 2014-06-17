@@ -51,7 +51,7 @@ public class SelectProjectPopup extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         progressBar.spin();
 
-        new GetProjectsAsyncTask(getApplicationContext(), getProjectsResultListener).execute();
+        new GetProjectsAsyncTask(getApplicationContext(), false, getProjectsResultListener).execute();
 
     }
 

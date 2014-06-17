@@ -74,5 +74,6 @@
     <string name="current_track_seperator">-</string>
     <string name="ok">OK</string>
     <string name="reset">Reset</string>
+    <string name="action_refresh_projects">Projekte laden</string>
 
 </resources>

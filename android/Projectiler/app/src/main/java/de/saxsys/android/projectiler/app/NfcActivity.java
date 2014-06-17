@@ -56,7 +56,7 @@ public class NfcActivity extends ActionBarActivity {
         } else if (businessProcess.getStartDate() == null) {
             // Projekteauswahl anzeigen
             progressBar.setVisibility(View.VISIBLE);
-            new GetProjectsAsyncTask(getApplicationContext(), getProjectsListener).execute();
+            new GetProjectsAsyncTask(getApplicationContext(), false, getProjectsListener).execute();
 
         } else {
             progressBar.setVisibility(View.VISIBLE);

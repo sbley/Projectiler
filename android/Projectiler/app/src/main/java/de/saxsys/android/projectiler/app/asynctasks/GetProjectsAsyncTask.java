@@ -15,14 +15,16 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 public class GetProjectsAsyncTask extends AsyncTask<Void, Void, List<String>> {
 
     private BusinessProcess businessProcess;
+    private boolean loadFromServer;
 
-    public GetProjectsAsyncTask(Context ctx, AsyncTaskResultListener<List<String>> resultListener) {
+    public GetProjectsAsyncTask(Context ctx, boolean loadFromServer, AsyncTaskResultListener<List<String>> resultListener) {
         super(ctx, resultListener);
         businessProcess = BusinessProcess.getInstance(getContext());
+        this.loadFromServer = loadFromServer;
     }
 
     @Override
     protected List<String> onExecute(Void... voids) throws Exception {
-        return businessProcess.getProjectNames();
+        return businessProcess.getProjectNames(loadFromServer);
     }
 }
