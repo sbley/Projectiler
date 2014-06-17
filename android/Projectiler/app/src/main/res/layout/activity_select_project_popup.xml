@@ -23,9 +23,9 @@
         ProgressWheel:rimWidth="2dp" />
 
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/lvProjects"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

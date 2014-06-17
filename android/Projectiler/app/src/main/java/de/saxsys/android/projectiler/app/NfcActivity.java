@@ -8,7 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.todddavies.components.progressbar.ProgressWheel;
 
 import org.droidparts.activity.support.v7.ActionBarActivity;
 import org.droidparts.annotation.inject.InjectView;
@@ -19,7 +22,7 @@ import java.util.List;
 
 import de.saxsys.android.projectiler.app.asynctasks.GetProjectsAsyncTask;
 import de.saxsys.android.projectiler.app.asynctasks.StartAsyncTask;
-import de.saxsys.android.projectiler.app.asynctasks.StopAsyncTask;
+import de.saxsys.android.projectiler.app.dialog.CommentDialog;
 import de.saxsys.android.projectiler.app.ui.adapter.ProjectListAdapter;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 import de.saxsys.android.projectiler.app.utils.NotificationUtils;
@@ -31,9 +34,9 @@ public class NfcActivity extends ActionBarActivity {
     private final String TAG = NfcActivity.class.getSimpleName();
 
     @InjectView(id = R.id.progressBar)
-    private ProgressBar progressBar;
+    private ProgressWheel progressBar;
     @InjectView(id = R.id.lvProjects)
-    private ListView lvPorjects;
+    private PullToRefreshListView lvProjects;
 
     private BusinessProcess businessProcess;
 
@@ -56,15 +59,37 @@ public class NfcActivity extends ActionBarActivity {
         } else if (businessProcess.getStartDate() == null) {
             // Projekteauswahl anzeigen
             progressBar.setVisibility(View.VISIBLE);
+            progressBar.spin();
+
+            lvProjects.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+                @Override
+                public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.spin();
+                    lvProjects.setVisibility(View.GONE);
+                    new GetProjectsAsyncTask(getApplicationContext(), true, getProjectsListener).execute();
+
+                }
+            });
+
             new GetProjectsAsyncTask(getApplicationContext(), false, getProjectsListener).execute();
 
         } else {
             progressBar.setVisibility(View.VISIBLE);
-            new StopAsyncTask(getApplicationContext(), businessProcess.getProjectName(), null, null, stopTaskListener).execute();
+            progressBar.spin();
+            lvProjects.setVisibility(View.GONE);
+            CommentDialog dialog = new CommentDialog(stopTaskListener, backPressListener, businessProcess.getProjectName());
+            dialog.show(getFragmentManager(), "CommentDialog");
 
         }
 
     }
+    private CommentDialog.OnBackPressListener backPressListener = new CommentDialog.OnBackPressListener() {
+        @Override
+        public void onBackPress() {
+            finish();
+        }
+    };
 
     private AsyncTaskResultListener<Date> startListener = new AsyncTaskResultListener<Date>() {
         @Override
@@ -90,17 +115,18 @@ public class NfcActivity extends ActionBarActivity {
     private AsyncTaskResultListener<List<String>> getProjectsListener = new AsyncTaskResultListener<List<String>>() {
         @Override
         public void onAsyncTaskSuccess(List<String> itemList) {
-            lvPorjects.setAdapter(new ProjectListAdapter(getApplicationContext(), itemList));
+            lvProjects.setAdapter(new ProjectListAdapter(getApplicationContext(), itemList));
+            lvProjects.onRefreshComplete();
 
             progressBar.setVisibility(View.GONE);
 
-            lvPorjects.setVisibility(View.VISIBLE);
+            lvProjects.setVisibility(View.VISIBLE);
 
-            lvPorjects.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            lvProjects.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
 
-                    String projectName = (String) lvPorjects.getItemAtPosition(index);
+                    String projectName = (String) adapterView.getItemAtPosition(index);
 
                     businessProcess.saveProjectName(getApplicationContext(), projectName);
 

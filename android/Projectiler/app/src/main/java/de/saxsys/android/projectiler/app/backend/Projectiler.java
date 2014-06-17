@@ -3,6 +3,7 @@ package de.saxsys.android.projectiler.app.backend;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -141,6 +142,7 @@ public class Projectiler {
         dataStore.setAutoLogin(false);
         dataStore.setCredentials("", "");
         dataStore.setProjectName("");
+        dataStore.savePorjectNames(new ArrayList<String>());
     }
 
     public List<Booking> getDailyReports() throws CrawlingException {

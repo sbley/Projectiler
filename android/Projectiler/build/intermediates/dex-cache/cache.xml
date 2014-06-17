@@ -2,24 +2,6 @@
 <pre-dex-items>
 
     <item
-        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\classes-3efbb231d3338e82744be1ef28bc953ae84b4ebf.jar"
-        jar="D:\private_git_repository\Projectiler\android\Projectiler\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.1.0\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
-    <item
-        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\droidparts-support-2.0.5-902b499e25f77b0d1fc3b55a3f1da9134ec22ac0.jar"
-        jar="C:\Users\stefan.heinze\.gradle\caches\modules-2\files-2.1\org.droidparts\droidparts-support\2.0.5\93f8e846060489ea56c6dcae49c2cb4088dca92b\droidparts-support-2.0.5.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="93f8e846060489ea56c6dcae49c2cb4088dca92b"/>
-    <item
-        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\crawler-jsoup-1.0.3-SNAPSHOT-904b2d0c97ccc947b9019f4937850bcf83b9f597.jar"
-        jar="C:\Users\stefan.heinze\.m2\repository\de\saxsys\projectiler\crawler-jsoup\1.0.3-SNAPSHOT\crawler-jsoup-1.0.3-SNAPSHOT.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="694683e43feb1064d40cbe9840739924281a3e63"/>
-    <item
         dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\droidparts-2.0.5-6be8b366b726650312c427134623ec4ff16d75ca.jar"
         jar="C:\Users\stefan.heinze\.gradle\caches\modules-2\files-2.1\org.droidparts\droidparts\2.0.5\e4c5854b2012f5453b0cc5f62bdd306b9765990d\droidparts-2.0.5.jar"
         jumboMode="false"
@@ -36,7 +18,7 @@
         jar="D:\private_git_repository\Projectiler\android\Projectiler\build\intermediates\exploded-aar\Projectiler\library\unspecified\classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="0a8a171d7ca7db6fae47f71053486bf378ac97d0"/>
+        sha1="6a3f94e4760ced8ba24751a99623b56141679e79"/>
     <item
         dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\jsoup-1.7.3-d08cae233b6da6e980c774c535aa1ca4e1100a16.jar"
         jar="C:\Users\stefan.heinze\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.7.3\92568d7167ce1bf9eb1fd815b022d5a2c113547a\jsoup-1.7.3.jar"
@@ -56,16 +38,40 @@
         revision="19.1.0"
         sha1="1411768bb8c8ffbbfaec9a9074ab07d3ce37a6b3"/>
     <item
+        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\classes-d839e8f217ccd0e405f93df1aa7d3bb65f815aef.jar"
+        jar="D:\private_git_repository\Projectiler\android\Projectiler\build\intermediates\exploded-aar\Projectiler\ProgressWheel-master\unspecified\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="7adc806e7de36a221876dc143e977f6e34fa3ad7"/>
+    <item
+        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\classes-3efbb231d3338e82744be1ef28bc953ae84b4ebf.jar"
+        jar="D:\private_git_repository\Projectiler\android\Projectiler\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.1.0\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+    <item
+        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\droidparts-support-2.0.5-902b499e25f77b0d1fc3b55a3f1da9134ec22ac0.jar"
+        jar="C:\Users\stefan.heinze\.gradle\caches\modules-2\files-2.1\org.droidparts\droidparts-support\2.0.5\93f8e846060489ea56c6dcae49c2cb4088dca92b\droidparts-support-2.0.5.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="93f8e846060489ea56c6dcae49c2cb4088dca92b"/>
+    <item
+        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\crawler-jsoup-1.0.3-SNAPSHOT-904b2d0c97ccc947b9019f4937850bcf83b9f597.jar"
+        jar="C:\Users\stefan.heinze\.m2\repository\de\saxsys\projectiler\crawler-jsoup\1.0.3-SNAPSHOT\crawler-jsoup-1.0.3-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="694683e43feb1064d40cbe9840739924281a3e63"/>
+    <item
+        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\classes-42f026f9e4b1fb82cbc31b0f30347d7cc19a628b.jar"
+        jar="D:\private_git_repository\Projectiler\android\Projectiler\build\intermediates\exploded-aar\Projectiler\pulltorefresh\unspecified\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="4206aca0109bbe3959e9153086407c428aa0de98"/>
+    <item
         dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\crouton-1.8.4-165836a1e1722be94242dc65d502f9f26ef9381f.jar"
         jar="C:\Users\stefan.heinze\.gradle\caches\modules-2\files-2.1\de.keyboardsurfer.android.widget\crouton\1.8.4\c2544779f1579b0fd6e81590812fcdea034e6a69\crouton-1.8.4.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="c2544779f1579b0fd6e81590812fcdea034e6a69"/>
-    <item
-        dex="D:\private_git_repository\Projectiler\android\Projectiler\app\build\intermediates\pre-dexed\debug\classes-d839e8f217ccd0e405f93df1aa7d3bb65f815aef.jar"
-        jar="D:\private_git_repository\Projectiler\android\Projectiler\build\intermediates\exploded-aar\Projectiler\ProgressWheel-master\unspecified\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="d12465e9990ab341c47b97f292da7cb956192b99"/>
 
 </pre-dex-items>

@@ -3,12 +3,11 @@ apply plugin: 'android'
 android {
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 7
-        versionName "1.0"
+        versionName '1.0'
     }
     buildTypes {
         release {
@@ -16,11 +15,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    productFlavors {
+    }
+    packagingOptions {
+        exclude 'AndroidManifest.xml'
+    }
 }
 repositories {
-    maven{
-        url "http://nexus.saxsys.de/content/repositories/external/"
-    }
+    maven { url 'http://nexus.saxsys.de/content/repositories/external/' }
     mavenLocal()
     //mavenCentral()
 }
@@ -36,4 +38,5 @@ dependencies {
     compile 'de.saxsys.projectiler:crawler-api:1.0.3-SNAPSHOT@jar'
     compile project(':ProgressWheel-master')
     compile project(':library')
+    compile project(':pulltorefresh')
 }

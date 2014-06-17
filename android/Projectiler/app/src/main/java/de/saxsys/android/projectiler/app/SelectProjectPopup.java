@@ -7,6 +7,8 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 import org.droidparts.activity.Activity;
@@ -28,7 +30,7 @@ public class SelectProjectPopup extends Activity {
     @InjectView(id = R.id.progressBar)
     private ProgressWheel progressBar;
     @InjectView(id = R.id.lvProjects)
-    private ListView lvProjects;
+    private PullToRefreshListView lvProjects;
 
     private BusinessProcess businessProcess;
 
@@ -44,12 +46,23 @@ public class SelectProjectPopup extends Activity {
 
         businessProcess = BusinessProcess.getInstance(getApplicationContext());
 
-        if(businessProcess.getStartDate() != null){
+        if (businessProcess.getStartDate() != null) {
             finish();
         }
 
         progressBar.setVisibility(View.VISIBLE);
         progressBar.spin();
+
+        lvProjects.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.spin();
+                lvProjects.setVisibility(View.GONE);
+                new GetProjectsAsyncTask(getApplicationContext(), true, getProjectsResultListener).execute();
+
+            }
+        });
 
         new GetProjectsAsyncTask(getApplicationContext(), false, getProjectsResultListener).execute();
 
@@ -58,13 +71,14 @@ public class SelectProjectPopup extends Activity {
     private AsyncTaskResultListener<List<String>> getProjectsResultListener = new AsyncTaskResultListener<List<String>>() {
         @Override
         public void onAsyncTaskSuccess(List<String> itemList) {
+            lvProjects.onRefreshComplete();
             lvProjects.setAdapter(new ProjectListAdapter(getApplicationContext(), itemList));
             lvProjects.setVisibility(View.VISIBLE);
             lvProjects.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
 
-                    String projectName = (String) lvProjects.getItemAtPosition(index);
+                    String projectName = (String) adapterView.getItemAtPosition(index);
 
                     businessProcess.saveProjectName(getApplicationContext(), projectName);
 
@@ -81,6 +95,7 @@ public class SelectProjectPopup extends Activity {
         @Override
         public void onAsyncTaskFailure(Exception e) {
             Log.e(TAG, e.getMessage(), e);
+            lvProjects.onRefreshComplete();
             finish();
         }
     };

@@ -1,30 +1,21 @@
 buildscript {
     repositories {
         //mavenCentral();
-
-        maven{
-            url "http://nexus.saxsys.de/content/repositories/external/"
-        }
+        maven { url 'http://nexus.saxsys.de/content/repositories/external/' }
         //-Dhttp.proxyHost=aero.saxsys.de -Dhttp.proxyPort=8080
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.11.+'
     }
 }
-
 apply plugin: 'android-library'
-
 android {
-
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
-
+    buildToolsVersion '19.1.0'
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
     }
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -34,4 +25,11 @@ android {
             res.srcDirs = ['res']
         }
     }
+    productFlavors {
+    }
+    buildTypes {
+    }
+}
+
+dependencies {
 }
