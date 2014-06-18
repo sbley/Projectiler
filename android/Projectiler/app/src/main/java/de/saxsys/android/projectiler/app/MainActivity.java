@@ -41,6 +41,7 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private static final String EXTRA_EVENT_ID = "event_id_start";
     private final String TAG = MainActivity.class.getSimpleName();
 
     public static final String NFC_KEY_WORD = "de.saxsys.android.projectile.app";
@@ -80,6 +81,10 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
+
+        sendWearNotification();
+
+
         Log.d(TAG, "setup Navigation Drawer");
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -99,6 +104,47 @@ public class MainActivity extends ActionBarActivity
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writeTagFilters = new IntentFilter[]{tagDetected};
+
+    }
+
+    private void sendWearNotification() {
+/*
+        int notificationId = 001;
+
+// Create builder for the main notification
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_projectctiler_notification)
+                        .setContentTitle("Page 1")
+                        .setContentText("Short message");
+
+// Create a big text style for the second page
+        NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
+        secondPageStyle.setBigContentTitle("Page 2")
+                .bigText("A lot of text...");
+
+// Create second page notification
+        Notification secondPageNotification =
+                new NotificationCompat.Builder(this)
+                        .setStyle(secondPageStyle)
+                        .build();
+
+// Create main notification and add the second page
+        Notification twoPageNotification =
+                new WearableNotifications.Builder(notificationBuilder)
+                        .addPage(secondPageNotification)
+                        .build();
+
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+
+        // Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, twoPageNotification);
+*/
+
+
+
+
 
     }
 
@@ -264,7 +310,7 @@ public class MainActivity extends ActionBarActivity
             IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED); // filter for tags
             IntentFilter[] writeTagFilters = new IntentFilter[]{tagDetected};
             nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
-        }else{
+        } else {
             Log.w(TAG, "NFC not possible");
         }
 

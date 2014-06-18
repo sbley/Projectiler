@@ -27,6 +27,8 @@ import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 import org.droidparts.fragment.support.v4.Fragment;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -41,7 +43,7 @@ import de.saxsys.android.projectiler.app.utils.BusinessProcess;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
+public class NavigationDrawerFragment extends Fragment implements View.OnClickListener, PropertyChangeListener {
 
     /**
      * Remember the position of the selected item.
@@ -124,6 +126,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         setHasOptionsMenu(true);
 
         businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
+        businessProcess.addPropertyChangeListener(this);
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
@@ -430,6 +433,18 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             setItems(null);
         }
     };
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        if (propertyChangeEvent.getPropertyName().equals("refresh")) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setItems(itemList);
+                }
+            });
+        }
+    }
 
     /**
      * Callbacks interface that all activities using this fragment must implement.

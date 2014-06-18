@@ -16,6 +16,8 @@ import org.droidparts.annotation.inject.InjectView;
 import org.droidparts.concurrent.task.AsyncTaskResultListener;
 import org.droidparts.fragment.support.v4.Fragment;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Date;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -30,7 +32,7 @@ import de.saxsys.android.projectiler.app.utils.WidgetUtils;
 /**
  * Created by spaxx86 on 21.05.2014.
  */
-public class TimeTrackingFragment extends Fragment implements View.OnClickListener {
+public class TimeTrackingFragment extends Fragment implements View.OnClickListener, PropertyChangeListener {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -99,6 +101,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         businessProcess = BusinessProcess.getInstance(getActivity().getApplicationContext());
+        businessProcess.addPropertyChangeListener(this);
 
         projectName = getArguments().getString(ARG_PROJECT_NAME);
         startVisible = getArguments().getBoolean(ARG_START_VISIBLE);
@@ -223,7 +226,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
 
         } else if (view == btnReset) {
 
-            businessProcess.resetProject(getActivity().getApplicationContext(), true);
+            businessProcess.resetProject(getActivity().getApplicationContext(), false);
             btnReset.setVisibility(View.GONE);
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.GONE);
@@ -257,6 +260,7 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             setStartDateTextView(aDate);
 
             WidgetUtils.refreshWidget(getActivity().getApplicationContext());
+
         }
 
         @Override
@@ -316,4 +320,16 @@ public class TimeTrackingFragment extends Fragment implements View.OnClickListen
             btnReset.setEnabled(true);
         }
     };
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        if (propertyChangeEvent.getPropertyName().equals("refresh")) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initView();
+                }
+            });
+        }
+    }
 }

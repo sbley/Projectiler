@@ -2,6 +2,8 @@ package de.saxsys.android.projectiler.app.utils;
 
 import android.content.Context;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,10 +25,12 @@ public class BusinessProcess {
     private static BusinessProcess INSTANCE;
     private UserDataStore dataStorage;
     private Projectiler projectiler;
+    private static Context context;
 
     public static BusinessProcess getInstance(final Context context) {
         if (null == INSTANCE) {
             INSTANCE = new BusinessProcess(context);
+            BusinessProcess.context = context;
         }
         return INSTANCE;
     }
@@ -35,6 +39,22 @@ public class BusinessProcess {
         projectiler = Projectiler.createDefaultProjectiler(context);
         dataStorage = UserDataStore.getInstance(context);
     }
+
+    private static final Object obj = new Object();
+    private static PropertyChangeSupport pcs = null;
+
+    private static PropertyChangeSupport getPropertyChangeSupport() {
+        if (pcs == null) {
+            pcs = new PropertyChangeSupport(obj);
+        }
+
+        return pcs;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChangeSupport().addPropertyChangeListener(listener);
+    }
+
 
 
     public String getUserName() {
@@ -46,7 +66,9 @@ public class BusinessProcess {
     }
 
     public Date checkin() {
-        return projectiler.checkin();
+        Date checkin = projectiler.checkin();
+        NotificationUtils.sendStartTrackingNotification(context);
+        return checkin;
     }
 
     public Date checkout(final String projectName) throws CrawlingException, IllegalStateException {
@@ -54,6 +76,7 @@ public class BusinessProcess {
         Date checkout = null;
 
         checkout = projectiler.checkout(projectName);
+        NotificationUtils.removeStartTrackingNotification(context);
         return checkout;
     }
 
@@ -62,6 +85,7 @@ public class BusinessProcess {
         Date checkout = null;
 
         checkout = projectiler.checkout(projectName, startDate, endDate);
+        NotificationUtils.removeStartTrackingNotification(context);
 
         return checkout;
     }
@@ -147,6 +171,11 @@ public class BusinessProcess {
         }
         resetStartTime();
         WidgetUtils.hideProgressBarOnWidget(context, dataStorage);
+        NotificationUtils.removeStartTrackingNotification(context);
+
+        // notify trackingFragment + navigationDrawer
+        getPropertyChangeSupport().firePropertyChange("refresh", 0, null);
+
     }
 
     public void showProgressBarOnWidget(Context context) {

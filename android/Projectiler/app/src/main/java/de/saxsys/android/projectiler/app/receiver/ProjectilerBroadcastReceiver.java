@@ -51,6 +51,8 @@ public class ProjectilerBroadcastReceiver extends BroadcastReceiver {
                 }
                 if(endLong != 0){
                     endDate = new Date(endLong);
+                }else{
+                    endDate = new Date();
                 }
 
                 handleActionStop(context, startDate, endDate);

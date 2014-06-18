@@ -39,4 +39,5 @@ dependencies {
     compile project(':ProgressWheel-master')
     compile project(':library')
     compile project(':pulltorefresh')
+    compile files('libs/wearable-preview-support.jar')
 }

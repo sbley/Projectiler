@@ -12,8 +12,8 @@ import android.widget.RemoteViews;
 
 import java.util.Date;
 
-import de.saxsys.android.projectiler.app.receiver.ProjectilerBroadcastReceiver;
 import de.saxsys.android.projectiler.app.utils.BusinessProcess;
+import de.saxsys.android.projectiler.app.utils.IntentUtils;
 
 
 /**
@@ -65,16 +65,12 @@ public class ProjectilerAppWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.tv_current_project, popupPendingIntent);
 
         Intent commentIntent = new Intent(context, ProjectilerAppWidget.class);
-        Intent startIntent = new Intent(context, ProjectilerBroadcastReceiver.class);
-        Intent resetIntent = new Intent(context, ProjectilerBroadcastReceiver.class);
 
         commentIntent.setAction(SHOW_COMMENT_DIALOG_ACTION);
-        startIntent.setAction(ProjectilerBroadcastReceiver.ACTION_START);
-        resetIntent.setAction(ProjectilerBroadcastReceiver.ACTION_RESET);
 
         PendingIntent commentPendingIntent = PendingIntent.getBroadcast(context, 0, commentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent startPendingIntent = PendingIntent.getBroadcast(context, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent resetPendingIntent = PendingIntent.getBroadcast(context, 0, resetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent startPendingIntent = IntentUtils.createStartPendingIntent(context);
+        PendingIntent resetPendingIntent = IntentUtils.createResetPendingIntent(context);
 
 
         views.setOnClickPendingIntent(R.id.buttonStop, commentPendingIntent);
