@@ -64,6 +64,9 @@
     <string name="ok">OK</string>
     <string name="reset">Reset</string>
     <string name="action_refresh_projects">Projekte laden</string>
+    <string name="project_started">Projekt gestartet</string>
+    <string name="stop">Stop</string>
+    <string name="project">Projekt</string>
 
     <array name="navigation_drawer_groups">
         <item>Funktionen</item>

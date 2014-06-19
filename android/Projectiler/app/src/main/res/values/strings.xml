@@ -74,6 +74,9 @@
     <string name="current_track_seperator">-</string>
     <string name="ok">OK</string>
     <string name="reset">Reset</string>
-    <string name="action_refresh_projects">Projekte laden</string>
+    <string name="action_refresh_projects">refresh projects</string>
+    <string name="project_started">Project started</string>
+    <string name="stop">Stop</string>
+    <string name="project">Project</string>
 
 </resources>

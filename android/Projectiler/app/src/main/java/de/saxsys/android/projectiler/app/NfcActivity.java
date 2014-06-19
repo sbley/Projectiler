@@ -101,7 +101,7 @@ public class NfcActivity extends ActionBarActivity {
 
             String projectName = businessProcess.getProjectName();
 
-            NotificationUtils.sendNotification(getApplicationContext(), 001, getString(R.string.start_tracking), getString(R.string.start_tracking_project, startTime, projectName));
+            NotificationUtils.sendNotification(getApplicationContext(), NotificationUtils.NOTIFICATION_START_TRACKING_NFC, getString(R.string.start_tracking), getString(R.string.start_tracking_project, startTime, projectName));
 
             WidgetUtils.refreshWidget(getApplicationContext());
             finish();
@@ -148,7 +148,7 @@ public class NfcActivity extends ActionBarActivity {
         public void onAsyncTaskSuccess(String projectName) {
             progressBar.setVisibility(View.GONE);
 
-            NotificationUtils.sendNotification(getApplicationContext(), 002, getString(R.string.stopped_time_tracking), getString(R.string.project_booked, projectName));
+            NotificationUtils.sendNotification(getApplicationContext(), NotificationUtils.NOTIFICATION_STOP_TRACKING, getString(R.string.stopped_time_tracking), getString(R.string.project_booked, projectName));
             WidgetUtils.refreshWidget(getApplicationContext());
             NfcActivity.this.finish();
         }
@@ -156,7 +156,7 @@ public class NfcActivity extends ActionBarActivity {
         @Override
         public void onAsyncTaskFailure(Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            NotificationUtils.sendNotification(getApplicationContext(), 003, getString(R.string.error_stop_tracking), e.getMessage());
+            NotificationUtils.sendNotification(getApplicationContext(), NotificationUtils.NOTIFICATION_ERROR_STOP_TRACKING, getString(R.string.error_stop_tracking), e.getMessage());
             finish();
         }
     };

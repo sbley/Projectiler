@@ -112,7 +112,7 @@ public class ProjectilerBroadcastReceiver extends BroadcastReceiver {
 
             if(e instanceof IllegalStateException){
                 // notification schicken
-                NotificationUtils.sendNotification(context, 111, context.getString(R.string.error_stop_tracking), e.getMessage());
+                NotificationUtils.sendNotification(context, NotificationUtils.NOTIFICATION_ERROR_STOP_TRACKING, context.getString(R.string.error_stop_tracking), e.getMessage());
             }
 
             businessProcess.hideProgressBarOnWidget(context);

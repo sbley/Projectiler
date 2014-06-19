@@ -16,6 +16,12 @@ import de.saxsys.android.projectiler.app.backend.UserDataStore;
  */
 public class NotificationUtils {
 
+    public static final int NOTIFICATION_START_TRACKING_NFC = 001;
+    public static final int NOTIFICATION_STOP_TRACKING = 002;
+    public static final int NOTIFICATION_ERROR_STOP_TRACKING = 003;
+    public static final int NOTIFICATION_START_TRACKING = 04;
+
+
     public static void sendNotification(final Context context, int mNotificationId, String title, String text) {
 
         NotificationManager mNotifyMgr =
@@ -32,14 +38,10 @@ public class NotificationUtils {
 
 
     public static void sendStartTrackingNotification(final Context context) {
-        int notificationId = 001;
-        // Build intent for notification content
-
         UserDataStore dataStore = UserDataStore.getInstance(context);
 
-
         NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-        bigStyle.setBigContentTitle("Projekt gestartet")
+        bigStyle.setBigContentTitle(context.getString(R.string.project_started))
         .bigText(dataStore.getProjectName());
 
         // Create builder for the main notification
@@ -50,11 +52,11 @@ public class NotificationUtils {
                                 context.getResources(), R.drawable.ic_launcher_saxsys))
                         .setStyle(bigStyle)
                         .setUsesChronometer(true)
-                        .addAction(R.drawable.ic_projectctiler_notification, "Stop", IntentUtils.createStopPendingIntent(context))
-                        .addAction(R.drawable.ic_projectctiler_notification, "Reset", IntentUtils.createResetPendingIntent(context));
+                        .addAction(R.drawable.ic_projectctiler_notification, context.getString(R.string.stop), IntentUtils.createStopPendingIntent(context))
+                        .addAction(R.drawable.ic_projectctiler_notification, context.getString(R.string.reset), IntentUtils.createResetPendingIntent(context));
 
         NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
-        secondPageStyle.setBigContentTitle("Projekt")
+        secondPageStyle.setBigContentTitle(context.getString(R.string.project))
                 .bigText(dataStore.getProjectName());
 
         Notification secondPageNotification =
@@ -72,15 +74,14 @@ public class NotificationUtils {
                 NotificationManagerCompat.from(context);
 
         // Build the notification and issues it with notification manager.
-        notificationManager.notify(notificationId, twoPageNotification);
-
+        notificationManager.notify(NOTIFICATION_START_TRACKING, twoPageNotification);
 
     }
 
     public static void removeStartTrackingNotification(final Context context) {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nMgr = (NotificationManager) context.getSystemService(ns);
-        nMgr.cancel(001);
+        nMgr.cancel(NOTIFICATION_START_TRACKING);
     }
 
 }
