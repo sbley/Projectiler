@@ -19,6 +19,7 @@ import de.saxsys.android.projectiler.app.R;
  */
 public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
+    private Context context;
     private final int activeElement;
     private List<String> groups;
     private List<String> projects;
@@ -28,6 +29,7 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.activeElement = activeElement;
         this.projects = objects;
+        this.context = context;
         groups = new ArrayList<String>();
 
         String[] stringArray = context.getResources().getStringArray(R.array.navigation_drawer_groups);
@@ -72,11 +74,24 @@ public class NavigationDrawerAdapter extends BaseExpandableListAdapter {
 
 
         if(groupPosition == 1){
-            if(childPosition == activeElement){
-                holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            }else{
+
+            // kein Projekt gewaehlt
+            if(activeElement == -1){
                 holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                holder.tvProjectName.setTextColor(context.getResources().getColor(android.R.color.black));
+            }else{
+                if(childPosition == activeElement){
+                    holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    holder.tvProjectName.setTextColor(context.getResources().getColor(android.R.color.black));
+                }else{
+                    holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    holder.tvProjectName.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
+                }
             }
+
+        }else{
+            holder.tvProjectName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+            holder.tvProjectName.setTextColor(context.getResources().getColor(android.R.color.black));
         }
 
 

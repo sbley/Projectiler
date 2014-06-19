@@ -350,6 +350,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
 
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    int activeIndex = businessProcess.getCurrentActiveProjectIndex(itemList);
 
                     if(groupPosition == 0){
 
@@ -362,13 +363,29 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
                     }else if (groupPosition == 1){
 
-                        Fragment fragment = TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true);
+                        // gibt es ein aktives projekt?
+                        if(activeIndex != -1){
 
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.container, fragment)
-                                .commit();
+                            // wurde auf das aktive projekt geklickt?
+                            if(childPosition == currentActiveIndex){
+                                Fragment fragment = TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true);
 
-                        mDrawerLayout.closeDrawers();
+                                fragmentManager.beginTransaction()
+                                        .replace(R.id.container, fragment)
+                                        .commit();
+
+                                mDrawerLayout.closeDrawers();
+                            }
+
+                        }else{
+                            Fragment fragment = TimeTrackingFragment.newInstance(itemList.get(childPosition), false, true);
+
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.container, fragment)
+                                    .commit();
+
+                            mDrawerLayout.closeDrawers();
+                        }
                     }
 
                     return false;
