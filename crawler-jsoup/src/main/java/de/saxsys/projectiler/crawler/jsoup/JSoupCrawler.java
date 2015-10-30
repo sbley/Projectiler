@@ -358,7 +358,7 @@ public class JSoupCrawler implements Crawler {
 
     /** Time formatted to Projectile format */
     private String formatTime(final Date time) {
-        return new SimpleDateFormat(settings.getTimeFormat()).format(time);
+        return new SimpleDateFormat("HH:mm").format(time);
     }
 
     /** Current date formatted as dd.MM.yyyy */
