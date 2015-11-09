@@ -20,7 +20,7 @@
 		<!-- include crawler implementation here (selenium or jsoup) -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>crawler-jsoup</artifactId>
+			<artifactId>ws-rest</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

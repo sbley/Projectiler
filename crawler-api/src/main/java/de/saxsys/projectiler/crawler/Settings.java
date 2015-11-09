@@ -7,19 +7,14 @@ import java.util.concurrent.TimeUnit;
  * 
  * @author stefan.bley
  */
-public class Settings {
+public abstract class Settings {
 
-	public String getProjectileUrl() {
-		return System.getProperty("projectile.url", "https://pt.saxsys.de/projectile/start");
-	}
+  public abstract String getProjectileUrl();
 
-	/** Time format used in Projectile */
-	public String getTimeFormat() {
-		return "HH:mm";
-	}
+  public abstract String getApplicationKey();
 
-	/** Connection timeout in millis */
-	public int getTimeout() {
-		return (int) TimeUnit.SECONDS.toMillis(10);
-	}
+  /** Connection timeout in millis */
+  public int getTimeout() {
+    return (int) TimeUnit.SECONDS.toMillis(10);
+  }
 }
