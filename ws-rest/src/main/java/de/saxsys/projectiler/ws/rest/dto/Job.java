@@ -2,6 +2,10 @@ package de.saxsys.projectiler.ws.rest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * 
+ * @author stefan.bley
+ */
 public class Job {
 
   private String id;

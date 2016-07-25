@@ -1,5 +1,9 @@
 package de.saxsys.projectiler.ws.rest.dto;
 
+/**
+ * 
+ * @author stefan.bley
+ */
 public class LoginCredentials {
 
   private String username;

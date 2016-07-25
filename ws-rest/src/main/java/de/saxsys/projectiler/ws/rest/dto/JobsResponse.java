@@ -5,6 +5,10 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * 
+ * @author stefan.bley
+ */
 public class JobsResponse {
 
   @SerializedName("StatusCode")
