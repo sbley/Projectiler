@@ -98,6 +98,9 @@ public class RetrofitClient implements Crawler {
     @Override
     public void clock(Credentials credentials, String projectName, Date start, Date end, String comment)
             throws ConnectionException, CrawlingException {
+        if (null == start || null == end || start.after(end)) {
+            throw new CrawlingException("Time has not been clocked. Start time must be before end time.");
+        }
         try {
             login(credentials);
             Job project = lookupProject(projectName);
