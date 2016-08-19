@@ -31,7 +31,7 @@ import de.saxsys.projectiler.crawler.Settings;
  * Interacts with Projectile via JSoup.
  * 
  * @author stefan.bley
- * @see {@link http://jsoup.org}
+ * @see <a href="http://jsoup.org">http://jsoup.org</a>
  */
 public class JSoupCrawler implements Crawler {
 
@@ -79,8 +79,8 @@ public class JSoupCrawler implements Crawler {
     }
 
     @Override
-    public void clock(final Credentials credentials, final String projectName, final Date start,
-            final Date end, final String comment) throws CrawlingException {
+    public void clock(final Credentials credentials, final String projectName, final Date start, final Date end,
+            final String comment) throws CrawlingException {
         try {
             Document startPage = login(credentials);
             Document ttPage = openTimeTracker(startPage);
@@ -96,8 +96,7 @@ public class JSoupCrawler implements Crawler {
     }
 
     @Override
-    public List<Booking> getDailyReport(final Credentials credentials)
-        throws ConnectionException, CrawlingException {
+    public List<Booking> getDailyReport(final Credentials credentials) throws ConnectionException, CrawlingException {
         try {
             Document startPage = login(credentials);
             Document ttPage = openTimeTracker(startPage);
@@ -116,7 +115,8 @@ public class JSoupCrawler implements Crawler {
     /**
      * Login to Projectile and return the cookies containing the session ID.
      * 
-     * @throws InvalidCredentialsException if the credentials are wrong
+     * @throws InvalidCredentialsException
+     *             if the credentials are wrong
      */
     private Document login(final Credentials cred) throws IOException, InvalidCredentialsException {
         Response response = jsoupConnection().data("login", cred.getUsername())
@@ -128,8 +128,7 @@ public class JSoupCrawler implements Crawler {
         Document startPage = response.parse();
         if (startPage.getElementsByAttributeValue("name", "password").isEmpty()) {
             String sessionId = response.cookie(JSESSIONID);
-            LOGGER.info(
-                    "User " + cred.getUsername() + " logged in with session ID " + sessionId + ".");
+            LOGGER.info("User " + cred.getUsername() + " logged in with session ID " + sessionId + ".");
             saveTaid(startPage);
             cookies = response.cookies();
             return startPage;
@@ -147,31 +146,18 @@ public class JSoupCrawler implements Crawler {
         Document introPage = openStandardIntroPage(currentPage);
 
         String today = formatToday();
-        Response response =
-                jsoupConnection().cookies(cookies)
-                        .data("taid", taid)
-                        .data("CurrentFocusField", "0")
-                        .data("CurrentDraggable", "0")
-                        .data("CurrentDropTraget", "0")
-                        .data(introPage.select("input[name$=.Button=TimeTracker1")
-                                .first()
-                                .attr("name") + ".x", "8")
-                        .data(introPage.select("input[name$=.Button=TimeTracker1")
-                                .first()
-                                .attr("name") + ".y", "8")
-                        .data(introPage.select("input[name$=.val.BsmHiddenViewField]")
-                                .first()
-                                .attr("name"), "1")
-                        .data(introPage.select("select[name$=.Field.0.Field_TimeTracker")
-                                .first()
-                                .attr("name"), TODAY)
-                        .data(introPage.select("input[name$=.Field.0.Field_TimeTrackerDate:0")
-                                .first()
-                                .attr("name"), today)
-                        .data(introPage.select("input[name$=.Field.0.Field_TimeTrackerDate2:0")
-                                .first()
-                                .attr("name"), today)
-                        .execute();
+        Response response = jsoupConnection().cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "0")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(introPage.select("input[name$=.Button=TimeTracker1").first().attr("name") + ".x", "8")
+                .data(introPage.select("input[name$=.Button=TimeTracker1").first().attr("name") + ".y", "8")
+                .data(introPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
+                .data(introPage.select("select[name$=.Field.0.Field_TimeTracker").first().attr("name"), TODAY)
+                .data(introPage.select("input[name$=.Field.0.Field_TimeTrackerDate:0").first().attr("name"), today)
+                .data(introPage.select("input[name$=.Field.0.Field_TimeTrackerDate2:0").first().attr("name"), today)
+                .execute();
         Document ttPage = response.parse();
         saveTaid(ttPage);
         return ttPage;
@@ -183,12 +169,9 @@ public class JSoupCrawler implements Crawler {
                 .data("CurrentFocusField", "0")
                 .data("CurrentDraggable", "0")
                 .data("CurrentDropTraget", "0")
-                .data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".x",
-                        "8")
-                .data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".y",
-                        "8")
-                .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"),
-                        "1")
+                .data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".x", "8")
+                .data(startPage.select("input[name$=.BUTTON.intro").first().attr("name") + ".y", "8")
+                .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
                 .execute();
         Document introPage = response.parse();
         saveTaid(introPage);
@@ -196,26 +179,20 @@ public class JSoupCrawler implements Crawler {
     }
 
     private Document openStandardIntroPage(final Document startPage) throws IOException {
-        Response response =
-                jsoupConnection().cookies(cookies)
-                        .data("taid", taid)
-                        .data("CurrentFocusField", "0")
-                        .data("CurrentDraggable", "0")
-                        .data("CurrentDropTraget", "0")
-                        .data(startPage.select("input[name$=.BUTTON.SelectTab.0")
-                                .first()
-                                .attr("name"), "0")
-                        .data(startPage.select("input[name$=.val.BsmHiddenViewField]")
-                                .first()
-                                .attr("name"), "1")
-                        .execute();
+        Response response = jsoupConnection().cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "0")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(startPage.select("input[name$=.BUTTON.SelectTab.0").first().attr("name"), "0")
+                .data(startPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
+                .execute();
         Document ttPage = response.parse();
         saveTaid(ttPage);
         return ttPage;
     }
 
-    private List<String> readProjectNames(final Document timeTrackerPage)
-        throws IOException, CrawlingException {
+    private List<String> readProjectNames(final Document timeTrackerPage) throws IOException, CrawlingException {
         List<String> projectNames = new ArrayList<String>();
         Elements options = timeTrackerPage.select("select[id$=NewWhat_0_0] option");
         if (options.isEmpty()) {
@@ -231,8 +208,8 @@ public class JSoupCrawler implements Crawler {
         return projectNames;
     }
 
-    private void clockTime(final Date start, final Date end, final String projectName,
-            final String comment, final Document ttPage) throws IOException, CrawlingException {
+    private void clockTime(final Date start, final Date end, final String projectName, final String comment,
+            final Document ttPage) throws IOException, CrawlingException {
         String optionValue = null;
         Elements options = ttPage.select("select[id$=NewWhat_0_0] option");
         for (Element option : options) {
@@ -242,33 +219,22 @@ public class JSoupCrawler implements Crawler {
             }
         }
         String nullSafeComment = (null == comment) ? "" : comment;
-        final Response response =
-                jsoupConnection().cookies(cookies)
-                        .data("taid", taid)
-                        .data("CurrentFocusField", "name")
-                        .data("CurrentDraggable", "0")
-                        .data("CurrentDropTraget", "0")
-                        .data(ttPage.select("input[name$=.val.BsmHiddenViewField]")
-                                .first()
-                                .attr("name"), "1")
-                        .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name")
-                                + ".x", "8")
-                        .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name")
-                                + ".y", "8")
-                        .data(ttPage.select("select[id$=.Field.0.TimeTrackerConfirmationAction")
-                                .first()
-                                .id(), "-1")
-                        .data(ttPage.select("input[id$=Field.0.Begin:0]").first().id(),
-                                formatToday())
-                        .data(ttPage.select("input.rw[id$=NewFrom_0_0]").first().id(),
-                                formatTime(start))
-                        .data(ttPage.select("input.rw[id$=NewTo_0_0]").first().id(),
-                                formatTime(end))
-                        .data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
-                        .data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
-                        .data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(),
-                                nullSafeComment)
-                        .execute();
+        final Response response = jsoupConnection().cookies(cookies)
+                .data("taid", taid)
+                .data("CurrentFocusField", "name")
+                .data("CurrentDraggable", "0")
+                .data("CurrentDropTraget", "0")
+                .data(ttPage.select("input[name$=.val.BsmHiddenViewField]").first().attr("name"), "1")
+                .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name") + ".x", "8")
+                .data(ttPage.select("input[name$=+0+0__ButtonTable_]").first().attr("name") + ".y", "8")
+                .data(ttPage.select("select[id$=.Field.0.TimeTrackerConfirmationAction").first().id(), "-1")
+                .data(ttPage.select("input[id$=Field.0.Begin:0]").first().id(), formatToday())
+                .data(ttPage.select("input.rw[id$=NewFrom_0_0]").first().id(), formatTime(start))
+                .data(ttPage.select("input.rw[id$=NewTo_0_0]").first().id(), formatTime(end))
+                .data(ttPage.select("input.rw[id$=NewTime_0_0]").first().id(), "")
+                .data(ttPage.select("select[id$=NewWhat_0_0]").first().id(), optionValue)
+                .data(ttPage.select("input.rw[id$=NewNote_0_0]").first().id(), nullSafeComment)
+                .execute();
         Document document = response.parse();
         saveTaid(document);
 
@@ -283,17 +249,13 @@ public class JSoupCrawler implements Crawler {
         }
         boolean clocked = false;
         try {
-            String inputStartId =
-                    document.select("input.rw[id*=Field_Start][value=" + formatTime(start) + "]")
-                            .first()
-                            .id();
+            String inputStartId = document.select("input.rw[id*=Field_Start][value=" + formatTime(start) + "]")
+                    .first()
+                    .id();
             String inputEndId = inputStartId.replace("Start", "End");
-            clocked = !document
-                    .select("input.rw[id=" + inputEndId + "][value=" + formatTime(end) + "]")
-                    .isEmpty();
+            clocked = !document.select("input.rw[id=" + inputEndId + "][value=" + formatTime(end) + "]").isEmpty();
             String inputWhatId = inputStartId.replace("Start", "What");
-            clocked &= !document.select(
-                    "select[id=" + inputWhatId + "] option[selected][value=" + optionValue + "]")
+            clocked &= !document.select("select[id=" + inputWhatId + "] option[selected][value=" + optionValue + "]")
                     .isEmpty();
             clocked &= document.select("img[src*=error_i1_16.gif]").isEmpty();
         } catch (NullPointerException e) {
@@ -315,11 +277,11 @@ public class JSoupCrawler implements Crawler {
             String inputStartId = inputStart.id();
             String startTime = inputStart.val();
             String inputEndId = inputStartId.replace("Start", "End");
-            String endTime =
-                    timeTrackerPage.select("input.rw[id=" + inputEndId + "]").first().val();
+            String endTime = timeTrackerPage.select("input.rw[id=" + inputEndId + "]").first().val();
             String inputWhatId = inputStartId.replace("Start", "What");
-            String projectName = timeTrackerPage
-                    .select("select[id=" + inputWhatId + "] option[selected]").first().text();
+            String projectName = timeTrackerPage.select("select[id=" + inputWhatId + "] option[selected]")
+                    .first()
+                    .text();
             bookings.add(new Booking(projectName, startTime, endTime));
         }
 
@@ -345,9 +307,7 @@ public class JSoupCrawler implements Crawler {
      * Creates a JSoup connection to Projectile with method POST and given timeout
      */
     private Connection jsoupConnection() {
-        return Jsoup.connect(settings.getProjectileUrl())
-                .timeout(settings.getTimeout())
-                .method(Method.POST);
+        return Jsoup.connect(settings.getProjectileUrl()).timeout(settings.getTimeout()).method(Method.POST);
     }
 
     /** Reads the transaction ID from the response and stores it to a field */

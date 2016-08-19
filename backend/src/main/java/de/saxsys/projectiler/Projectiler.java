@@ -58,7 +58,6 @@ public class Projectiler {
    * @param comment optional comment
    * @throws CrawlingException
    * @throws ConnectionException if connection to Projectile fails
-   * @throws ProjectilerException in case backend operations fail
    * @throws IllegalStateException if invoked while not being checked in or if work time is less than one minute
    */
   public Date checkout(final String projectName, final String comment) throws CrawlingException {

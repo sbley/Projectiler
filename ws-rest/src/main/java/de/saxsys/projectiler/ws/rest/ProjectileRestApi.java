@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -32,6 +33,10 @@ public interface ProjectileRestApi {
   @Headers("Accept: application/json")
   @GET("api/json/0/jobs?bsmExtraFields=project_caption")
   Call<JobsResponse> getJobs();
+  
+  @Headers("Accept: application/json")
+  @GET("api/json/0/jobs/{id}?bsmExtraFields=project_caption")
+  Call<JobsResponse> getJob(@Path("id") String jobId);
 
   @Headers({"Accept: application/json", "Content-Type: application/json" })
   @POST("api/json/0/timebits")

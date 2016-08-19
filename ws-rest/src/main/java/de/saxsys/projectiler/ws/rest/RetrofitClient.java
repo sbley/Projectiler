@@ -178,6 +178,27 @@ public class RetrofitClient implements Crawler {
         throw new IOException();
     }
 
+    private Job readProject(String jobId) throws IOException, CrawlingException {
+        ProjectileRestApi service = retrofit.create(ProjectileRestApi.class);
+        Response<JobsResponse> response = service.getJob(jobId).execute();
+        if (response.isSuccessful()) {
+            LOGGER.info("Project " + jobId + " read.");
+            JobsResponse body = response.body();
+            if (body.getStatusCode().isError()) {
+                handle404NotFound();
+            } else {
+                return body.getJobs().get(0);
+            }
+        } else if (404 == response.code()) {
+            handle404NotFound();
+        } else if (401 == response.code()) {
+            throw new InvalidCredentialsException();
+        } else {
+            LOGGER.severe(response.errorBody().string());
+        }
+        throw new IOException();
+    }
+
     private Object clockTime(Date start, Date end, Job project, String comment) throws CrawlingException, IOException {
         if (null == start || null == end || null == project) {
             LOGGER.warning("Time has not been clocked. Start time, end time or project missing.");
@@ -218,7 +239,15 @@ public class RetrofitClient implements Crawler {
             List<Timebit> timebits = response.body().getTimebits();
             List<Booking> bookings = new ArrayList<>();
             for (Timebit timebit : timebits) {
-                bookings.add(new Booking(timebit.getJobId(), timebit.getStarttime(), timebit.getEndtime()));
+                String projectName = "";
+                try {
+                    Job project = readProject(timebit.getJobId());
+                    projectName = project.getProjectName();
+                } catch (CrawlingException e) {
+                    LOGGER.warning("Project name for job " + timebit.getJobId() + " could not be read.");
+                }
+                bookings.add(new Booking(timebit.getJobId(), projectName, timebit.getStarttime(), timebit.getEndtime(),
+                        timebit.getNote()));
             }
             return bookings;
         } else if (404 == response.code()) {
