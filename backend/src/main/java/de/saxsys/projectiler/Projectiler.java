@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import de.saxsys.projectiler.crawler.ConnectionException;
-import de.saxsys.projectiler.crawler.Crawler;
-import de.saxsys.projectiler.crawler.CrawlingException;
-import de.saxsys.projectiler.crawler.Credentials;
-import de.saxsys.projectiler.crawler.InvalidCredentialsException;
+import de.saxsys.projectiler.api.ConnectionException;
+import de.saxsys.projectiler.api.ProjectileClientApi;
+import de.saxsys.projectiler.api.ProjectileApiException;
+import de.saxsys.projectiler.api.Credentials;
+import de.saxsys.projectiler.api.InvalidCredentialsException;
 import de.saxsys.projectiler.ws.rest.RetrofitClient;
 
 /**
@@ -20,13 +20,13 @@ public class Projectiler {
 
   private static final Logger LOGGER = Logger.getLogger(Projectiler.class.getSimpleName());
   private final UserDataStore dataStore = UserDataStore.getInstance();
-  private final Crawler crawler;
+  private final ProjectileClientApi crawler;
 
   public static Projectiler createDefaultProjectiler() {
     return new Projectiler(new RetrofitClient(new SystemSettings()));
   }
 
-  protected Projectiler(final Crawler crawler) {
+  protected Projectiler(final ProjectileClientApi crawler) {
     this.crawler = crawler;
   }
 
@@ -56,11 +56,11 @@ public class Projectiler {
    * 
    * @param projectName project to clock your time to
    * @param comment optional comment
-   * @throws CrawlingException
+   * @throws ProjectileApiException
    * @throws ConnectionException if connection to Projectile fails
    * @throws IllegalStateException if invoked while not being checked in or if work time is less than one minute
    */
-  public Date checkout(final String projectName, final String comment) throws CrawlingException {
+  public Date checkout(final String projectName, final String comment) throws ProjectileApiException {
     if (!isCheckedIn()) {
       throw new IllegalStateException("Must be checked in before checking out.");
     }
@@ -88,9 +88,9 @@ public class Projectiler {
    * 
    * @return list of project names or empty list
    * @throws ConnectionException if connection to Projectile fails
-   * @throws CrawlingException if an error occoures in the crawles
+   * @throws ProjectileApiException if an error occoures in the crawles
    */
-  public List<String> getProjectNames() throws ConnectionException, CrawlingException {
+  public List<String> getProjectNames() throws ConnectionException, ProjectileApiException {
     return crawler.getProjectNames(createCredentials());
   }
 
@@ -101,10 +101,10 @@ public class Projectiler {
    * @param password Projectile password
    * @throws InvalidCredentialsException if credentials are invalid
    * @throws ConnectionException if connection to Projectile fails
-   * @throws CrawlingException
+   * @throws ProjectileApiException
    */
   public void saveCredentials(final String username, final String password)
-    throws InvalidCredentialsException, ConnectionException, CrawlingException {
+    throws InvalidCredentialsException, ConnectionException, ProjectileApiException {
     crawler.checkCredentials(new Credentials(username, password));
     dataStore.setCredentials(username, password);
     dataStore.save();

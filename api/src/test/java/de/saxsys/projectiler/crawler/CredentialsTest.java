@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import de.saxsys.projectiler.api.Credentials;
+
 public class CredentialsTest {
 
 	@Test

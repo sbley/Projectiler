@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.crawler;
+package de.saxsys.projectiler.api;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author stefan.bley
  */
-public interface Crawler {
+public interface ProjectileClientApi {
 
 	/**
 	 * Verifies the credentials are valid.
@@ -21,23 +21,23 @@ public interface Crawler {
 	 *             if the credentials are invalid
 	 * @throws ConnectionException
 	 *             if connection to Projectile cannot be established
-	 * @throws CrawlingException
+	 * @throws ProjectileApiException
 	 *             in case the crawling fails
 	 */
 	void checkCredentials(Credentials credentials) throws InvalidCredentialsException,
-			ConnectionException, CrawlingException;
+			ConnectionException, ProjectileApiException;
 
 	/**
 	 * Get a list of all available project names.
 	 * 
 	 * @throws ConnectionException
 	 *             if connection to Projectile cannot be established
-	 * @throws CrawlingException
+	 * @throws ProjectileApiException
 	 *             in case the crawling fails
 	 * @return project names or empty list
 	 */
 	List<String> getProjectNames(Credentials credentials) throws ConnectionException,
-			CrawlingException;
+			ProjectileApiException;
 
 	/**
 	 * Clock time for given user and project.
@@ -54,11 +54,11 @@ public interface Crawler {
 	 *            (optional)
 	 * @throws ConnectionException
 	 *             if connection to Projectile cannot be established
-	 * @throws CrawlingException
+	 * @throws ProjectileApiException
 	 *             in case the crawling fails
 	 */
 	void clock(Credentials credentials, String projectName, Date start, Date end, String comment)
-			throws ConnectionException, CrawlingException;
+			throws ConnectionException, ProjectileApiException;
 
 	/**
 	 * Get a list of clocked times for the current day and user.
@@ -66,10 +66,10 @@ public interface Crawler {
 	 * @return list of clocked times or empty list
 	 * @throws ConnectionException
 	 *             if connection to Projectile cannot be established
-	 * @throws CrawlingException
+	 * @throws ProjectileApiException
 	 *             in case the crawling fails
 	 */
 	List<Booking> getDailyReport(Credentials credentials) throws ConnectionException,
-			CrawlingException;
+			ProjectileApiException;
 
 }

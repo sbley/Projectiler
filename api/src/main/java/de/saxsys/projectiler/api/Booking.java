@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.crawler;
+package de.saxsys.projectiler.api;
 
 /**
  * A booking is a period of time booked for a project.

@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.crawler;
+package de.saxsys.projectiler.api;
 
 /**
  * Exception to be thrown by Crawler implementations if the booking would consume more than the remaining budget for
@@ -6,7 +6,7 @@ package de.saxsys.projectiler.crawler;
  * 
  * @author stefan.bley
  */
-public class NoBudgetException extends CrawlingException {
+public class NoBudgetException extends ProjectileApiException {
 
     private static final long serialVersionUID = 7232508869516591946L;
 

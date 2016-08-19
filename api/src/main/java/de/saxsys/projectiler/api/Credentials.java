@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.crawler;
+package de.saxsys.projectiler.api;
 
 /**
  * Credentials to log into Projectile.

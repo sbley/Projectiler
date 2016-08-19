@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import de.saxsys.projectiler.crawler.Booking;
-import de.saxsys.projectiler.crawler.ConnectionException;
-import de.saxsys.projectiler.crawler.Crawler;
-import de.saxsys.projectiler.crawler.CrawlingException;
-import de.saxsys.projectiler.crawler.Credentials;
-import de.saxsys.projectiler.crawler.InvalidCredentialsException;
-import de.saxsys.projectiler.crawler.NoBudgetException;
-import de.saxsys.projectiler.crawler.Settings;
+import de.saxsys.projectiler.api.Booking;
+import de.saxsys.projectiler.api.ConnectionException;
+import de.saxsys.projectiler.api.ProjectileClientApi;
+import de.saxsys.projectiler.api.ProjectileApiException;
+import de.saxsys.projectiler.api.Credentials;
+import de.saxsys.projectiler.api.InvalidCredentialsException;
+import de.saxsys.projectiler.api.NoBudgetException;
+import de.saxsys.projectiler.api.Settings;
 import de.saxsys.projectiler.ws.rest.dto.AddTimebitResponse;
 import de.saxsys.projectiler.ws.rest.dto.GetTimebitResponse;
 import de.saxsys.projectiler.ws.rest.dto.Job;
@@ -44,7 +44,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * 
  * @author stefan.bley
  */
-public class RetrofitClient implements Crawler {
+public class RetrofitClient implements ProjectileClientApi {
 
     private static final Logger LOGGER = Logger.getLogger(RetrofitClient.class.getName());
     private final Retrofit retrofit;
@@ -84,47 +84,47 @@ public class RetrofitClient implements Crawler {
     }
 
     @Override
-    public List<String> getProjectNames(Credentials credentials) throws ConnectionException, CrawlingException {
+    public List<String> getProjectNames(Credentials credentials) throws ConnectionException, ProjectileApiException {
         try {
             login(credentials);
             return readProjectNames();
         } catch (UnknownHostException e) {
             throw new ConnectionException(e);
         } catch (IOException e) {
-            throw new CrawlingException("Error while retrieving project names.");
+            throw new ProjectileApiException("Error while retrieving project names.");
         }
     }
 
     @Override
     public void clock(Credentials credentials, String projectName, Date start, Date end, String comment)
-            throws ConnectionException, CrawlingException {
+            throws ConnectionException, ProjectileApiException {
         if (null == start || null == end || start.after(end)) {
-            throw new CrawlingException("Time has not been clocked. Start time must be before end time.");
+            throw new ProjectileApiException("Time has not been clocked. Start time must be before end time.");
         }
         try {
             login(credentials);
             Job project = lookupProject(projectName);
             if (null == project) {
-                throw new CrawlingException("Time has not been clocked. " + projectName + " is not a valid project.");
+                throw new ProjectileApiException("Time has not been clocked. " + projectName + " is not a valid project.");
             } else {
                 clockTime(start, end, project, comment);
             }
         } catch (UnknownHostException e) {
             throw new ConnectionException(e);
         } catch (IOException e) {
-            throw new CrawlingException("Error while clocking time.");
+            throw new ProjectileApiException("Error while clocking time.");
         }
     }
 
     @Override
-    public List<Booking> getDailyReport(Credentials credentials) throws ConnectionException, CrawlingException {
+    public List<Booking> getDailyReport(Credentials credentials) throws ConnectionException, ProjectileApiException {
         try {
             login(credentials);
             return readDailyReport();
         } catch (UnknownHostException e) {
             throw new ConnectionException(e);
         } catch (IOException e) {
-            throw new CrawlingException("Error while retrieving daily report.", e);
+            throw new ProjectileApiException("Error while retrieving daily report.", e);
         }
     }
 
@@ -142,7 +142,7 @@ public class RetrofitClient implements Crawler {
         }
     }
 
-    private Job lookupProject(String projectName) throws IOException, CrawlingException {
+    private Job lookupProject(String projectName) throws IOException, ProjectileApiException {
         List<Job> projects = readProjects();
         for (Job project : projects) {
             if (projectName.equals(project.getProjectName())) {
@@ -152,7 +152,7 @@ public class RetrofitClient implements Crawler {
         return null;
     }
 
-    private List<String> readProjectNames() throws IOException, CrawlingException {
+    private List<String> readProjectNames() throws IOException, ProjectileApiException {
         List<String> projectNames = new ArrayList<>();
         List<Job> projects = readProjects();
         for (Job project : projects) {
@@ -162,7 +162,7 @@ public class RetrofitClient implements Crawler {
         return projectNames;
     }
 
-    private List<Job> readProjects() throws IOException, CrawlingException {
+    private List<Job> readProjects() throws IOException, ProjectileApiException {
         ProjectileRestApi service = retrofit.create(ProjectileRestApi.class);
         Response<JobsResponse> response = service.getJobs().execute();
         if (response.isSuccessful()) {
@@ -178,7 +178,7 @@ public class RetrofitClient implements Crawler {
         throw new IOException();
     }
 
-    private Job readProject(String jobId) throws IOException, CrawlingException {
+    private Job readProject(String jobId) throws IOException, ProjectileApiException {
         ProjectileRestApi service = retrofit.create(ProjectileRestApi.class);
         Response<JobsResponse> response = service.getJob(jobId).execute();
         if (response.isSuccessful()) {
@@ -199,10 +199,10 @@ public class RetrofitClient implements Crawler {
         throw new IOException();
     }
 
-    private Object clockTime(Date start, Date end, Job project, String comment) throws CrawlingException, IOException {
+    private Object clockTime(Date start, Date end, Job project, String comment) throws ProjectileApiException, IOException {
         if (null == start || null == end || null == project) {
             LOGGER.warning("Time has not been clocked. Start time, end time or project missing.");
-            throw new CrawlingException("Time has not been clocked. Start time, end time or project missing.");
+            throw new ProjectileApiException("Time has not been clocked. Start time, end time or project missing.");
         }
 
         ProjectileRestApi service = retrofit.create(ProjectileRestApi.class);
@@ -215,7 +215,7 @@ public class RetrofitClient implements Crawler {
                 if (7 == addTimebitResponse.getStatusCode().getCodeNumber()) {
                     throw new NoBudgetException();
                 } else {
-                    throw new CrawlingException(addTimebitResponse.getMessage());
+                    throw new ProjectileApiException(addTimebitResponse.getMessage());
                 }
             } else if (addTimebitResponse.getStatusCode().isWarning()) {
                 LOGGER.warning("Time clocked with warning: " + addTimebitResponse.getMessage());
@@ -243,7 +243,7 @@ public class RetrofitClient implements Crawler {
                 try {
                     Job project = readProject(timebit.getJobId());
                     projectName = project.getProjectName();
-                } catch (CrawlingException e) {
+                } catch (ProjectileApiException e) {
                     LOGGER.warning("Project name for job " + timebit.getJobId() + " could not be read.");
                 }
                 bookings.add(new Booking(timebit.getJobId(), projectName, timebit.getStarttime(), timebit.getEndtime(),

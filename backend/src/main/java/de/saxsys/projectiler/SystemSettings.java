@@ -1,6 +1,6 @@
 package de.saxsys.projectiler;
 
-import de.saxsys.projectiler.crawler.Settings;
+import de.saxsys.projectiler.api.Settings;
 
 /**
  * Read settings from environment variables.

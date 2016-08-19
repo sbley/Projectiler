@@ -1,4 +1,4 @@
-package de.saxsys.projectiler.crawler;
+package de.saxsys.projectiler.api;
 
 import java.util.concurrent.TimeUnit;
 

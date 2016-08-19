@@ -1,19 +1,19 @@
-package de.saxsys.projectiler.crawler;
+package de.saxsys.projectiler.api;
 
 /**
  * Exception to be thrown by Crawler implementations if there is any failure.
  * 
  * @author stefan.bley
  */
-public class CrawlingException extends Exception {
+public class ProjectileApiException extends Exception {
 
     private static final long serialVersionUID = 7232508869516591946L;
 
-    public CrawlingException(String message) {
+    public ProjectileApiException(String message) {
         super(message);
     }
 
-    public CrawlingException(String message, Throwable cause) {
+    public ProjectileApiException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
 import de.saxsys.projectiler.Projectiler;
-import de.saxsys.projectiler.crawler.InvalidCredentialsException;
+import de.saxsys.projectiler.api.InvalidCredentialsException;
 import de.saxsys.projectiler.misc.Notification;
 
 public class CheckOutTask extends Task<Date> {
