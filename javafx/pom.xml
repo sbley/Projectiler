@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.saxsys.projectiler</groupId>
         <artifactId>projectiler</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </parent>
 
     <properties>
@@ -80,7 +80,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <!-- copy to target to make replacements 
+                                        <!-- copy to target to make replacements
                                             transient + replace variables in iss file -->
                                         <copy
                                             file="${project.basedir}\${installerresources}\${issfile}"
