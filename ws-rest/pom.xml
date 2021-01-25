@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>de.saxsys.projectiler</groupId>
 		<artifactId>projectiler</artifactId>
-		<version>1.2.0</version>
+		<version>1.2.1</version>
 	</parent>
 	<artifactId>ws-rest</artifactId>
 
 	<properties>
-		<retrofit.version>2.1.0</retrofit.version>
+		<retrofit.version>2.9.0</retrofit.version>
 	</properties>
 
 	<dependencies>
