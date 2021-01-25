@@ -9,7 +9,7 @@
 	<artifactId>ws-rest</artifactId>
 
 	<properties>
-		<retrofit.version>2.1.0</retrofit.version>
+		<retrofit.version>2.9.0</retrofit.version>
 	</properties>
 
 	<dependencies>
